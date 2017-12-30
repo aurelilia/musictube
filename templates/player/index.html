@@ -1,0 +1,42 @@
+{% load static %}
+<!---->
+<link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/png" />
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<title>MusicTube</title>
+<!---->
+<div class="nav">
+    <ul>
+        <li class="logo">
+            <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px">
+        </li>
+        <li class="controls">
+            <!-- TODO: Proper icons, unicode ones are awful -->
+            <p id="prev-button">«</p>
+            <p id="play-button">▶</p>
+            <p id="stop-button">⏹</p>
+            <p id="next-button">»</p>
+        </li>
+        <li class="track">
+            <img alt="" src="{% static 'img/track-stub.png' %}" height="50px">
+            <p class="track-title">No track playing.</p>
+        </li>
+        <li class="hamburger-menu">
+            <img alt="MENU" src="{% static 'img/hamburger.png' %}" height="50px">
+            <!--    <li class="my-playlists">
+                        <a href="/">My Playlists</a>
+                    </li>
+                    <li class="edit-playlist">           TODO: Implement hamburger menu; add these
+                        <a href="/">Edit Playlists</a>
+                    </li>
+                -->
+        </li>
+    </ul>
+</div>
+
+<div class="notes" id="playlists">
+</div>
+
+<script src="{% static 'js/index.js' %}"></script>
+{% csrf_token %}

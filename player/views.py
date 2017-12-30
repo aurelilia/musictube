@@ -1,3 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def home(request):
+    """ Returns the main page. """
+    return render(request, 'player/index.html')
