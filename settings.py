@@ -11,25 +11,27 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'y&&225htj-x2y4%_tbd+wd$q#6b8hvpafts7uvy+^#rppcjlrz'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# Put your key into the file 'key' in BASE_DIR, otherwise a default key meant for dev environments
+# is used!!
+try:
+    with open(os.path.join(BASE_DIR, 'key'), 'r') as key:
+        SECRET_KEY = key.read()
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']
+except FileNotFoundError:
+    print('WARNING: Key not found! Assuming dev environment, using default key.')
+    SECRET_KEY = 'wyS5Wi0DeSzj9Lr5Jyfd'
+    DEBUG = True
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -72,18 +74,21 @@ WSGI_APPLICATION = 'musictube.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# Put your database config in your BASE_DIR, as json in file 'database'
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    with open(os.path.join(BASE_DIR, 'database'), 'r') as db:
+        DATABASES = json.loads(db.read())
 
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -102,19 +107,23 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'Europe/Berlin'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
-
 STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/musictube/static/'
+
+
+# Various settings
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
+X_FRAME_OPTIONS = 'DENY'
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+USE_X_FORWARDED_PORT = True
