@@ -23,16 +23,14 @@
             <p class="track-title">No track playing.</p>
         </li>
         <li class="hamburger-menu">
-            <img alt="MENU" src="{% static 'img/hamburger.png' %}" height="50px">
-            <!--    <li class="my-playlists">
-                        <a href="/">My Playlists</a>
-                    </li>
-                    <li class="edit-playlist">           TODO: Implement hamburger menu; add these
-                        <a href="/">Edit Playlists</a>
-                    </li>
-                -->
+            <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
         </li>
     </ul>
+    <div id="menu-dropdown" class="menu-dropdown">
+        <a href="#">My Playlists</a>
+        <a href="#">Edit Playlists</a>
+        <a href="#">Log out</a>
+    </div>
 </div>
 
 <div class="notes" id="playlists">

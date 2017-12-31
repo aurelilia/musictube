@@ -13,6 +13,7 @@ a
     text-decoration: none
     color: #66f
 
+
 // Navbar
 .nav ul
     list-style-type: none
@@ -43,7 +44,32 @@ a
 .controls p
     padding: 0px 5px
 
+// Navbar hamburger menu
 .hamburger-menu
     padding: 0px 50px
     flex: 1
     text-align: right
+    position: relative
+    display: inline-block
+
+.menu-dropdown
+    display: none
+    float: right
+    position: relative
+    background-color: $bg
+    min-width: 160px
+    box-shadow: 0px 5px 10px 3px rgba(153 , 153, 153, 0.4)
+    z-index: 100
+    margin-top: 75px
+
+.show 
+    display: block
+
+a 
+    color: black
+    padding: 12px 16px
+    text-decoration: none
+    display: block
+
+a:hover
+    background-color: #eee
