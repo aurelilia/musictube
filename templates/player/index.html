@@ -33,7 +33,15 @@
     </div>
 </div>
 
-<div class="notes" id="playlists">
+<div class="content" id="content">
+    <table width="90%">
+        {% for playlist in playlists %}
+        <tr class="playlist" onclick="startPlaylist('{{ playlist.pid }}')">
+            <td class="playlist-name">{{ playlist.name }}</td>
+            <td class="playlist-video-count">{{ playlist.count }} {% if playlist.count == 1%}video{% else %}videos{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 <script src="{% static 'js/index.js' %}"></script>

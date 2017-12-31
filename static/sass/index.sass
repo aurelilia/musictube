@@ -1,5 +1,6 @@
 // Variables
 $bg: #f8f8f8
+$tr: #f0f0f0
 $wtext: #fff
 $navbar: #3066A7
 
@@ -12,6 +13,11 @@ body
 a
     text-decoration: none
     color: #66f
+
+.content
+    display: flex
+    justify-content: center
+    margin-top: 120px
 
 
 // Navbar
@@ -73,3 +79,20 @@ a
 
 a:hover
     background-color: #eee
+
+
+// Playlist list
+tr
+    height: 40px
+
+tr:nth-child(odd)
+    background-color: $tr
+
+tr:hover
+    background-color: #ddd !important
+
+td
+    padding: 10px
+
+.playlist-name
+    width: 85%

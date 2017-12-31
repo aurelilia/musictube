@@ -9,6 +9,12 @@ a {
   color: #66f;
 }
 
+.content {
+  display: flex;
+  justify-content: center;
+  margin-top: 120px;
+}
+
 .nav ul {
   list-style-type: none;
   overflow: hidden;
@@ -74,5 +80,25 @@ a {
 
 a:hover {
   background-color: #eee;
+}
+
+tr {
+  height: 40px;
+}
+
+tr:nth-child(odd) {
+  background-color: #f0f0f0;
+}
+
+tr:hover {
+  background-color: #ddd !important;
+}
+
+td {
+  padding: 10px;
+}
+
+.playlist-name {
+  width: 85%;
 }
 /*# sourceMappingURL=index.css.map */
