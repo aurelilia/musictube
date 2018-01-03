@@ -1,0 +1,8 @@
+<table width="90%">
+    {% for video in videos %}
+    <tr onclick="startVideo('{{ video.title }}', '{{ video.direct_url }}')">
+        <td class="video-title">{{ video.title }}</td>
+        <td class="video.length">{{ video.length }}</td>
+    </tr>
+    {% endfor %}
+</table>

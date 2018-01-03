@@ -19,8 +19,7 @@
             <p id="next-button">»</p>
         </li>
         <li class="track">
-            <img alt="" src="{% static 'img/track-stub.png' %}" height="50px">
-            <p class="track-title">No track playing.</p>
+            <p class="track-title" id="track-title">No track playing.</p>
         </li>
         <li class="hamburger-menu">
             <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
@@ -36,7 +35,7 @@
 <div class="content" id="content">
     <table width="90%">
         {% for playlist in playlists %}
-        <tr class="playlist" onclick="startPlaylist('{{ playlist.pid }}')">
+        <tr onclick="viewPlaylist('{{ playlist.pid }}')">
             <td class="playlist-name">{{ playlist.name }}</td>
             <td class="playlist-video-count">{{ playlist.count }} {% if playlist.count == 1%}video{% else %}videos{% endif %}</td>
         </tr>
