@@ -39,13 +39,13 @@ window.onclick = function (e) {
 // View a playlist
 async function viewPlaylist(pid) {
     content.classList.toggle("fade");
-    sendXMLHttp(null, null, "/p/" + pid, "GET", function(){
-        if(this.readyState == 4 && this.status == 200) {
+    sendXMLHttp(null, null, "/p/" + pid, "GET", function () {
+        if (this.readyState == 4 && this.status == 200) {
             content_buffer = this.responseText;
         }
     });
     await new Promise(resolve => setTimeout(resolve, 700));
-    while (content_buffer  === null) {
+    while (content_buffer === null) {
         await new Promise(resolve => setTimeout(resolve, 20));
     }
     content.innerHTML = content_buffer;
@@ -56,11 +56,27 @@ async function viewPlaylist(pid) {
 // Start playing
 function startVideo(title, url) {
     document.getElementById("track-title").innerHTML = title;
-    var e = document.createElement("AUDIO");
+    document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
+    e = document.createElement("AUDIO");
     e.setAttribute("autoplay", "");
     e.setAttribute("src", url);
     document.body.appendChild(e);
 }
 
+// Play/pause
+function playPause() {
+    if (e !== null) {
+        var button = document.getElementById("play-button");
+        if (e.paused()) {
+            e.play();
+            button.innerHTML = '<i class="fa fa-pause"></i>';
+        } else {
+            e.pause();
+            button.innerHTML = '<i class="fa fa-play"></i>';
+        }
+    }
+}
+
 var content = document.getElementById("content");
 var content_buffer = null;
+var e = null;
