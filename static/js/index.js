@@ -3,8 +3,8 @@
 // "whenReady" is a function executed on state change.
 function sendXMLHttp(name, data, location, type, whenReady) {
     var form = new FormData();
-    form.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
     if (name !== null) {
+        form.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
         form.append(name, data);
     }
     var request = new XMLHttpRequest();
@@ -12,19 +12,6 @@ function sendXMLHttp(name, data, location, type, whenReady) {
     request.open(type, location);
     request.send(form);
 }
-
-// Change main page content. Fade it if 1st arg is true
-async function changeContent(fade, newContent) {
-    if (fade) {
-        content.classList.toggle("fade");
-        await new Promise(resolve => setTimeout(resolve, 700))
-        content.innerHTML = newContent;
-        content.classList.toggle("fade");
-    } else {
-        content.innerHTML = newContent;
-    }
-}
-
 
 // Navbar menu functionality
 function toggleMenu() {
@@ -36,91 +23,90 @@ window.onclick = function (e) {
     }
 }
 
-// View a playlist
-async function viewPlaylist(pid) {
-    content.classList.toggle("fade");
-    sendXMLHttp(null, null, "/p/" + pid, "GET", function () {
-        if (this.readyState == 4 && this.status == 200) {
-            content_buffer = this.responseText;
-        }
-    });
-    await new Promise(resolve => setTimeout(resolve, 700));
-    while (content_buffer === null) {
-        await new Promise(resolve => setTimeout(resolve, 20));
-    }
-    content.innerHTML = content_buffer;
-    content_buffer = null;
-    content.classList.toggle("fade");
-}
 
-// Start playing
-function startVideo(title, url) {
-    if (audio !== null) {
-        if (document.getElementById("track-title").innerHTML === title) {
-            audio.play();
-            document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
-            return;
-        }
-        document.body.removeChild(audio);
-    }
-    document.getElementById("track-title").innerHTML = title;
-    document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
-    audio = document.createElement("AUDIO");
-    audio.setAttribute("autoplay", "");
-    audio.setAttribute("src", url);
-    document.body.appendChild(audio);
-}
+// Get user's playlist data from the HTML the server provided
+var playlist_data = JSON.parse(document.getElementById("json").innerHTML);
+// Add playing element to the DOM, create an object for it
+var player = {
+    e: document.createElement("AUDIO"),
+    title: "No track playing."
+};
+player.e.setAttribute("autoplay", "");
+document.body.appendChild(player.e);
+player.e.pause();
 
-// Play/pause
-function playPause() {
-    if (audio !== null) {
-        var button = document.getElementById("play-button");
-        if (audio.paused) {
-            audio.play();
-            button.innerHTML = '<i class="fa fa-pause"></i>';
-        } else {
-            audio.pause();
-            button.innerHTML = '<i class="fa fa-play"></i>';
-        }
-    }
-}
 
-var content = document.getElementById("content");
-var content_buffer = null;
-var audio = null;
-
-var data = JSON.parse(get_data);
-
-var data = {
-    playlists: [{
-        name: name,
-        videos: [{
-            title: title,
-            url: url,
-            length: length
-        }]
-    }]
-}; // TODO: Get playlist + video info from server.
-
-Vue.component('list-item', {
-    props: ['name', 'context'],
+Vue.component('playlists', {
+    props: ['playlists', 'current_playlist_index'],
     template: `
-        <tr> 
-            <td class="name">{{ name }}</td>
-            <td class="context">{{ context }}</td>
-        </tr>
+        <table width="90%">
+            <tr v-for="playlist in playlists" :key="playlist.id"
+                v-on:click="$emit('update:index', playlists.indexOf(playlist))">
+                <td class="name">{{ playlist.name }}</td>
+                <td class="context">{{ playlist.videos.length }} titles</td>
+            </tr>
+        </table>
+    `,
+});
+
+Vue.component('playlist-videos', {
+    props: ['playlists', 'current_playlist_index'],
+    template: `
+        <table width="90%">
+            <tr v-for="video in playlists[current_playlist_index].videos" :key="video.id"
+                v-on:click="$emit('update:track', video)">
+                <td class="name">{{ video.title }}</td>
+                <td class="context">{{ video.length }}s</td>
+            </tr>
+        </table>
     `
 });
 
 var vm = new Vue({
-    el: '#content',
-    data: data,
-    template: `
-        <table width="90%">
-            <list-item v-for="playlist in playlists" 
-                       v-bind:name="playlist.name" 
-                       v-bind:context="playlist.videos.length() + 'titles'">
-            </list-item>
-        </table>
-    `
+    el: '#vue-app',
+    data: {
+        playlists: playlist_data,
+        player: player,
+        playing: !player.e.paused,
+        current_screen: "playlists",
+        current_playlist_index: 0,
+        current_video_index: 0
+    },
+
+    methods: {
+        onPlaylistClick(index) {
+            this.current_playlist_index = index;
+            this.current_screen = "playlist-videos";
+        },
+        updateCurrentTrack(video) {
+            sendXMLHttp(null, null, "/u/" + video.url, "GET", function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    vm.player.title = video.title;
+                    vm.current_video_index = vm.playlists[vm.current_playlist_index].videos.indexOf(video);
+                    vm.player.e.setAttribute("src", this.responseText);
+                    vm.player.e.play();
+                    vm.playing = !vm.player.e.paused;
+                }
+            });
+        },
+        onPlayPause(video) {
+            if (vm.player.e.paused && vm.player.e.src != "") {
+                vm.player.e.play();
+            } else if (!vm.player.e.paused) {
+                vm.player.e.pause();
+            }
+            vm.playing = !vm.player.e.paused;
+        },
+        onPrevTrack() {
+            player.e.pause();
+            vm.current_video_index -= 1;
+            vm.updateCurrentTrack(vm.playlists[vm.current_playlist_index].videos[vm.current_video_index])
+        },
+        onNextTrack() {
+            player.e.pause();
+            vm.current_video_index += 1;
+            vm.updateCurrentTrack(vm.playlists[vm.current_playlist_index].videos[vm.current_video_index])
+
+        }
+    }
 });
