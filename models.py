@@ -5,7 +5,7 @@ class Video(models.Model):
     """ A YouTube video. URL is a 'youtube.com/?watch=' URL. """
     title = models.CharField('Video title', max_length=2048)
     url = models.URLField('Video URL', max_length=255)
-    length = models.TimeField('Video length')
+    length = models.IntegerField('Video length')
 
     def __str__(self):
         return self.title

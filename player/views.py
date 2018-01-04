@@ -21,12 +21,14 @@ def home(request):
 
 def fetch(request):
     """ API for getting info, using JSON """
-    playlists = Playlist.objects.filter(user=request.user)
-    for playlist in playlists:
-        # Videos need to be turned into a dict before being seializable to JSON...
-        playlist.videos = playlist.videos.all().values()
+    playlists_query = Playlist.objects.filter(user=request.user)
+    playlists = list(playlists_query.all().values())
     
-    return HttpResponse(json.dumps(playlists), cls=DjangoJSONEncoder)
+    # QuerySets need to be turned into a dict before being seializable to JSON...
+    # Django doesn't allow many-to-many relationships to be reassinged, resulting in... this. 
+    for plist_query, plist_dict in zip(playlists_query, playlists):
+        plist_dict['videos'] = list(plist_query.videos.all().values())
+    return HttpResponse(json.dumps(playlists, cls=DjangoJSONEncoder))
 
 def directURL(request, url):
     """ Takes youtube URL, returns audio URL from googlevideo. """
