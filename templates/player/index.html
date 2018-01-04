@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <title>MusicTube</title>
 </head>
 
@@ -17,10 +18,10 @@
             </li>
             <li class="controls">
                 <!-- TODO: Proper icons, unicode ones are awful -->
-                <p id="prev-button">«</p>
-                <p id="play-button">▶</p>
-                <p id="stop-button">⏹</p>
-                <p id="next-button">»</p>
+                <p id="prev-button"><i class="fa fa-backward"></i></p>
+                <p id="play-button" onclick="playPause()"><i class="fa fa-play"></i></p>
+                <p id="stop-button"><i class="fa fa-stop"></i></p>
+                <p id="next-button"><i class="fa fa-forward"></i></p>
             </li>
             <li class="track">
                 <p class="track-title" id="track-title">No track playing.</p>

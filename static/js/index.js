@@ -51,8 +51,23 @@ async function viewPlaylist(pid) {
 // Start playing
 function startVideo(title, url) {
     document.getElementById("track-title").innerHTML = title;
-    var e = document.createElement("AUDIO");
+    document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
+    e = document.createElement("AUDIO");
     e.setAttribute("autoplay", "");
     e.setAttribute("src", url);
     document.body.appendChild(e);
 }
+
+// Play/pause
+function playPause() {
+    var button = document.getElementById("play-button");
+    if(e.paused()) {
+        e.play();
+        button.innerHTML = '<i class="fa fa-pause"></i>';
+    } else {
+        e.pause();
+        button.innerHTML = '<i class="fa fa-play"></i>';
+    }
+}
+
+var e;
