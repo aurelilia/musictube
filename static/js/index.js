@@ -55,6 +55,9 @@ async function viewPlaylist(pid) {
 
 // Start playing
 function startVideo(title, url) {
+    if (e !== null) {
+        document.body.removeChild(e);
+    }
     document.getElementById("track-title").innerHTML = title;
     document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
     e = document.createElement("AUDIO");
