@@ -1,47 +1,54 @@
 {% load static %}
-<!---->
-<link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/png" />
-<link rel="stylesheet" href="{% static 'css/index.css' %}">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-<title>MusicTube</title>
-<!---->
-<div class="nav">
-    <ul>
-        <li class="logo">
-            <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px">
-        </li>
-        <li class="controls">
-            <!-- TODO: Proper icons, unicode ones are awful -->
-            <p id="prev-button">«</p>
-            <p id="play-button">▶</p>
-            <p id="stop-button">⏹</p>
-            <p id="next-button">»</p>
-        </li>
-        <li class="track">
-            <p class="track-title" id="track-title">No track playing.</p>
-        </li>
-        <li class="hamburger-menu">
-            <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
-        </li>
-    </ul>
-    <div id="menu-dropdown" class="menu-dropdown">
-        <a href="#">My Playlists</a>
-        <a href="#">Edit Playlists</a>
-        <a href="#">Log out</a>
+<html>
+
+<head>
+    <link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/png" />
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <title>MusicTube</title>
+</head>
+
+<body>
+    <div class="nav">
+        <ul>
+            <li class="logo">
+                <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px">
+            </li>
+            <li class="controls">
+                <!-- TODO: Proper icons, unicode ones are awful -->
+                <p id="prev-button">«</p>
+                <p id="play-button">▶</p>
+                <p id="stop-button">⏹</p>
+                <p id="next-button">»</p>
+            </li>
+            <li class="track">
+                <p class="track-title" id="track-title">No track playing.</p>
+            </li>
+            <li class="hamburger-menu">
+                <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
+            </li>
+        </ul>
+        <div id="menu-dropdown" class="menu-dropdown">
+            <a href="#">My Playlists</a>
+            <a href="#">Edit Playlists</a>
+            <a href="#">Log out</a>
+        </div>
     </div>
-</div>
 
-<div class="content" id="content">
-    <table width="90%">
-        {% for playlist in playlists %}
-        <tr onclick="viewPlaylist('{{ playlist.pid }}')">
-            <td class="playlist-name">{{ playlist.name }}</td>
-            <td class="playlist-video-count">{{ playlist.count }} {% if playlist.count == 1%}video{% else %}videos{% endif %}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+    <div class="content" id="content">
+        <table width="90%">
+            {% for playlist in playlists %}
+            <tr onclick="viewPlaylist('{{ playlist.pid }}')">
+                <td class="playlist-name">{{ playlist.name }}</td>
+                <td class="playlist-video-count">{{ playlist.count }} {% if playlist.count == 1%}video{% else %}videos{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-<script src="{% static 'js/index.js' %}"></script>
-{% csrf_token %}
+    <script src="{% static 'js/index.js' %}"></script>
+    {% csrf_token %}
+</body>
+
+</html>
