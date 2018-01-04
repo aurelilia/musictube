@@ -13,7 +13,6 @@ class Video(models.Model):
 
 class Playlist(models.Model):
     """ A playlist. Contains info about itself, its videos and owner. """
-    pid = models.CharField('Playlist ID', max_length=15)
     name = models.CharField('Playlist name', max_length=2048)
     videos = models.ManyToManyField(Video)
     user = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)
