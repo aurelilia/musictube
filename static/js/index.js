@@ -67,7 +67,7 @@ function startVideo(title, url) {
 function playPause() {
     if (e !== null) {
         var button = document.getElementById("play-button");
-        if (e.paused()) {
+        if (e.paused) {
             e.play();
             button.innerHTML = '<i class="fa fa-pause"></i>';
         } else {
