@@ -55,26 +55,31 @@ async function viewPlaylist(pid) {
 
 // Start playing
 function startVideo(title, url) {
-    if (e !== null) {
-        document.body.removeChild(e);
+    if (audio !== null) {
+        if (document.getElementById("track-title").innerHTML === title) {
+            audio.play();
+            document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
+            return;
+        }
+        document.body.removeChild(audio);
     }
     document.getElementById("track-title").innerHTML = title;
     document.getElementById("play-button").innerHTML = '<i class="fa fa-pause"></i>';
-    e = document.createElement("AUDIO");
-    e.setAttribute("autoplay", "");
-    e.setAttribute("src", url);
-    document.body.appendChild(e);
+    audio = document.createElement("AUDIO");
+    audio.setAttribute("autoplay", "");
+    audio.setAttribute("src", url);
+    document.body.appendChild(audio);
 }
 
 // Play/pause
 function playPause() {
-    if (e !== null) {
+    if (audio !== null) {
         var button = document.getElementById("play-button");
-        if (e.paused) {
-            e.play();
+        if (audio.paused) {
+            audio.play();
             button.innerHTML = '<i class="fa fa-pause"></i>';
         } else {
-            e.pause();
+            audio.pause();
             button.innerHTML = '<i class="fa fa-play"></i>';
         }
     }
@@ -82,4 +87,40 @@ function playPause() {
 
 var content = document.getElementById("content");
 var content_buffer = null;
-var e = null;
+var audio = null;
+
+var data = JSON.parse(get_data);
+
+var data = {
+    playlists: [{
+        name: name,
+        videos: [{
+            title: title,
+            url: url,
+            length: length
+        }]
+    }]
+}; // TODO: Get playlist + video info from server.
+
+Vue.component('list-item', {
+    props: ['name', 'context'],
+    template: `
+        <tr> 
+            <td class="name">{{ name }}</td>
+            <td class="context">{{ context }}</td>
+        </tr>
+    `
+});
+
+var vm = new Vue({
+    el: '#content',
+    data: data,
+    template: `
+        <table width="90%">
+            <list-item v-for="playlist in playlists" 
+                       v-bind:name="playlist.name" 
+                       v-bind:context="playlist.videos.length() + 'titles'">
+            </list-item>
+        </table>
+    `
+});
