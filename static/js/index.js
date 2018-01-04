@@ -15,14 +15,13 @@ function sendXMLHttp(name, data, location, type, whenReady) {
 
 // Change main page content. Fade it if 1st arg is true
 async function changeContent(fade, newContent) {
-    var content = document.getElementById("content");
     if (fade) {
         content.classList.toggle("fade");
         await new Promise(resolve => setTimeout(resolve, 700))
         content.innerHTML = newContent;
         content.classList.toggle("fade");
     } else {
-    content.innerHTML = this.responseText;
+        content.innerHTML = newContent;
     }
 }
 
@@ -39,13 +38,19 @@ window.onclick = function (e) {
 
 // View a playlist
 async function viewPlaylist(pid) {
-    sendXMLHttp(null, null, "/p/" + pid, "GET",
-        function () {
-            if (this.readyState == 4 && this.status == 200) {
-                changeContent(true, this.responseText);
-            }
+    content.classList.toggle("fade");
+    sendXMLHttp(null, null, "/p/" + pid, "GET", function(){
+        if(this.readyState == 4 && this.status == 200) {
+            content_buffer = this.responseText;
         }
-    )
+    });
+    await new Promise(resolve => setTimeout(resolve, 700));
+    while (content_buffer  === null) {
+        await new Promise(resolve => setTimeout(resolve, 20));
+    }
+    content.innerHTML = content_buffer;
+    content_buffer = null;
+    content.classList.toggle("fade");
 }
 
 // Start playing
@@ -56,3 +61,6 @@ function startVideo(title, url) {
     e.setAttribute("src", url);
     document.body.appendChild(e);
 }
+
+var content = document.getElementById("content");
+var content_buffer = null;
