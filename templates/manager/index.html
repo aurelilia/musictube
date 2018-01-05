@@ -1,0 +1,52 @@
+{% load static %}
+<html>
+
+<head>
+    <link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/png" />
+    <link rel="stylesheet" href="{% static 'css/manager.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <title>MusicTube</title>
+</head>
+
+<body>
+    <div id="vue-app">
+        <div class="nav">
+            <ul>
+                <li class="logo">
+                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
+                </li>
+                <li class="add" v-on:click="onAdd">
+                    <i class="fa fa-plus"></i>
+                </li>
+                <li class="right-aligned">
+                    <span class="hamburger-menu">
+                        <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
+                    </span>
+                </li>
+            </ul>
+            <div id="menu-dropdown" class="menu-dropdown">
+                <a href="/" >My Playlists</a>
+                <a v-on:click="cur_screen = 'playlists'">Edit Playlists</a>
+                <a href="/logout/">Log out</a>
+            </div>
+        </div>
+        <div class="content">
+            <transition name="component-fade" mode="out-in">
+                <component :is=cur_screen :view="cur_playlist" @update:view="onPlaylistClick" 
+                    v-bind:playlists="playlists" v-bind:cur_playlist="cur_playlist">
+                </component>
+            </transition>
+        </div>
+        <audio id="player" autoplay></audio>
+    </div>
+
+    <p id="json" style="visibility:hidden"> {{ json }}</p>
+
+    <script src="{% static 'js/vue.js' %}"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+    <script src="{% static 'js/manager.js' %}"></script> {% csrf_token %}
+</body>
+
+</html>
