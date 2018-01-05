@@ -16,7 +16,7 @@ window.onclick = function (e) {
     if (!e.target.matches(".menu-button")) {
         document.getElementById("menu-dropdown").classList.remove('show');
     }
-}
+};
 
 // Volume slider
 function updateVolume(num) {
@@ -30,7 +30,7 @@ function updatePosition(pos) {
     pos = Math.floor(pos);
     if (pos !== vm.player.position) {
         vm.player.position = pos;
-        vm.player.e.currentTime = pos; 
+        vm.player.e.currentTime = pos;
     }
 }
 
@@ -107,7 +107,6 @@ var vm = new Vue({
         },
         cur_video_index: function (index, oldindex) {
             if (index >= 0 && index < vm.cur_playlist.videos.length) {
-
                 if (!(vm.cur_playlist.videos[index] === vm.cur_video)) {
                     vm.player.e.pause();
                     vm.updateCurrentTrack(vm.cur_playlist.videos[index]);

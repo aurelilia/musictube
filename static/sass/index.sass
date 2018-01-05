@@ -30,7 +30,6 @@ a
     overflow: hidden
     margin: 0
     padding: 0
-    padding-bottom: 0px
     width: 100%
     height: 75px
     top: 0
@@ -57,9 +56,10 @@ a
 // Track position info+slider
 .track
     flex: 1
+
 .track-title, .position-text, 
     margin: 0
-    padding: 0 0
+    padding: 0
 
 .position-slider
     width: 150%
@@ -90,9 +90,11 @@ a
     background-color: $navbar
     color: $wtext
     border: none
+
 .volume-slider
     padding-top: 5px
     width: 50%
+
 .volume-box
     width: 45px
     border-bottom: 1px solid $wtext
@@ -144,11 +146,10 @@ tr .name
 .component-fade-enter-active, .component-fade-leave-active 
   transition: opacity .3s ease
 
-.component-fade-enter, .component-fade-leave-to
-  opacity: 0
-
 .position-fade-enter-active, .position-fade-leave-active 
   transition: opacity .5s
 
-.position-fade-enter, .position-fade-leave-to
+.component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to
   opacity: 0
+
+
