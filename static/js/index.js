@@ -34,10 +34,6 @@ function updatePosition(pos) {
     }
 }
 
-// Formats an int representing seconds into a MM:SS string
-function formatSeconds(secs) {
-    return secs / 60 + ":" + secs % 60;
-}
 
 /* VUE */
 // Get user's playlist data from the HTML the server provided
