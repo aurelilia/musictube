@@ -53,9 +53,32 @@ a {
   padding: 0px 5px;
 }
 
+.track {
+  flex: 1;
+}
+
+.track-title, .position-text {
+  margin: 0;
+  padding: 0 0;
+}
+
+.position-slider {
+  width: 150%;
+  background-color: #3066A7;
+  color: #fff;
+  border: none;
+  padding-top: 5px;
+}
+
+.position {
+  display: flex;
+  flex-flow: row;
+  white-space: nowrap;
+}
+
 .right-aligned {
   padding: 0px 50px;
-  flex: 1;
+  flex: 0.75;
   text-align: right;
   display: flex;
   justify-content: flex-end;
@@ -63,6 +86,7 @@ a {
 
 .volume {
   padding: 0 20px;
+  white-space: nowrap;
 }
 
 .volume-slider, .volume-box {
@@ -73,6 +97,7 @@ a {
 
 .volume-slider {
   padding-top: 5px;
+  width: 50%;
 }
 
 .volume-box {

@@ -33,6 +33,10 @@
                 </li>
                 <li class="track">
                     <p class="track-title" id="track-title">{{ player.title }}</p>
+                    <span class="position" v-if="cur_video !== null">
+                        <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
+                        <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100" onchange="updatePosition(this.value)" :value="player.position" onchange="updatePosition(this.value)">
+                    </span>
                 </li>
                 <li class="right-aligned">
                     <span class="volume">

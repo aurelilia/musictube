@@ -30,16 +30,35 @@ function updateVolume(num) {
     }
 }
 
+// Position slider
+function updatePosition(pos) {
+    pos = Math.floor(pos);
+    if (pos !== vm.player.position) {
+        vm.player.position = pos;
+        vm.player.e.currentTime = pos; 
+    }
+}
+
+// Formats an int representing seconds into a MM:SS string
+function formatSeconds(secs) {
+    return secs / 60 + ":" + secs % 60;
+}
+
 /* VUE */
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById("json").innerHTML);
 // Add player object
 var player = {
     e: document.getElementById("player"),
-    title: "No track playing."
+    title: "No track playing.",
+    position: 0
 };
 player.e.pause();
+player.e.addEventListener('timeupdate', function () {
+    vm.player.position = Math.floor(player.e.currentTime);
+});
 player.e.addEventListener('ended', function () {
+    updatePosition(0);
     vm.onNextTrack();
 });
 
@@ -48,11 +67,11 @@ Vue.component('playlists', {
     props: ['playlists'],
     template: `
     <table width="90%">
-    <tr v-for="playlist in playlists" :key="playlist.id"
-    v-on:click="$emit('update:view', playlist)">
-    <td class="name">{{ playlist.name }}</td>
-    <td class="context">{{ playlist.videos.length }} titles</td>
-    </tr>
+        <tr v-for="playlist in playlists" :key="playlist.id"
+            v-on:click="$emit('update:view', playlist)">
+            <td class="name">{{ playlist.name }}</td>
+            <td class="context">{{ playlist.videos.length }} titles</td>
+        </tr>
     </table>
     `,
 });
@@ -61,13 +80,18 @@ Vue.component('playlist-videos', {
     props: ['playlists', 'cur_playlist_view'],
     template: `
     <table width="90%">
-    <tr v-for="video in cur_playlist_view.videos" :key="video.id"
-    v-on:click="$emit('update:track', [cur_playlist_view, video])">
-    <td class="name">{{ video.title }}</td>
-    <td class="context">{{ video.length }}s</td>
-    </tr>
+        <tr v-for="video in cur_playlist_view.videos" :key="video.id"
+            v-on:click="$emit('update:track', [cur_playlist_view, video])">
+            <td class="name">{{ video.title }}</td>
+            <td class="context">{{ formatSeconds(video.length) }}</td>
+        </tr>
     </table>
-    `
+    `,
+    methods: {
+        formatSeconds(secs) {
+            return new Date(1000 * secs).toISOString().substr(14, 5);
+        },
+    }
 });
 
 
@@ -103,6 +127,9 @@ var vm = new Vue({
         }
     },
     methods: {
+        formatSeconds(secs) {
+            return new Date(1000 * secs).toISOString().substr(14, 5);
+        },
         onPlaylistClick(view) {
             this.cur_playlist_view = view;
             this.cur_screen = "playlist-videos";
@@ -123,7 +150,7 @@ var vm = new Vue({
             vm.cur_playlist = info[0];
             vm.updateCurrentTrack(info[1]);
         },
-        onPlayPause(video) {
+        onPlayPause() {
             if (!vm.playing && vm.player.e.src !== "") {
                 vm.player.e.play();
             } else if (vm.playing) {

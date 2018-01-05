@@ -54,11 +54,29 @@ a
 .controls *
     padding: 0px 5px
 
+// Track position info+slider
+.track
+    flex: 1
+.track-title, .position-text, 
+    margin: 0
+    padding: 0 0
+
+.position-slider
+    width: 150%
+    background-color: $navbar
+    color: $wtext
+    border: none
+    padding-top: 5px
+
+.position
+    display: flex
+    flex-flow: row
+    white-space: nowrap
 
 // Right-aligned part of navbar
 .right-aligned
     padding: 0px 50px
-    flex: 1
+    flex: 0.75
     text-align: right
     display: flex
     justify-content: flex-end
@@ -66,6 +84,7 @@ a
 // Volume control
 .volume
     padding: 0 20px
+    white-space: nowrap
 
 .volume-slider, .volume-box
     background-color: $navbar
@@ -73,6 +92,7 @@ a
     border: none
 .volume-slider
     padding-top: 5px
+    width: 50%
 .volume-box
     width: 45px
     border-bottom: 1px solid $wtext
