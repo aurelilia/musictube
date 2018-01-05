@@ -33,14 +33,18 @@
                 </li>
                 <li class="track">
                     <p class="track-title" id="track-title">{{ player.title }}</p>
-                    <span class="position" v-if="cur_video !== null">
-                        <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
-                        <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100" onchange="updatePosition(this.value)" :value="player.position" onchange="updatePosition(this.value)">
-                    </span>
+                    <transition name="position-fade">
+                        <span class="position" v-if="cur_video !== null">
+                            <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
+                            <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100"
+                                onchange="updatePosition(this.value)" :value="player.position" onchange="updatePosition(this.value)">
+                        </span>
+                    </transition>
                 </li>
                 <li class="right-aligned">
                     <span class="volume">
-                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" onchange="updateVolume(this.value)" :value="volume">
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" onchange="updateVolume(this.value)"
+                            :value="volume">
                         <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
                     </span>
                     {% endverbatim %}
@@ -50,15 +54,17 @@
                 </li>
             </ul>
             <div id="menu-dropdown" class="menu-dropdown">
-                <a href="#">My Playlists</a>
-                <a href="#">Edit Playlists</a>
-                <a href="#">Log out</a>
+                <a v-on:click="cur_screen = 'playlists'">My Playlists</a>
+                <a href="/e/">Edit Playlists</a>
+                <a href="/logout/">Log out</a>
             </div>
         </div>
         <div class="content">
-            <component :is=cur_screen :view="cur_playlist_view" @update:view="onPlaylistClick" :track="playing" @update:track="updateCurrentPlaylistAndTrack"
-                v-bind:playlists="playlists" v-bind:cur_playlist_view="cur_playlist_view">
-            </component>
+            <transition name="component-fade" mode="out-in">
+                <component :is=cur_screen :view="cur_playlist_view" @update:view="onPlaylistClick" :track="playing" @update:track="updateCurrentPlaylistAndTrack"
+                    v-bind:playlists="playlists" v-bind:cur_playlist_view="cur_playlist_view">
+                </component>
+            </transition>
         </div>
         <audio id="player" autoplay></audio>
     </div>

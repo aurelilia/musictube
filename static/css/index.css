@@ -152,4 +152,20 @@ td {
 tr .name {
   width: 85%;
 }
+
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+
+.component-fade-enter, .component-fade-leave-to {
+  opacity: 0;
+}
+
+.position-fade-enter-active, .position-fade-leave-active {
+  transition: opacity .5s;
+}
+
+.position-fade-enter, .position-fade-leave-to {
+  opacity: 0;
+}
 /*# sourceMappingURL=index.css.map */
