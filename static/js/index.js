@@ -1,15 +1,10 @@
-// Interact with server. 
-// "type" can be either POST or GET
+// Interact with server via GET request. 
 // "whenReady" is a function executed on state change.
-function sendXMLHttp(name, data, location, type, whenReady) {
+function sendGET(location, whenReady) {
     var form = new FormData();
-    if (name !== null) {
-        form.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
-        form.append(name, data);
-    }
     var request = new XMLHttpRequest();
     request.onreadystatechange = whenReady;
-    request.open(type, location);
+    request.open("GET", location);
     request.send(form);
 }
 
@@ -137,7 +132,7 @@ var vm = new Vue({
         updateCurrentTrack(video) {
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
-            sendXMLHttp(null, null, "/u/" + video.url, "GET", function () {
+            sendGET("/u/" + video.url, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
                     vm.player.e.setAttribute("src", this.responseText);
