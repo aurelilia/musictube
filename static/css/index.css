@@ -57,8 +57,8 @@ a {
   padding: 0px 50px;
   flex: 1;
   text-align: right;
-  position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .volume {
@@ -69,6 +69,10 @@ a {
   background-color: #3066A7;
   color: #fff;
   border: none;
+}
+
+.volume-slider {
+  padding-top: 5px;
 }
 
 .volume-box {
