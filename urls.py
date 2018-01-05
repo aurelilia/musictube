@@ -15,9 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('logout/', auth_views.logout, {'template_name': 'registration/logout.html'}, name='logout'),
+    path('accounts/profile/', RedirectView.as_view(url='/', permanent=True)),
+    path('e/', include('musictube.manager.urls')),
     path('', include('musictube.player.urls'))
 ]
