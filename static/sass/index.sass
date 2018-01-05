@@ -54,14 +54,30 @@ a
 .controls *
     padding: 0px 5px
 
-// Navbar hamburger menu
-.hamburger-menu
+
+// Right-aligned part of navbar
+.right-aligned
     padding: 0px 50px
     flex: 1
     text-align: right
     position: relative
     display: inline-block
 
+// Volume control
+.volume
+    padding: 0 20px
+
+.volume-slider, .volume-box
+    background-color: $navbar
+    color: $wtext
+    border: none
+
+.volume-box
+    width: 45px
+    border-bottom: 1px solid $wtext
+    margin-right: 20px
+
+// Navbar hamburger menu
 .menu-dropdown
     display: none
     float: right

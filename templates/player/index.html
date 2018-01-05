@@ -15,7 +15,7 @@
         <div class="nav">
             <ul>
                 <li class="logo">
-                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px">
+                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
                 </li>
                 {% verbatim %}
                 <li class="controls">
@@ -34,9 +34,15 @@
                 <li class="track">
                     <p class="track-title" id="track-title">{{ player.title }}</p>
                 </li>
-                {% endverbatim %}
-                <li class="hamburger-menu">
-                    <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
+                <li class="right-aligned">
+                    <span class="volume">
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" onchange="updateVolume(this.value)" :value="volume">
+                        <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
+                    </span>
+                    {% endverbatim %}
+                    <span class="hamburger-menu">
+                        <img class="menu-button" alt="MENU" src="{% static 'img/hamburger.png' %}" height="30px" onclick="toggleMenu()">
+                    </span>
                 </li>
             </ul>
             <div id="menu-dropdown" class="menu-dropdown">
@@ -46,13 +52,11 @@
             </div>
         </div>
         <div class="content">
-            <component :is=current_screen 
-                       :index="current_playlist_index" @update:index="onPlaylistClick" 
-                       :track="playing" @update:track="updateCurrentTrack"
-                       v-bind:playlists="playlists" 
-                       v-bind:current_playlist_index="current_playlist_index">
+            <component :is=cur_screen :view="cur_playlist_view" @update:view="onPlaylistClick" :track="playing" @update:track="updateCurrentPlaylistAndTrack"
+                v-bind:playlists="playlists" v-bind:cur_playlist_view="cur_playlist_view">
             </component>
         </div>
+        <audio id="player" autoplay></audio>
     </div>
 
     <p id="json" style="visibility:hidden"> {{ json }}</p>

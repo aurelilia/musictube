@@ -53,12 +53,28 @@ a {
   padding: 0px 5px;
 }
 
-.hamburger-menu {
+.right-aligned {
   padding: 0px 50px;
   flex: 1;
   text-align: right;
   position: relative;
   display: inline-block;
+}
+
+.volume {
+  padding: 0 20px;
+}
+
+.volume-slider, .volume-box {
+  background-color: #3066A7;
+  color: #fff;
+  border: none;
+}
+
+.volume-box {
+  width: 45px;
+  border-bottom: 1px solid #fff;
+  margin-right: 20px;
 }
 
 .menu-dropdown {
