@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth import views as auth_views
 from musictube.player.views import fetch
-# Create your views here.
+
 
 def home(request):
     """ Returns the main page. """
@@ -8,4 +9,3 @@ def home(request):
         context = {'json': fetch(request)}
         return render(request, 'manager/index.html', context=context)
     return auth_views.login(request)
-

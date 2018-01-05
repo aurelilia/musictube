@@ -1,7 +1,7 @@
-import pafy
 import json
+import pafy
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest, HttpResponseForbidden, HttpResponse
+from django.http import HttpResponse
 from django.contrib.auth import views as auth_views
 from django.core.serializers.json import DjangoJSONEncoder
 from musictube.models import Playlist
@@ -16,7 +16,7 @@ def home(request):
 
 
 def fetch(request):
-    """ API for getting info, using JSON 
+    """ API for getting info, using JSON
         [{
             name: name,
             videos: [{
