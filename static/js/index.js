@@ -39,7 +39,7 @@ var player = {
     title: "No track playing."
 };
 player.e.pause();
-player.e.addEventListener('ended',  function () {
+player.e.addEventListener('ended', function () {
     vm.onNextTrack();
 });
 
@@ -132,11 +132,14 @@ var vm = new Vue({
             vm.playing = !vm.player.e.paused;
         },
         onPrevTrack() {
-            vm.cur_video_index -= 1;
+            if (vm.playing) {
+                vm.cur_video_index -= 1;
+            }
         },
         onNextTrack() {
-            vm.cur_video_index += 1;
-
+            if (vm.playing) {
+                vm.cur_video_index += 1;
+            }
         }
     }
 });
