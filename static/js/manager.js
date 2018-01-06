@@ -29,22 +29,6 @@ window.onclick = function (e) {
     }
 };
 
-// Volume slider
-function updateVolume(num) {
-    if (num !== vm.volume) {
-        vm.volume = num;
-    }
-}
-
-// Position slider
-function updatePosition(pos) {
-    pos = Math.floor(pos);
-    if (pos !== vm.player.position) {
-        vm.player.position = pos;
-        vm.player.e.currentTime = pos;
-    }
-}
-
 
 /* VUE */
 // Get user's playlist data from the HTML the server provided
@@ -58,19 +42,27 @@ Vue.component('playlists', {
             v-on:click="$emit('update:view', playlist)">
             <td class="name">{{ playlist.name }}</td>
             <td class="context">{{ playlist.videos.length }} titles</td>
+            <td class="delete"><i class="fa fa-trash-o" v-on:click="onDelete(playlist)"></i></td>
         </tr>
     </table>
     `,
+    methods: {
+        onDelete(obj) {
+            sendPOST("/e/dp/", obj.name);
+            vm.playlists.pop(obj);
+            vm.cur_screen = "playlists";
+        }
+    }
 });
 
 Vue.component('playlist-videos', {
     props: ['playlists', 'cur_playlist'],
     template: `
     <table width="90%">
-        <tr v-for="video in cur_playlist.videos" :key="video.id"
-            v-on:click="$emit('update:track', [cur_playlist, video])">
+        <tr v-for="video in cur_playlist.videos" :key="video.id">
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
+            <td class="delete"><i class="fa fa-trash-o" v-on:click="onDelete(video)"></i></td>
         </tr>
     </table>
     `,
@@ -78,7 +70,12 @@ Vue.component('playlist-videos', {
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         },
+        onDelete(obj) {
+            sendPOST("/e/dv/", JSON.stringify([vm.cur_playlist.name, obj.title]));
+            vm.cur_playlist.videos.pop(obj);
+        }
     }
+
 });
 
 
@@ -113,15 +110,25 @@ var vm = new Vue({
                         url: prompt("Enter the URL:"),
                         plistname: vm.cur_playlist.name
                     };
-                    sendPOST("/e/nv/", JSON.stringify(new_video), function() {
+                    sendPOST("/e/nv/", JSON.stringify(new_video), function () {
                         if (this.readyState == 4 && this.status == 200) {
                             new_video['title'] = this.responseText;
                         }
                     });
                     break;
             }
+        },
+        onDelete(obj) {
+            switch (vm.cur_screen) {
+                case "playlists":
+                    sendPOST("/e/dp", obj.name);
+                    vm.playlists.pop(obj);
+                    break;
+                case "playlist-videos":
+                    sendPOST("/e/dv", JSON.stringify([cur_playlist.name, obj.title]));
+                    vm.cur_playlist.videos.pop(obj);
+                    break;
+            }
         }
     }
 });
-
-updateVolume(25);

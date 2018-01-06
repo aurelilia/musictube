@@ -1,6 +1,4 @@
 import json
-import random
-import string
 import pafy
 from django.shortcuts import render
 from django.contrib.auth import views as auth_views
@@ -35,6 +33,24 @@ def addVideo(request):
         video.save()
         playlist = Playlist.objects.filter(user=request.user, name=content['plistname'])[0]
         playlist.videos.add(video)
+        playlist.save()
+        return HttpResponse("true")
+    return HttpResponse("false")
+
+
+def deletePlaylist(request):
+    if request.user.is_authenticated:
+        Playlist.objects.filter(user=request.user, name=request.POST['content']).delete()
+        return HttpResponse("true")
+    return HttpResponse("false")
+
+
+def deleteVideo(request):
+    if request.user.is_authenticated:
+        content = json.loads(request.POST['content'])
+        playlist = Playlist.objects.filter(user=request.user, name=content[0])[0]
+        video = Video.objects.filter(title=content[1])[0]
+        playlist.videos.remove(video)
         playlist.save()
         return HttpResponse("true")
     return HttpResponse("false")

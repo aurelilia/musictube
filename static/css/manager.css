@@ -100,6 +100,12 @@ tr .name {
   width: 85%;
 }
 
+tr .delete {
+  width: 3%;
+  text-align: center;
+  font-size: 1.25em;
+}
+
 .component-fade-enter-active, .component-fade-leave-active {
   transition: opacity .3s ease;
 }

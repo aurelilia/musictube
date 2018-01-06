@@ -7,4 +7,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('np/', views.addPlaylist, name='addPlaylist'),
     path('nv/', views.addVideo, name='addVideo'),
+    path('dp/', views.deletePlaylist, name='deletePlaylist'),
+    path('dv/', views.deleteVideo, name='deleteVideo'),
+
 ]
