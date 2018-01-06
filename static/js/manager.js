@@ -38,19 +38,19 @@ Vue.component('playlists', {
     props: ['playlists'],
     template: `
     <table width="90%">
-        <tr v-for="playlist in playlists" :key="playlist.id"
-            v-on:click="$emit('update:view', playlist)">
-            <td class="name">{{ playlist.name }}</td>
-            <td class="context">{{ playlist.videos.length }} titles</td>
+        <tr v-for="playlist in playlists" :key="playlist.id">
+            <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
+            <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} titles</td>
             <td class="delete"><i class="fa fa-trash-o" v-on:click="onDelete(playlist)"></i></td>
         </tr>
     </table>
     `,
     methods: {
         onDelete(obj) {
-            sendPOST("/e/dp/", obj.name);
-            vm.playlists.pop(obj);
-            vm.cur_screen = "playlists";
+            if (confirm("Are you sure you want to delete the playlist?")) {
+                sendPOST("/e/dp/", obj.name);
+                vm.playlists.splice(vm.playlists.indexOf(obj), 1);
+            }
         }
     }
 });
@@ -71,8 +71,10 @@ Vue.component('playlist-videos', {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         },
         onDelete(obj) {
-            sendPOST("/e/dv/", JSON.stringify([vm.cur_playlist.name, obj.title]));
-            vm.cur_playlist.videos.pop(obj);
+            if (confirm("Are you sure you want to remove the video?")) {
+                sendPOST("/e/dv/", JSON.stringify([vm.cur_playlist.name, obj.title]));
+                vm.cur_playlist.videos.splice(vm.cur_playlist.videos.indexOf(obj), 1);
+            }
         }
     }
 
@@ -85,6 +87,7 @@ var vm = new Vue({
         playlists: playlist_data,
         cur_screen: "playlists",
         cur_playlist: null,
+        add: false,
     },
     methods: {
         formatSeconds(secs) {
@@ -95,10 +98,17 @@ var vm = new Vue({
             this.cur_screen = "playlist-videos";
         },
         onAdd() {
+            name = document.getElementById('add-input').value;
             switch (vm.cur_screen) {
                 case "playlists":
+                    for (var i = 0, len = vm.playlists.length; i < len; i++) {
+                        if (name === vm.playlists[i].name) {
+                            alert("You already have a playlist with that name! Please choose another one.");
+                            return;
+                        }
+                    }
                     new_playlist = {
-                        name: prompt("Give it a name:"),
+                        name: name,
                         private: false,
                         videos: []
                     };
@@ -106,29 +116,23 @@ var vm = new Vue({
                     sendPOST("/e/np/", JSON.stringify(new_playlist));
                     break;
                 case "playlist-videos":
+                    if (!name.includes("youtube.com/watch?v=")) {
+                        alert("Not a valid URL! Please try again.");
+                        return;
+                    }
                     new_video = {
-                        url: prompt("Enter the URL:"),
+                        url: name,
                         plistname: vm.cur_playlist.name
                     };
                     sendPOST("/e/nv/", JSON.stringify(new_video), function () {
                         if (this.readyState == 4 && this.status == 200) {
-                            new_video['title'] = this.responseText;
+                            vm.cur_playlist.videos.push(JSON.parse(this.responseText));
                         }
                     });
                     break;
             }
+            vm.add = false;
+            document.getElementById('add-input').value = "";
         },
-        onDelete(obj) {
-            switch (vm.cur_screen) {
-                case "playlists":
-                    sendPOST("/e/dp", obj.name);
-                    vm.playlists.pop(obj);
-                    break;
-                case "playlist-videos":
-                    sendPOST("/e/dv", JSON.stringify([cur_playlist.name, obj.title]));
-                    vm.cur_playlist.videos.pop(obj);
-                    break;
-            }
-        }
     }
 });

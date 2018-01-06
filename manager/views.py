@@ -3,6 +3,8 @@ import pafy
 from django.shortcuts import render
 from django.contrib.auth import views as auth_views
 from django.http import HttpResponse
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
 from musictube.player.views import fetch
 from musictube.models import Playlist, Video
 
@@ -34,7 +36,7 @@ def addVideo(request):
         playlist = Playlist.objects.filter(user=request.user, name=content['plistname'])[0]
         playlist.videos.add(video)
         playlist.save()
-        return HttpResponse("true")
+        return HttpResponse(json.dumps(model_to_dict(video), cls=DjangoJSONEncoder))
     return HttpResponse("false")
 
 

@@ -42,7 +42,25 @@ a {
 }
 
 .add {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.add-icon {
   font-size: 2.4em;
+}
+
+input {
+  border: none;
+  border-bottom: 2px solid #fff;
+  background-color: #3066A7;
+  color: #fff;
+  margin: 15px;
+  margin-bottom: 0;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
 }
 
 .right-aligned {

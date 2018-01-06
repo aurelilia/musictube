@@ -17,8 +17,13 @@
                 <li class="logo">
                     <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
                 </li>
-                <li class="add" v-on:click="onAdd">
-                    <i class="fa fa-plus"></i>
+                <li class="add">
+                    <p class="add-icon">
+                        <i class="fa fa-plus" v-on:click="add = !add"></i>
+                    </p>
+                    <form v-on:submit.prevent="onAdd()">
+                        <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL...">
+                    </form>
                 </li>
                 <li class="right-aligned">
                     <span class="hamburger-menu">
@@ -27,15 +32,14 @@
                 </li>
             </ul>
             <div id="menu-dropdown" class="menu-dropdown">
-                <a href="/" >My Playlists</a>
+                <a href="/">My Playlists</a>
                 <a v-on:click="cur_screen = 'playlists'">Edit Playlists</a>
                 <a href="/logout/">Log out</a>
             </div>
         </div>
         <div class="content">
             <transition name="component-fade" mode="out-in">
-                <component :is=cur_screen :view="cur_playlist" @update:view="onPlaylistClick" 
-                    v-bind:playlists="playlists" v-bind:cur_playlist="cur_playlist">
+                <component :is=cur_screen :view="cur_playlist" @update:view="onPlaylistClick" v-bind:playlists="playlists" v-bind:cur_playlist="cur_playlist">
                 </component>
             </transition>
         </div>
