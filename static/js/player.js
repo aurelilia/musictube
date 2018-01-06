@@ -40,6 +40,7 @@ function updatePosition(pos) {
 /* VUE */
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById("json").innerHTML);
+
 // Add player object
 var player = {
     e: document.getElementById("player"),
@@ -64,7 +65,7 @@ Vue.component('playlists', {
         <tr v-for="playlist in playlists" :key="playlist.id"
             v-on:click="$emit('update:view', playlist)">
             <td class="name">{{ playlist.name }}</td>
-            <td class="context">{{ playlist.videos.length }} titles</td>
+            <td class="context">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
         </tr>
     </table>
     `,

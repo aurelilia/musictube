@@ -41,7 +41,7 @@ Vue.component('playlists', {
     <table width="90%" v-else>
         <tr v-for="playlist in playlists" :key="playlist.id">
             <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
-            <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} titles</td>
+            <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
             <td class="delete"><i class="fa fa-trash-o" v-on:click="onDelete(playlist)"></i></td>
         </tr>
     </table>
