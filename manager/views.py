@@ -18,8 +18,9 @@ def home(request):
 
 
 def addPlaylist(request):
-    if request.user.is_authenticated:
-        content = json.loads(request.POST['content'])
+    content = json.loads(request.POST['content'])
+    # Second condition: check if user already has a playlist of that name.
+    if request.user.is_authenticated and not Playlist.objects.filter(user=request.user, name=content['name']):
         playlist = Playlist(name=content['name'], user=request.user, private=content['private'])
         playlist.save()
         return HttpResponse("true")
