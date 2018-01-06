@@ -37,7 +37,8 @@ var playlist_data = JSON.parse(document.getElementById("json").innerHTML);
 Vue.component('playlists', {
     props: ['playlists'],
     template: `
-    <table width="90%">
+    <span v-if="!playlists.length">No playlists. Press <i class="fa fa-plus" v-on:click="add = !add"></i> to add one!</span>
+    <table width="90%" v-else>
         <tr v-for="playlist in playlists" :key="playlist.id">
             <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
             <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} titles</td>
@@ -58,7 +59,8 @@ Vue.component('playlists', {
 Vue.component('playlist-videos', {
     props: ['playlists', 'cur_playlist'],
     template: `
-    <table width="90%">
+    <span v-if="!cur_playlist.videos.length">No videos. Press <i class="fa fa-plus" v-on:click="add = !add"></i> to add one!</span>
+    <table width="90%" v-else>
         <tr v-for="video in cur_playlist.videos" :key="video.id">
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
