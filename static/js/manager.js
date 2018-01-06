@@ -103,19 +103,31 @@ var vm = new Vue({
             name = document.getElementById('add-input').value;
             switch (vm.cur_screen) {
                 case "playlists":
-                    for (var i = 0, len = vm.playlists.length; i < len; i++) {
-                        if (name === vm.playlists[i].name) {
-                            alert("You already have a playlist with that name! Please choose another one.");
-                            return;
+                    if (name.includes("youtube.com/playlist")) {
+                        content = {
+                            url: name,
+                            private: false
+                        };
+                        sendPOST("/e/ip/", JSON.stringify(content), function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                vm.playlists = JSON.parse(this.responseText);
+                            }
+                        });
+                    } else {
+                        for (var i = 0, len = vm.playlists.length; i < len; i++) {
+                            if (name === vm.playlists[i].name) {
+                                alert("You already have a playlist with that name! Please choose another one.");
+                                return;
+                            }
                         }
+                        new_playlist = {
+                            name: name,
+                            private: false,
+                            videos: []
+                        };
+                        vm.playlists.push(new_playlist);
+                        sendPOST("/e/np/", JSON.stringify(new_playlist));
                     }
-                    new_playlist = {
-                        name: name,
-                        private: false,
-                        videos: []
-                    };
-                    vm.playlists.push(new_playlist);
-                    sendPOST("/e/np/", JSON.stringify(new_playlist));
                     break;
                 case "playlist-videos":
                     if (!name.includes("youtube.com/watch?v=")) {

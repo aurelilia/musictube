@@ -56,3 +56,19 @@ def deleteVideo(request):
         playlist.save()
         return HttpResponse("true")
     return HttpResponse("false")
+
+
+def importPlaylist(request):
+    content = json.loads(request.POST['content'])
+    if request.user.is_authenticated:
+        plist_pafy = pafy.playlist.get_playlist(content['url'])
+        playlist = Playlist(name=plist_pafy['title'], user=request.user, private=content['private'])
+        playlist.save()
+        for pafy_item in plist_pafy['items']:
+            pafy_vid = pafy_item['pafy']
+            video = Video(title=pafy_vid.title, length=pafy_vid.length, url=pafy_vid.videoid)
+            video.save()
+            playlist.videos.add(video)
+        playlist.save()
+        return HttpResponse(fetch(request))
+    return HttpResponse("false")

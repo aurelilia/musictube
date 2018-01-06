@@ -9,5 +9,5 @@ urlpatterns = [
     path('nv/', views.addVideo, name='addVideo'),
     path('dp/', views.deletePlaylist, name='deletePlaylist'),
     path('dv/', views.deleteVideo, name='deleteVideo'),
-
+    path('ip/', views.importPlaylist, name='importPlaylist'),
 ]
