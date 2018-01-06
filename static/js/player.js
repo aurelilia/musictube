@@ -22,6 +22,8 @@ window.onclick = function (e) {
 function updateVolume(num) {
     if (num !== vm.volume) {
         vm.volume = num;
+        // Store volume in local storage, so the user doesn't lose it on reload
+        localStorage.setItem("volume", num);
     }
 }
 
@@ -161,4 +163,9 @@ var vm = new Vue({
     }
 });
 
-updateVolume(25);
+// Check if volume is already in local storage; use default value if not
+if (localStorage.getItem("volume") !== null) {
+    updateVolume(localStorage.getItem("volume"));
+} else {
+    updateVolume(25);
+}
