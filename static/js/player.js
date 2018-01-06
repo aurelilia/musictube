@@ -13,7 +13,7 @@ function toggleMenu() {
     document.getElementById("menu-dropdown").classList.toggle("show");
 }
 window.onclick = function (e) {
-    if (!e.target.matches(".menu-button")) {
+    if (!e.target.matches(".fa-bars")) {
         document.getElementById("menu-dropdown").classList.remove('show');
     }
 };

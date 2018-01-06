@@ -105,6 +105,10 @@ a {
   margin-right: 20px;
 }
 
+.hamburger-menu {
+  font-size: 1.5em;
+}
+
 .menu-dropdown {
   display: none;
   float: right;
