@@ -39,6 +39,7 @@ Vue.component('playlists', {
         <tr v-for="playlist in playlists" :key="playlist.id">
             <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
             <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
+            <td class="rename"><i class="fa fa-edit" v-on:click="onRename(playlist)"></i></td>
             <td class="delete"><i class="fa fa-trash-o" v-on:click="onDelete(playlist)"></i></td>
         </tr>
     </table>
@@ -48,6 +49,13 @@ Vue.component('playlists', {
             if (confirm("Are you sure you want to delete the playlist?")) {
                 sendPOST("/e/dp/", obj.name);
                 vm.playlists.splice(vm.playlists.indexOf(obj), 1);
+            }
+        },
+        onRename(obj) {
+            name = prompt("Enter a new name for the playlist:");
+            if (name !== null && name !== "") {
+                sendPOST("/e/rp/", JSON.stringify({'old': obj.name, 'new': name}));
+                obj.name = name;
             }
         }
     }

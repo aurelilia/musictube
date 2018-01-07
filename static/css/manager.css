@@ -132,7 +132,7 @@ input {
   justify-content: flex-end;
 }
 
-tr .delete {
+tr .delete, .rename {
   width: 3%;
   text-align: center;
   font-size: 1.25em;

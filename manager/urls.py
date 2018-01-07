@@ -10,4 +10,5 @@ urlpatterns = [
     path('dp/', views.deletePlaylist, name='deletePlaylist'),
     path('dv/', views.deleteVideo, name='deleteVideo'),
     path('ip/', views.importPlaylist, name='importPlaylist'),
+    path('rp/', views.renamePlaylist, name='renamePlaylist'),
 ]
