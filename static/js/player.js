@@ -8,12 +8,6 @@ function sendGET(location, whenReady) {
     request.send(form);
 }
 
-// Navbar menu functionality
-window.onclick = function (e) {
-    if (!e.target.matches(".fa-bars")) {
-        vm.menu_active = false;
-    }
-};
 
 // Volume slider
 function updateVolume(num) {
@@ -30,6 +24,20 @@ function updatePosition(pos) {
     if (pos !== vm.player.position) {
         vm.player.position = pos;
         vm.player.e.currentTime = pos;
+    }
+}
+
+// Scrolling title
+var scroller = null;
+function scrollTitle(text) {
+    if (vm.scroll_title && (document.title != "MusicTube")) {
+        document.title = text;
+        scroller = setTimeout(function () {
+            scrollTitle(text.substr(1) + text.substr(0, 1));
+        }, 500);
+    } else {
+        clearTimeout(scroller);
+        document.title = vm.cur_video === null ? "MusicTube" : vm.cur_video.title;
     }
 }
 
@@ -98,6 +106,7 @@ var vm = new Vue({
         random: false,
         cur_screen: "playlists",
         menu_active: false,
+        scroll_title: false,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
         // looked at with the playlist-videos component
         cur_playlist: null,
@@ -122,6 +131,11 @@ var vm = new Vue({
             } else {
                 vm.cur_video_index = 0;
             }
+        },
+        scroll_title: function (bool) {
+            var text = vm.cur_video === null ? "MusicTube":vm.cur_video.title;
+            scrollTitle(text);
+            localStorage.setItem("scroll", bool);
         }
     },
     methods: {
@@ -138,7 +152,8 @@ var vm = new Vue({
             sendGET("/u/" + video.url, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
-                    document.title = video.title + " | Musictube";
+                    //document.title = video.title + " | Musictube";
+                    scrollTitle(video.title + "     ");
                     vm.player.e.setAttribute("src", this.responseText);
                     vm.player.e.play();
                     vm.playing = !vm.player.e.paused;
@@ -186,4 +201,9 @@ if (localStorage.getItem("volume") !== null) {
 document.getElementById("random-button").classList.toggle("grey");
 if (localStorage.getItem("random") === "true") {
     vm.onRandom();
+}
+
+// Get title scroll settings
+if (localStorage.getItem("scroll") === "true") {
+    vm.scroll_title = true;
 }
