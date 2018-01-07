@@ -17,7 +17,6 @@
                 <li class="logo">
                     <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
                 </li>
-                {% verbatim %}
                 <li class="controls">
                     <p id="prev-button" v-on:click="onPrevTrack">
                         <i class="fa fa-backward"></i>
@@ -33,6 +32,7 @@
                         <i class="fa fa-forward"></i>
                     </p>
                 </li>
+                {% verbatim %}
                 <li class="track">
                     <p class="track-title" id="track-title">{{ player.title }}</p>
                     <transition name="position-fade">
@@ -42,14 +42,14 @@
                                 oninput="updatePosition(this.value)" :value="player.position">
                         </span>
                     </transition>
-                </li>
+                </li> 
+                {% endverbatim %}
                 <li class="right-aligned">
                     <span class="volume">
                         <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" oninput="updateVolume(this.value)"
                             :value="volume">
                         <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
                     </span>
-                    {% endverbatim %}
                     <span class="hamburger-menu">
                         <i class="fa fa-bars" onclick="toggleMenu()"></i>
                     </span>

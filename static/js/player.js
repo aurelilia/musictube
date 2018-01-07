@@ -140,6 +140,7 @@ var vm = new Vue({
             sendGET("/u/" + video.url, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
+                    document.title = video.title + " | Musictube";
                     vm.player.e.setAttribute("src", this.responseText);
                     vm.player.e.play();
                     vm.playing = !vm.player.e.paused;
