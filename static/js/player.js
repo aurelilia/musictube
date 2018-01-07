@@ -83,7 +83,7 @@ Vue.component('playlist-videos', {
     <table width="90%" v-else>
         <tr v-for="video in cur_playlist_view.videos" :key="video.id"
             v-on:click="$emit('update:track', [cur_playlist_view, video])">
-            <td class="thumb"><img :src="'http://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
+            <td class="thumb"><img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
         </tr>

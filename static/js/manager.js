@@ -67,7 +67,7 @@ Vue.component('playlist-videos', {
     <span v-if="!cur_playlist.videos.length">No videos. Press <i class="fa fa-plus" v-on:click="add = !add"></i> to add one!</span>
     <table width="90%" v-else>
         <tr v-for="video in cur_playlist.videos" :key="video.id">
-            <td class="thumb"><img :src="'http://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
+            <td class="thumb"><img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
             <td class="delete"><i class="fa fa-trash-o" v-on:click="onDelete(video)"></i></td>
