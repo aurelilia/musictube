@@ -122,9 +122,6 @@ var vm = new Vue({
         }
     },
     methods: {
-        formatSeconds(secs) {
-            return new Date(1000 * secs).toISOString().substr(14, 5);
-        },
         onPlaylistClick(view) {
             this.cur_playlist_view = view;
             this.cur_screen = "playlist-videos";
