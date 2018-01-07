@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <img alt="MusicTube" src="{% static 'img/logo-full.png' %}" width="500px">
+    <img alt="MusicTube" src="{% static 'img/logo-full.png' %}" height="300px">
     <form method="post">
         {% csrf_token %} {{ form.as_p }}
         <button type="submit">Login</button>
