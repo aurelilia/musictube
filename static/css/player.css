@@ -154,6 +154,10 @@ tr .name {
   margin-right: 20px;
 }
 
+.volume-icon {
+  padding: 0 5px;
+}
+
 input[type=range] {
   -webkit-appearance: none;
   height: 3px;

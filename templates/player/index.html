@@ -46,6 +46,9 @@
                 {% endverbatim %}
                 <li class="right-aligned">
                     <span class="volume">
+                        <span class="volume-icon">
+                            <i class="fa fa-volume-up"></i>
+                        </span>
                         <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" oninput="updateVolume(this.value)"
                             :value="volume">
                         <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
