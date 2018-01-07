@@ -11,7 +11,7 @@ label {
   display: block;
   text-align: center;
   color: #222;
-  margin: 50px 0px 10px 0px;
+  margin: 50px 0 10px;
 }
 
 input {
@@ -19,7 +19,7 @@ input {
   border-bottom: 2px solid #3066A7;
   background-color: #f8f8f8;
   color: #bbb;
-  padding: 0px 0px;
+  padding: 0;
   font-size: 1.5em;
   font-family: 'Open Sans', sans-serif;
   text-align: center;
@@ -43,7 +43,7 @@ img {
 
 span, ul {
   visibility: hidden;
-  font-size: 0em;
+  font-size: 0;
 }
 
 a {

@@ -31,7 +31,7 @@ a {
   height: 75px;
   top: 0;
   background-color: #3066A7;
-  box-shadow: 0px 5px 10px 3px rgba(153, 153, 153, 0.4);
+  box-shadow: 0 5px 10px 3px rgba(153, 153, 153, 0.4);
   position: fixed;
   display: flex;
   justify-content: flex-start;
@@ -41,7 +41,7 @@ a {
 }
 
 .logo {
-  padding: 0px 100px 0px 50px;
+  padding: 0 100px 0 50px;
 }
 
 .hamburger-menu {
@@ -55,7 +55,7 @@ a {
   right: 0;
   background-color: #f8f8f8;
   min-width: 160px;
-  box-shadow: 0px 5px 10px 3px rgba(153, 153, 153, 0.4);
+  box-shadow: 0 5px 10px 3px rgba(153, 153, 153, 0.4);
   z-index: 100;
   top: 75px;
 }
@@ -130,7 +130,7 @@ input {
 }
 
 .right-aligned {
-  padding: 0px 50px;
+  padding: 0 50px;
   flex: 1;
   text-align: right;
   display: flex;

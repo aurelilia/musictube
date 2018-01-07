@@ -31,7 +31,7 @@ a {
   height: 75px;
   top: 0;
   background-color: #3066A7;
-  box-shadow: 0px 5px 10px 3px rgba(153, 153, 153, 0.4);
+  box-shadow: 0 5px 10px 3px rgba(153, 153, 153, 0.4);
   position: fixed;
   display: flex;
   justify-content: flex-start;
@@ -41,7 +41,7 @@ a {
 }
 
 .logo {
-  padding: 0px 100px 0px 50px;
+  padding: 0 100px 0 50px;
 }
 
 .hamburger-menu {
@@ -55,7 +55,7 @@ a {
   right: 0;
   background-color: #f8f8f8;
   min-width: 160px;
-  box-shadow: 0px 5px 10px 3px rgba(153, 153, 153, 0.4);
+  box-shadow: 0 5px 10px 3px rgba(153, 153, 153, 0.4);
   z-index: 100;
   top: 75px;
 }
@@ -110,12 +110,12 @@ tr .name {
 .controls {
   display: flex;
   flex-direction: row;
-  padding: 0px 30px 0px 0px;
+  padding: 0 30px 0 0;
   font-size: 1.8em;
 }
 
 .controls * {
-  padding: 0px 5px;
+  padding: 0 5px;
 }
 
 .grey {
@@ -138,7 +138,7 @@ tr .name {
 }
 
 .right-aligned {
-  padding: 0px 50px;
+  padding: 0 50px;
   flex: 0.75;
   text-align: right;
   display: flex;
@@ -216,14 +216,12 @@ input::-moz-focus-outer {
 }
 
 .volume-slider {
-  margin-bottom: 3px !important;
-  margin-right: 5px !important;
+  margin: 0 5px 3px 0 !important;
   width: 60%;
 }
 
 .position-slider {
-  margin-top: 12px !important;
-  margin-left: 10px !important;
+  margin: 12px 0 0 10px !important;
   width: 150%;
 }
 /*# sourceMappingURL=player.css.map */
