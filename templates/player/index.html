@@ -26,6 +26,9 @@
                         <i class="fa fa-play" v-show="!playing"></i>
                         <i class="fa fa-pause" v-show="playing"></i>
                     </p>
+                    <p id="random-button" v-on:click="onRandom()">
+                        <i class="fa fa-random"></i>
+                    </p>
                     <p id="next-button" v-on:click="onNextTrack">
                         <i class="fa fa-forward"></i>
                     </p>

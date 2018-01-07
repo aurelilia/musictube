@@ -98,6 +98,7 @@ var vm = new Vue({
         player: player,
         playing: !player.e.paused,
         volume: 400,
+        random: false,
         cur_screen: "playlists",
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
         // looked at with the playlist-videos component
@@ -111,11 +112,15 @@ var vm = new Vue({
             vm.player.e.volume = vol / 400;
         },
         cur_video_index: function (index, oldindex) {
+            if (vm.cur_playlist.videos[index] === vm.cur_video) {
+                return;
+            }
+            if (vm.random) {
+                index = Math.floor((Math.random() * vm.cur_playlist.videos.length) + 1);
+            }
             if (index >= 0 && index < vm.cur_playlist.videos.length) {
-                if (!(vm.cur_playlist.videos[index] === vm.cur_video)) {
-                    vm.player.e.pause();
-                    vm.updateCurrentTrack(vm.cur_playlist.videos[index]);
-                }
+                vm.player.e.pause();
+                vm.updateCurrentTrack(vm.cur_playlist.videos[index]);
             } else {
                 vm.cur_video_index = 0;
             }
@@ -162,6 +167,11 @@ var vm = new Vue({
             if (vm.playing) {
                 vm.cur_video_index += 1;
             }
+        },
+        onRandom() {
+            vm.random = !vm.random;
+            document.getElementById("random-button").classList.toggle("grey");
+            localStorage.setItem("random", vm.random);
         }
     }
 });
@@ -171,4 +181,10 @@ if (localStorage.getItem("volume") !== null) {
     updateVolume(localStorage.getItem("volume"));
 } else {
     updateVolume(25);
+}
+
+// Get random state from local storage; toggle random if true
+document.getElementById("random-button").classList.toggle("grey");
+if (localStorage.getItem("random") === "true") {
+    vm.onRandom();
 }
