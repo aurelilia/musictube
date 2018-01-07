@@ -36,13 +36,13 @@
                         <span class="position" v-if="cur_video !== null">
                             <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
                             <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100"
-                                onchange="updatePosition(this.value)" :value="player.position" onchange="updatePosition(this.value)">
+                                oninput="updatePosition(this.value)" :value="player.position">
                         </span>
                     </transition>
                 </li>
                 <li class="right-aligned">
                     <span class="volume">
-                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" onchange="updateVolume(this.value)"
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" oninput="updateVolume(this.value)"
                             :value="volume">
                         <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
                     </span>

@@ -2,12 +2,13 @@
 $bg: #f8f8f8
 $tr: #f0f0f0
 $wtext: #fff
+$grey: rgba(200,200,200,0.2)
 $navbar: #3066A7
 
 // General
 body
     margin: 0
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Open Sans', sans-serif
     background-color: $bg
 
 a
@@ -86,14 +87,10 @@ a
     padding: 0 20px
     white-space: nowrap
 
-.volume-slider, .volume-box
+.volume-box
     background-color: $navbar
     color: $wtext
     border: none
-
-.volume-slider
-    padding-top: 5px
-    width: 50%
 
 .volume-box
     width: 45px
@@ -154,3 +151,71 @@ tr .name
 
 .component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to
   opacity: 0
+
+
+// Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
+$range-handle-color: $bg
+$range-handle-color-hover: $wtext
+$range-handle-size: 15px 
+
+$range-track-color: $grey
+$range-track-height: 3px 
+
+input[type=range]
+  -webkit-appearance: none
+  height: $range-track-height
+  border-radius: 1px
+  background: $range-track-color
+  outline: none
+  padding: 0
+  margin: 0
+
+  // Range Handle
+  &::-webkit-slider-thumb 
+    appearance: none
+    width: $range-handle-size
+    height: $range-handle-size
+    border-radius: 50%
+    background: $range-handle-color
+    cursor: pointer
+    transition: background .15s ease-in-out
+
+    &:hover 
+      background: $range-handle-color-hover
+    
+  &:active::-webkit-slider-thumb 
+    background: $range-handle-color-hover
+  
+  &::-moz-range-thumb 
+    width: $range-handle-size
+    height: $range-handle-size
+    border: 0
+    border-radius: 50%
+    background: $range-handle-color
+    cursor: pointer
+    transition: background .15s ease-in-out
+
+    &:hover 
+      background: $range-handle-color-hover
+    
+  &:active::-moz-range-thumb 
+    background: $range-handle-color-hover
+  
+// Firefox Overrides
+::-moz-range-track 
+    background: $range-track-color
+    border: 0
+
+input::-moz-focus-inner,
+input::-moz-focus-outer 
+  border: 0 
+
+
+.volume-slider
+    margin-bottom: 3px !important
+    margin-right: 5px !important
+    width: 60%
+
+.position-slider
+    margin-top: 12px !important
+    margin-left: 10px !important
