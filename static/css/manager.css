@@ -41,36 +41,6 @@ a {
   padding: 0px 100px 0px 50px;
 }
 
-.add {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-}
-
-.add-icon {
-  font-size: 2.4em;
-}
-
-input {
-  border: none;
-  border-bottom: 2px solid #fff;
-  background-color: #3066A7;
-  color: #fff;
-  margin: 15px;
-  margin-bottom: 0;
-  font-size: 1em;
-  font-family: 'Open Sans', sans-serif;
-  text-align: center;
-}
-
-.right-aligned {
-  padding: 0px 50px;
-  flex: 1;
-  text-align: right;
-  display: flex;
-  justify-content: flex-end;
-}
-
 .hamburger-menu {
   font-size: 1.5em;
 }
@@ -122,12 +92,6 @@ tr .name {
   width: 85%;
 }
 
-tr .delete {
-  width: 3%;
-  text-align: center;
-  font-size: 1.25em;
-}
-
 .component-fade-enter-active, .component-fade-leave-active {
   transition: opacity .3s ease;
 }
@@ -138,5 +102,41 @@ tr .delete {
 
 .component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to {
   opacity: 0;
+}
+
+.add {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.add-icon {
+  font-size: 2.4em;
+}
+
+input {
+  border: none;
+  border-bottom: 2px solid #fff;
+  background-color: #3066A7;
+  color: #fff;
+  margin: 15px;
+  margin-bottom: 0;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  text-align: center;
+}
+
+.right-aligned {
+  padding: 0px 50px;
+  flex: 1;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+}
+
+tr .delete {
+  width: 3%;
+  text-align: center;
+  font-size: 1.25em;
 }
 /*# sourceMappingURL=manager.css.map */

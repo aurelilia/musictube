@@ -1,49 +1,6 @@
-// Variables
-$bg: #f8f8f8
-$tr: #f0f0f0
-$wtext: #fff
-$navbar: #3066A7
-
-// General
-body
-    margin: 0
-    font-family: 'Open Sans', sans-serif;
-    background-color: $bg
-
-a
-    text-decoration: none
-    color: #66f
-
-.content
-    display: flex
-    justify-content: center
-    margin-top: 120px
-    transition: opacity 0.6s
-
-.fade
-    opacity: 0
-
+@import base
 
 // Navbar
-.nav ul
-    list-style-type: none
-    overflow: hidden
-    margin: 0
-    padding: 0
-    width: 100%
-    height: 75px
-    top: 0
-    background-color: $navbar
-    box-shadow: 0px 5px 10px 3px rgba(153 , 153, 153, 0.4)
-    position: fixed
-    display: flex
-    justify-content: flex-start
-    align-items: center
-    color: $wtext
-
-.logo
-   padding: 0px 100px 0px 50px
-
 .add
     display: flex
     flex-flow: row
@@ -72,60 +29,10 @@ input
     display: flex
     justify-content: flex-end
 
-.hamburger-menu
-    font-size: 1.5em
 
-.menu-dropdown
-    display: none
-    float: right
-    position: absolute
-    right: 0
-    background-color: $bg
-    min-width: 160px
-    box-shadow: 0px 5px 10px 3px rgba(153 , 153, 153, 0.4)
-    z-index: 100
-    top: 75px
-
-.show 
-    display: block
-
-a 
-    color: black
-    padding: 12px 16px
-    text-decoration: none
-    display: block
-
-a:hover
-    background-color: #eee
-
-
-// lists
-tr
-    height: 40px
-
-tr:nth-child(odd)
-    background-color: $tr
-
-tr:hover
-    background-color: #ddd !important
-
-td
-    padding: 10px
-
-tr .name
-    width: 85%
-
+// Lists
 tr .delete
     width: 3%
     text-align: center
     font-size: 1.25em
 
-// Transitions
-.component-fade-enter-active, .component-fade-leave-active 
-  transition: opacity .3s ease
-
-.position-fade-enter-active, .position-fade-leave-active 
-  transition: opacity .5s
-
-.component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to
-  opacity: 0
