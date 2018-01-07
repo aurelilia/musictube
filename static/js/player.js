@@ -9,12 +9,9 @@ function sendGET(location, whenReady) {
 }
 
 // Navbar menu functionality
-function toggleMenu() {
-    document.getElementById("menu-dropdown").classList.toggle("show");
-}
 window.onclick = function (e) {
     if (!e.target.matches(".fa-bars")) {
-        document.getElementById("menu-dropdown").classList.remove('show');
+        vm.menu_active = false;
     }
 };
 
@@ -100,6 +97,7 @@ var vm = new Vue({
         volume: 400,
         random: false,
         cur_screen: "playlists",
+        menu_active: false,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
         // looked at with the playlist-videos component
         cur_playlist: null,

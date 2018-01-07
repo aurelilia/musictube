@@ -20,12 +20,9 @@ function sendPOST(location, content, whenReady) {
 
 
 // Navbar menu functionality
-function toggleMenu() {
-    document.getElementById("menu-dropdown").classList.toggle("show");
-}
 window.onclick = function (e) {
     if (!e.target.matches(".fa-bars")) {
-        document.getElementById("menu-dropdown").classList.remove('show');
+        vm.menu_active = false;
     }
 };
 
@@ -90,6 +87,7 @@ var vm = new Vue({
         cur_screen: "playlists",
         cur_playlist: null,
         add: false,
+        menu_active: false,
     },
     methods: {
         onPlaylistClick(view) {

@@ -27,11 +27,11 @@
                 </li>
                 <li class="right-aligned">
                     <span class="hamburger-menu">
-                        <i class="fa fa-bars" onclick="toggleMenu()"></i>
+                        <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
                     </span>
                 </li>
             </ul>
-            <div id="menu-dropdown" class="menu-dropdown">
+            <div id="menu-dropdown" class="menu-dropdown" v-show="menu_active">
                 <a href="/">My Playlists</a>
                 <a v-on:click="cur_screen = 'playlists'">Edit Playlists</a>
                 <a href="/logout/">Log out</a>
