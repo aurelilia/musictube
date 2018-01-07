@@ -33,6 +33,9 @@
                     </p>
                 </li>
                 {% verbatim %}
+                <li class="thumb-nav" v-if="cur_video !== null">
+                    <img :src="'http://i.ytimg.com/vi/' + cur_video.url + '/mqdefault.jpg'" height="50px"></img>
+                </li>
                 <li class="track">
                     <p class="track-title" id="track-title">{{ player.title }}</p>
                     <transition name="position-fade">

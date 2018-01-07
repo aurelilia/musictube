@@ -90,6 +90,10 @@ tr .name {
   width: 85%;
 }
 
+tr .thumb {
+  width: 65px;
+}
+
 .component-fade-enter-active, .component-fade-leave-active {
   transition: opacity .3s ease;
 }
@@ -115,6 +119,12 @@ tr .name {
 
 .grey {
   color: rgba(200, 200, 200, 0.5);
+}
+
+.thumb-nav img {
+  margin-right: 10px;
+  margin-top: 3px;
+  border: 2px solid #fff;
 }
 
 .track {
