@@ -193,11 +193,11 @@ var vm = new Vue({
         updateCurrentTrack(video) {
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
+            scrollTitle(video.title + "     ");
+            vm.player.title = `Loading...`;
             sendGET("/u/" + video.url, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
-                    //document.title = video.title + " | Musictube";
-                    scrollTitle(video.title + "     ");
                     vm.player.e.setAttribute("src", this.responseText);
                     vm.player.e.play();
                     vm.playing = !vm.player.e.paused;
