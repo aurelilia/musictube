@@ -2,19 +2,19 @@ import json
 import pafy
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
 from musictube.models import Playlist
 
 
+@login_required
 def home(request):
     """ Returns the main page. """
-    if request.user.is_authenticated:
-        context = {'json': fetch(request)}
-        return render(request, 'player/index.html', context=context)
-    return auth_views.login(request)
+    context = {'json': fetch(request)}
+    return render(request, 'player/index.html', context=context)
 
 
+@login_required
 def fetch(request):
     """ API for getting info, using JSON
         [{
@@ -39,6 +39,7 @@ def fetch(request):
     return json.dumps(playlists, cls=DjangoJSONEncoder)
 
 
+@login_required
 def directURL(request, url):
     """ Takes youtube URL or id, returns audio URL from googlevideo. """
     video = pafy.new(url)
