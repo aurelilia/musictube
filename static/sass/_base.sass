@@ -54,7 +54,7 @@ a
     position: absolute
     right: 0
     background-color: $bg
-    min-width: 160px
+    min-width: 250px
     box-shadow: 0 5px 10px 3px rgba(153 , 153, 153, 0.4)
     z-index: 100
     top: 75px
@@ -98,3 +98,8 @@ tr .thumb
 .component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to
   opacity: 0
 
+.navbar-fade-enter-active, .navbar-fade-leave-active 
+  transition: color .3s ease
+
+.navbar-fade-enter, .navbar-fade-leave-to, .position-fade-enter, .position-fade-leave-to
+    color: $navbar !important

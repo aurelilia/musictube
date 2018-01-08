@@ -13,6 +13,25 @@
 .grey
     color: $random-off
 
+.add
+    display: flex
+    flex-flow: row
+    align-items: center
+
+.add-icon
+    font-size: 2.4em
+
+input[type=text]
+    border: none
+    border-bottom: 2px solid $wtext
+    background-color: $navbar
+    color: $wtext
+    margin: 15px
+    margin-bottom: 0
+    font-size: 1em
+    font-family: 'Open Sans', sans-serif
+    text-align: center
+
 // Track position info+slider
 .thumb-nav img
     margin-right: 10px
@@ -35,11 +54,13 @@
 // Right-aligned part of navbar
 .right-aligned
     padding: 0 50px
-    flex: 0.75
+    flex: 1
     text-align: right
     display: flex
     justify-content: flex-end
 
+.exit
+    margin: 0 10px
 
 // Volume control
 .volume
@@ -57,6 +78,12 @@
 .volume-icon
     padding: 0 5px
 
+
+// Lists
+tr .delete, .rename
+    width: 3%
+    text-align: center
+    font-size: 1.25em
 
 // Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
 $range-handle-color: $bg

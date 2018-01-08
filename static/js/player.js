@@ -7,6 +7,16 @@ function sendGET(location, whenReady) {
     request.open("GET", location);
     request.send(form);
 }
+// Interact via POST request.
+function sendPOST(location, content, whenReady) {
+    var form = new FormData();
+    form.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
+    form.append("content", content);
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = whenReady;
+    request.open("POST", location);
+    request.send(form);
+}
 
 
 // Volume slider
@@ -63,21 +73,37 @@ player.e.addEventListener('ended', function () {
 
 
 Vue.component('playlists', {
-    props: ['playlists'],
+    props: ['playlists', 'editor'],
     template: `
     <span v-if="!playlists.length">No playlists. Go to "Edit Playlists" to add one!</span>
     <table width="90%" v-else>
-        <tr v-for="playlist in playlists" :key="playlist.id"
-            v-on:click="$emit('update:view', playlist)">
-            <td class="name">{{ playlist.name }}</td>
-            <td class="context">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
+        <tr v-for="playlist in playlists" :key="playlist.id">
+            <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
+            <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
+            <td class="rename" v-if="editor"><i class="fa fa-edit" v-on:click="onRename(playlist)"></i></td>
+            <td class="delete" v-if="editor"><i class="fa fa-trash-o" v-on:click="onDelete(playlist)"></i></td>
         </tr>
     </table>
     `,
+    methods: {
+        onDelete(obj) {
+            if (confirm("Are you sure you want to delete the playlist?")) {
+                sendPOST("/e/dp/", obj.name);
+                vm.playlists.splice(vm.playlists.indexOf(obj), 1);
+            }
+        },
+        onRename(obj) {
+            name = prompt("Enter a new name for the playlist:");
+            if (name !== null && name !== "") {
+                sendPOST("/e/rp/", JSON.stringify({ 'old': obj.name, 'new': name }));
+                obj.name = name;
+            }
+        }
+    }
 });
 
 Vue.component('playlist-videos', {
-    props: ['playlists', 'cur_playlist_view'],
+    props: ['playlists', 'cur_playlist_view', 'editor'],
     template: `
     <span v-if="!cur_playlist_view.videos.length">No videos. Go to "Edit Playlists" to add one!</span>
     <table width="90%" v-else>
@@ -86,6 +112,7 @@ Vue.component('playlist-videos', {
             <td class="thumb"><img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
+            <td class="delete" v-if="editor"><i class="fa fa-trash-o" v-on:click="onDelete(video)"></i></td>
         </tr>
     </table>
     `,
@@ -93,6 +120,12 @@ Vue.component('playlist-videos', {
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         },
+        onDelete(obj) {
+            if (confirm("Are you sure you want to remove the video?")) {
+                sendPOST("/e/dv/", JSON.stringify([vm.cur_playlist_view.name, obj.title]));
+                vm.cur_playlist_view.videos.splice(vm.cur_playlist_view.videos.indexOf(obj), 1);
+            }
+        }
     }
 });
 
@@ -113,7 +146,10 @@ var vm = new Vue({
         cur_playlist: null,
         cur_playlist_view: null,
         cur_video: null,
-        cur_video_index: 0
+        cur_video_index: 0,
+        // EDITOR
+        editor: false,
+        add: false
     },
     watch: {
         volume: function (vol) {
@@ -162,8 +198,10 @@ var vm = new Vue({
             });
         },
         updateCurrentPlaylistAndTrack(info) {
+            if(!vm.editor) {
             vm.cur_playlist = info[0];
             vm.updateCurrentTrack(info[1]);
+            }
         },
         onPlayPause() {
             if (!vm.playing && vm.player.e.src !== "") {
@@ -187,7 +225,57 @@ var vm = new Vue({
             vm.random = !vm.random;
             document.getElementById("random-button").classList.toggle("grey");
             localStorage.setItem("random", vm.random);
-        }
+        },
+        // EDITOR
+        onAdd() {
+            name = document.getElementById('add-input').value;
+            switch (vm.cur_screen) {
+                case "playlists":
+                    if (name.includes("youtube.com/playlist")) {
+                        content = {
+                            url: name,
+                            private: false
+                        };
+                        sendPOST("/e/ip/", JSON.stringify(content), function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                vm.playlists = JSON.parse(this.responseText);
+                            }
+                        });
+                    } else {
+                        for (var i = 0, len = vm.playlists.length; i < len; i++) {
+                            if (name === vm.playlists[i].name) {
+                                alert("You already have a playlist with that name! Please choose another one.");
+                                return;
+                            }
+                        }
+                        new_playlist = {
+                            name: name,
+                            private: false,
+                            videos: []
+                        };
+                        vm.playlists.push(new_playlist);
+                        sendPOST("/e/np/", JSON.stringify(new_playlist));
+                    }
+                    break;
+                case "playlist-videos":
+                    if (!name.includes("youtube.com/watch?v=")) {
+                        alert("Not a valid URL! Please try again.");
+                        return;
+                    }
+                    new_video = {
+                        url: name,
+                        plistname: vm.cur_playlist_view.name
+                    };
+                    sendPOST("/e/nv/", JSON.stringify(new_video), function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
+                        }
+                    });
+                    break;
+            }
+            vm.add = false;
+            document.getElementById('add-input').value = "";
+        },
     }
 });
 

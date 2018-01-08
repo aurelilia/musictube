@@ -9,14 +9,6 @@ from musictube.player.views import fetch
 from musictube.models import Playlist, Video
 
 
-def home(request):
-    """ Returns the main page. """
-    if request.user.is_authenticated:
-        context = {'json': fetch(request)}
-        return render(request, 'manager/index.html', context=context)
-    return auth_views.login(request)
-
-
 def addPlaylist(request):
     content = json.loads(request.POST['content'])
     # Second condition: check if user already has a playlist of that name.
