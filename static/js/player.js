@@ -59,6 +59,7 @@ window.onclick = function (event) {
     console.log(event.target);
 };
 
+
 /* VUE */
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById("json").innerHTML);
@@ -102,7 +103,10 @@ Vue.component('playlists', {
         onRename(obj) {
             name = prompt("Enter a new name for the playlist:");
             if (name !== null && name !== "") {
-                sendPOST("/e/rp/", JSON.stringify({ 'old': obj.name, 'new': name }));
+                sendPOST("/e/rp/", JSON.stringify({
+                    'old': obj.name,
+                    'new': name
+                }));
                 obj.name = name;
             }
         }
@@ -177,7 +181,7 @@ var vm = new Vue({
             }
         },
         scroll_title: function (bool) {
-            var text = vm.cur_video === null ? "MusicTube":vm.cur_video.title;
+            var text = vm.cur_video === null ? "MusicTube" : vm.cur_video.title;
             scrollTitle(text);
             localStorage.setItem("scroll", bool);
         }
@@ -205,9 +209,9 @@ var vm = new Vue({
             });
         },
         updateCurrentPlaylistAndTrack(info) {
-            if(!vm.editor) {
-            vm.cur_playlist = info[0];
-            vm.updateCurrentTrack(info[1]);
+            if (!vm.editor) {
+                vm.cur_playlist = info[0];
+                vm.updateCurrentTrack(info[1]);
             }
         },
         onPlayPause() {

@@ -49,8 +49,7 @@ a {
 }
 
 .menu-dropdown {
-  float: right;
-  position: absolute;
+  position: fixed;
   right: 0;
   background-color: #f8f8f8;
   min-width: 250px;
