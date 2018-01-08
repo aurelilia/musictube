@@ -1,25 +1,19 @@
 body {
-  margin: 0;
+  margin: 0 0 5%;
   padding: 0;
-  margin-bottom: 5%;
   font-family: 'Open Sans', sans-serif;
   background-color: #f8f8f8;
 }
 
-a {
-  text-decoration: none;
-  color: #66f;
-}
-
 .content {
-  display: flex;
-  justify-content: center;
   margin-top: 120px;
-  transition: opacity 0.6s;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
 }
 
-.fade {
-  opacity: 0;
+table {
+  width: 100%;
 }
 
 .nav ul {
@@ -40,10 +34,6 @@ a {
   z-index: 100;
 }
 
-.logo {
-  padding: 0 50px;
-}
-
 .hamburger-menu {
   font-size: 1.5em;
 }
@@ -52,7 +42,7 @@ a {
   position: fixed;
   right: 0;
   background-color: #f8f8f8;
-  min-width: 250px;
+  min-width: 200px;
   box-shadow: 0 5px 10px 3px rgba(153, 153, 153, 0.4);
   z-index: 100;
   top: 75px;
@@ -69,79 +59,14 @@ a:hover {
   background-color: #eee;
 }
 
-tr:nth-child(odd) {
-  background-color: #f0f0f0;
-}
-
-tr:hover {
-  background-color: #ddd !important;
-}
-
-td {
-  padding: 10px;
-}
-
-tr .name {
-  width: 85%;
-}
-
-.thumb {
-  width: 65px;
-}
-
-.playlist-thumb {
-  position: relative;
-  min-width: 110px;
-  width: 110px;
-  height: 90px;
-}
-
-.playlist-thumb img {
-  position: absolute;
-  border: 1px solid #fff;
-}
-
-.thumb-1 {
-  top: 30px;
-  left: 10px;
-  z-index: 30;
-}
-
-.thumb-2 {
-  z-index: 20;
-  top: 20px;
-  left: 20px;
-}
-
-.thumb-3 {
-  z-index: 10;
-  top: 10px;
-  left: 30px;
-}
-
-.component-fade-enter-active, .component-fade-leave-active {
-  transition: opacity .3s ease;
-}
-
-.position-fade-enter-active, .position-fade-leave-active {
-  transition: opacity .5s;
-}
-
-.component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to {
-  opacity: 0;
-}
-
-.navbar-fade-enter-active, .navbar-fade-leave-active {
-  transition: color .3s ease;
-}
-
-.navbar-fade-enter, .navbar-fade-leave-to, .position-fade-enter, .position-fade-leave-to {
-  color: #3066A7 !important;
+.logo {
+  padding: 0 50px;
 }
 
 .controls {
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: 0 30px 0 0;
   font-size: 1.8em;
 }
@@ -154,14 +79,8 @@ tr .name {
   color: rgba(200, 200, 200, 0.5);
 }
 
-.add {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-}
-
 .add-icon {
-  font-size: 2.4em;
+  font-size: 1.3em;
 }
 
 input[type=text] {
@@ -176,14 +95,14 @@ input[type=text] {
   text-align: center;
 }
 
+.track {
+  flex: 1;
+}
+
 .thumb-nav img {
   margin-right: 10px;
   margin-top: 3px;
   border: 2px solid #fff;
-}
-
-.track {
-  flex: 1;
 }
 
 .track-title, .position-text {
@@ -225,12 +144,6 @@ input[type=text] {
 
 .volume-icon {
   padding: 0 5px;
-}
-
-tr .delete, .rename {
-  width: 3%;
-  text-align: center;
-  font-size: 1.25em;
 }
 
 input[type=range] {
@@ -297,5 +210,81 @@ input::-moz-focus-outer {
 .position-slider {
   margin: 12px 0 0 10px !important;
   width: 150%;
+}
+
+tr:nth-child(odd) {
+  background-color: #f0f0f0;
+}
+
+tr:hover {
+  background-color: #ddd !important;
+}
+
+td {
+  padding: 10px;
+}
+
+tr .name {
+  width: 85%;
+}
+
+tr .delete, .rename {
+  width: 3%;
+  text-align: center;
+  font-size: 1.25em;
+}
+
+.thumb {
+  width: 65px;
+}
+
+.playlist-thumb {
+  position: relative;
+  min-width: 110px;
+  width: 110px;
+  height: 90px;
+}
+
+.playlist-thumb img {
+  position: absolute;
+  border: 1px solid #fff;
+}
+
+.thumb-1 {
+  top: 30px;
+  left: 10px;
+  z-index: 30;
+}
+
+.thumb-2 {
+  z-index: 20;
+  top: 20px;
+  left: 20px;
+}
+
+.thumb-3 {
+  z-index: 10;
+  top: 10px;
+  left: 30px;
+}
+
+.component-fade-enter-active, .component-fade-leave-active {
+  transition: opacity .3s ease;
+}
+
+.position-fade-enter-active, .position-fade-leave-active {
+  transition: opacity .5s;
+}
+
+.component-fade-enter, .component-fade-leave-to, .position-fade-enter, .position-fade-leave-to {
+  opacity: 0;
+}
+
+.navbar-fade-enter-active, .navbar-fade-leave-active {
+  transition: color .3s ease;
+}
+
+.navbar-fade-enter, .navbar-fade-leave-to, .position-fade-enter, .position-fade-leave-to {
+  color: #3066A7 !important;
 }
 /*# sourceMappingURL=player.css.map */
