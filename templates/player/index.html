@@ -13,90 +13,92 @@
 <body>
     <div id="vue-app">
         <div class="nav">
-        <transition name="navbar-fade" mode="out-in">
-            <ul v-if="!editor" key="play">
-                <li class="logo">
-                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
-                </li>
-                <li class="controls">
-                    <p id="prev-button" v-on:click="onPrevTrack">
-                        <i class="fa fa-backward"></i>
-                    </p>
-                    <p id="play-button" v-on:click="onPlayPause">
-                        <i class="fa fa-play" v-show="!playing"></i>
-                        <i class="fa fa-pause" v-show="playing"></i>
-                    </p>
-                    <p id="random-button" v-on:click="onRandom()">
-                        <i class="fa fa-random"></i>
-                    </p>
-                    <p id="next-button" v-on:click="onNextTrack">
-                        <i class="fa fa-forward"></i>
-                    </p>
-                </li>
-                {% verbatim %}
-                <li class="thumb-nav" v-if="cur_video !== null">
-                    <img :src="'https://i.ytimg.com/vi/' + cur_video.url + '/mqdefault.jpg'" height="50px"></img>
-                </li>
-                <li class="track">
-                    <p class="track-title" id="track-title">{{ player.title }}</p>
-                    <transition name="position-fade">
-                        <span class="position" v-if="cur_video !== null">
-                            <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
-                            <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100"
-                                oninput="updatePosition(this.value)" :value="player.position">
-                        </span>
-                    </transition>
-                </li>
-                {% endverbatim %}
-                <li class="right-aligned">
-                    <span class="volume">
-                        <span class="volume-icon">
-                            <i class="fa fa-volume-up"></i>
-                        </span>
-                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" oninput="updateVolume(this.value)"
-                            :value="volume">
-                        <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
-                    </span>
-                    <span class="hamburger-menu">
-                        <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
-                    </span>
-                </li>
-            </ul>
-            <ul v-else key="edit">
-                <li class="logo">
-                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
-                </li>
-                <li class="add">
-                    <p class="add-icon">
-                        <i class="fa fa-plus" v-on:click="add = !add"></i>
-                    </p>
-                    <form v-on:submit.prevent="onAdd()">
-                        <transition name="navbar-fade">
-                            <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL...">
+            <transition name="navbar-fade" mode="out-in">
+                <ul v-if="!editor" key="play">
+                    <li class="logo">
+                        <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
+                    </li>
+                    <li class="controls">
+                        <p id="prev-button" v-on:click="onPrevTrack">
+                            <i class="fa fa-backward"></i>
+                        </p>
+                        <p id="play-button" v-on:click="onPlayPause">
+                            <i class="fa fa-play" v-show="!playing"></i>
+                            <i class="fa fa-pause" v-show="playing"></i>
+                        </p>
+                        <p id="random-button" v-on:click="onRandom()">
+                            <i class="fa fa-random"></i>
+                        </p>
+                        <p id="next-button" v-on:click="onNextTrack">
+                            <i class="fa fa-forward"></i>
+                        </p>
+                    </li>
+                    {% verbatim %}
+                    <li class="thumb-nav" v-if="cur_video !== null">
+                        <img :src="'https://i.ytimg.com/vi/' + cur_video.url + '/mqdefault.jpg'" height="50px"></img>
+                    </li>
+                    <li class="track">
+                        <p class="track-title" id="track-title">{{ player.title }}</p>
+                        <transition name="position-fade">
+                            <span class="position" v-if="cur_video !== null">
+                                <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
+                                <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100"
+                                    oninput="updatePosition(this.value)" :value="player.position">
+                            </span>
                         </transition>
-                    </form>
-                </li>
-                <li class="right-aligned">
-                    <span class="exit" v-on:click="editor = !editor">
-                        Return to player
-                    </span>
-                    <span class="hamburger-menu">
-                        <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
-                    </span>
-                </li>
-            </ul>
-        </transition>
+                    </li>
+                    {% endverbatim %}
+                    <li class="right-aligned">
+                        <span class="volume">
+                            <span class="volume-icon">
+                                <i class="fa fa-volume-up"></i>
+                            </span>
+                            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" oninput="updateVolume(this.value)"
+                                :value="volume">
+                            <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
+                        </span>
+                        <span class="hamburger-menu">
+                            <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
+                        </span>
+                    </li>
+                </ul>
+                <ul v-else key="edit">
+                    <li class="logo">
+                        <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
+                    </li>
+                    <li class="add">
+                        <p class="add-icon">
+                            <i class="fa fa-plus" v-on:click="add = !add"></i>
+                        </p>
+                        <form v-on:submit.prevent="onAdd()">
+                            <transition name="navbar-fade">
+                                <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL...">
+                            </transition>
+                        </form>
+                    </li>
+                    <li class="right-aligned">
+                        <span class="exit" v-on:click="editor = !editor">
+                            Return to player
+                        </span>
+                        <span class="hamburger-menu">
+                            <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
+                        </span>
+                    </li>
+                </ul>
+            </transition>
 
-            <div id="menu-dropdown" class="menu-dropdown" v-show="menu_active">
-                <a v-on:click="cur_screen = 'playlists'">My Playlists</a>
-                <a href="/logout/">Log out</a>
-                <a v-on:click="scroll_title = !scroll_title" v-show="scroll_title">
+            <div id="menu-item" class="menu-dropdown" v-show="menu_active">
+                <a class="menu-item" v-on:click="cur_screen = 'playlists'">My Playlists</a>
+                <a class="menu-item" href="/logout/">Log out</a>
+
+                <a class="menu-item" v-on:click="scroll_title = !scroll_title" v-show="scroll_title">
                     <i class="fa fa-check-square-o" aria-hidden="true"></i> Scroll Title</a>
-                <a v-on:click="scroll_title = !scroll_title" v-show="!scroll_title">
+                <a class="menu-item" v-on:click="scroll_title = !scroll_title" v-show="!scroll_title">
                     <i class="fa fa-square-o" aria-hidden="true"></i> Scroll Title</a>
-                <a v-on:click="editor = !editor" v-show="editor">
+
+                <a class="menu-item" v-on:click="editor = !editor" v-show="editor">
                     <i class="fa fa-check-square-o" aria-hidden="true"></i> Editor Mode</a>
-                <a v-on:click="editor = !editor" v-show="!editor">
+                <a class="menu-item" v-on:click="editor = !editor" v-show="!editor">
                     <i class="fa fa-square-o" aria-hidden="true"></i> Editor Mode</a>
             </div>
         </div>

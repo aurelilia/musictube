@@ -51,6 +51,13 @@ function scrollTitle(text) {
     }
 }
 
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function (event) {
+    if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
+        vm.menu_active = false;
+    }
+    console.log(event.target);
+};
 
 /* VUE */
 // Get user's playlist data from the HTML the server provided
