@@ -86,6 +86,11 @@ Vue.component('playlists', {
     <span v-if="!playlists.length">No playlists. Go to "Edit Playlists" to add one!</span>
     <table width="90%" v-else>
         <tr v-for="playlist in playlists" :key="playlist.id">
+            <td class="playlist-thumb">
+                <img :src="'https://i.ytimg.com/vi/' + playlist.videos[0].url + '/mqdefault.jpg'" height=50px class="thumb-1" v-if="playlist.videos[0] !== undefined"></img>
+                <img :src="'https://i.ytimg.com/vi/' + playlist.videos[1].url + '/mqdefault.jpg'" height=50px class="thumb-2" v-if="playlist.videos[1] !== undefined"></img>
+                <img :src="'https://i.ytimg.com/vi/' + playlist.videos[2].url + '/mqdefault.jpg'" height=50px class="thumb-3" v-if="playlist.videos[2] !== undefined"></img>
+            </td>
             <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
             <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
             <td class="rename" v-if="editor"><i class="fa fa-edit" v-on:click="onRename(playlist)"></i></td>
