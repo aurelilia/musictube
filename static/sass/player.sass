@@ -83,9 +83,9 @@ input[type=text]
     border-bottom: 2px solid $wtext
     background-color: $navbar
     color: $wtext
-    margin: 15px
+    margin: 20px
     margin-bottom: 0
-    font-size: 1em
+    font-size: 0.6em
     font-family: 'Open Sans', sans-serif
     text-align: center
 
@@ -234,20 +234,11 @@ tr .delete, .rename
     position: absolute
     border: 1px solid $wtext
 
-.thumb-1
-    top: 30px
-    left: 10px
-    z-index: 30
-
-.thumb-2
-    z-index: 20
-    top: 20px
-    left: 20px
-
-.thumb-3
-    z-index: 10
-    top: 10px
-    left: 30px
+@for $i from 1 through 3
+    .thumb-#{$i}
+        left: 10px * $i
+        top: ($i * -10) + 40
+        z-index: ($i * -10) + 40
 
 
 // Transitions

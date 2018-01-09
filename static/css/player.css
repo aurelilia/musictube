@@ -88,9 +88,9 @@ input[type=text] {
   border-bottom: 2px solid #fff;
   background-color: #3066A7;
   color: #fff;
-  margin: 15px;
+  margin: 20px;
   margin-bottom: 0;
-  font-size: 1em;
+  font-size: 0.6em;
   font-family: 'Open Sans', sans-serif;
   text-align: center;
 }
@@ -251,21 +251,21 @@ tr .delete, .rename {
 }
 
 .thumb-1 {
-  top: 30px;
   left: 10px;
+  top: 30;
   z-index: 30;
 }
 
 .thumb-2 {
-  z-index: 20;
-  top: 20px;
   left: 20px;
+  top: 20;
+  z-index: 20;
 }
 
 .thumb-3 {
-  z-index: 10;
-  top: 10px;
   left: 30px;
+  top: 10;
+  z-index: 10;
 }
 
 .component-fade-enter-active, .component-fade-leave-active {
