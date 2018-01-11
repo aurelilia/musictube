@@ -3,3 +3,5 @@ migrations
 __pycache__
 key
 vue.js
+*.css
+*.css.map

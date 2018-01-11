@@ -16,3 +16,6 @@ This depends on django >= 2.0 and pafy. To install both with pip, do:
 key: Put your SECRET_KEY in here. If this is missing, a dev env will be assumed and a default key be used.
 
 database: Put your django DATABASE settings in here (serialized in JSON).  
+
+
+#### Finally, compile the SASS files and put them under static/css.
