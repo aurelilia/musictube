@@ -287,4 +287,51 @@ tr .delete, .rename {
 .navbar-fade-enter, .navbar-fade-leave-to, .position-fade-enter, .position-fade-leave-to {
   color: #3066A7 !important;
 }
+
+@media only screen and (max-device-width: 1024px) {
+  .logo {
+    display: none;
+  }
+  .controls {
+    padding-left: 15px;
+  }
+}
+
+@media only screen and (max-device-width: 768px) {
+  .volume, .playlist-thumb, .thumb, .thumb-nav {
+    display: none;
+  }
+  .track {
+    overflow: hidden;
+    padding: 2px 5px;
+    width: 100%;
+    height: 50px;
+    bottom: 0;
+    background-color: #3066A7;
+    position: fixed;
+    color: #fff;
+    z-index: 100;
+  }
+  .track-title {
+    white-space: nowrap;
+  }
+  .position-slider {
+    width: 70% !important;
+  }
+  body {
+    margin-bottom: 60px;
+  }
+  .content {
+    margin-top: 85px;
+  }
+}
+
+@media only screen and (max-device-width: 400px) {
+  .track-title {
+    white-space: normal !important;
+  }
+  .position-slider, .position-text {
+    display: none;
+  }
+}
 /*# sourceMappingURL=player.css.map */
