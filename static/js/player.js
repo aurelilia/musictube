@@ -40,7 +40,10 @@ function updatePosition(pos) {
 // Scrolling title
 var scroller = null;
 function scrollTitle(text) {
-    if (vm.scroll_title && (document.title != "MusicTube")) {
+    if (vm.scroll_title) {
+        if(document.title !== "MusicTube") {
+            clearTimeout(scroller);
+        }
         document.title = text;
         scroller = setTimeout(function () {
             scrollTitle(text.substr(1) + text.substr(0, 1));
@@ -200,7 +203,7 @@ var vm = new Vue({
         updateCurrentTrack(video) {
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
-            scrollTitle(video.title + "     ");
+            scrollTitle(video.title + " <> ");
             vm.player.title = `Loading...`;
             sendGET("/u/" + video.url, function () {
                 if (this.readyState == 4 && this.status == 200) {
