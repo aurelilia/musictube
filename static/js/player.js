@@ -56,7 +56,6 @@ window.onclick = function (event) {
     if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
         vm.menu_active = false;
     }
-    console.log(event.target);
 };
 
 
