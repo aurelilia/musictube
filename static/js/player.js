@@ -107,13 +107,13 @@ Vue.component('playlists', {
             }
         },
         onRename(obj) {
-            name = prompt("Enter a new name for the playlist:");
-            if (name !== null && name !== "") {
+            list_name = prompt("Enter a new name for the playlist:");
+            if (list_name !== null && list_name !== "") {
                 sendPOST("/e/rp/", JSON.stringify({
                     'old': obj.name,
-                    'new': name
+                    'new': list_name
                 }));
-                obj.name = name;
+                obj.name = list_name;
             }
         }
     }
@@ -172,7 +172,7 @@ var vm = new Vue({
         volume: function (vol) {
             vm.player.e.volume = vol / 400;
         },
-        cur_video_index: function (index, oldindex) {
+        cur_video_index: function (index) {
             if (vm.cur_playlist.videos[index] === vm.cur_video) {
                 return;
             }
