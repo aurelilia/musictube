@@ -1,9 +1,8 @@
 import json
 import pafy
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
 from musictube.player.views import fetch
 from musictube.models import Playlist, Video

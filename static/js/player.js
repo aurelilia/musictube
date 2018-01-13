@@ -1,20 +1,20 @@
 // Interact with server via GET request. 
-// "whenReady" is a function executed on state change.
+// 'whenReady' is a function executed on state change.
 function sendGET(location, whenReady) {
     var form = new FormData();
     var request = new XMLHttpRequest();
     request.onreadystatechange = whenReady;
-    request.open("GET", location);
+    request.open('GET', location);
     request.send(form);
 }
 // Interact via POST request.
 function sendPOST(location, content, whenReady) {
     var form = new FormData();
-    form.append("csrfmiddlewaretoken", document.getElementsByName("csrfmiddlewaretoken")[0].value);
-    form.append("content", content);
+    form.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+    form.append('content', content);
     var request = new XMLHttpRequest();
     request.onreadystatechange = whenReady;
-    request.open("POST", location);
+    request.open('POST', location);
     request.send(form);
 }
 
@@ -24,7 +24,7 @@ function updateVolume(num) {
     if (num !== vm.volume) {
         vm.volume = num;
         // Store volume in local storage, so the user doesn't lose it on reload
-        localStorage.setItem("volume", num);
+        localStorage.setItem('volume', num);
     }
 }
 
@@ -39,9 +39,10 @@ function updatePosition(pos) {
 
 // Scrolling title
 var scroller = null;
+
 function scrollTitle(text) {
     if (vm.scroll_title) {
-        if(document.title !== "MusicTube") {
+        if (document.title !== 'MusicTube') {
             clearTimeout(scroller);
         }
         document.title = text;
@@ -50,7 +51,7 @@ function scrollTitle(text) {
         }, 500);
     } else {
         clearTimeout(scroller);
-        document.title = vm.cur_video === null ? "MusicTube" : vm.cur_video.title;
+        document.title = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
     }
 }
 
@@ -64,12 +65,12 @@ window.onclick = function (event) {
 
 /* VUE */
 // Get user's playlist data from the HTML the server provided
-var playlist_data = JSON.parse(document.getElementById("json").innerHTML);
+var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
 
 // Add player object
 var player = {
-    e: document.getElementById("player"),
-    title: "No track playing.",
+    e: document.getElementById('player'),
+    title: 'No track playing.',
     position: 0
 };
 player.e.pause();
@@ -101,15 +102,15 @@ Vue.component('playlists', {
     `,
     methods: {
         onDelete(obj) {
-            if (confirm("Are you sure you want to delete the playlist?")) {
-                sendPOST("/e/dp/", obj.name);
+            if (confirm('Are you sure you want to delete the playlist?')) {
+                sendPOST('/e/dp/', obj.name);
                 vm.playlists.splice(vm.playlists.indexOf(obj), 1);
             }
         },
         onRename(obj) {
-            list_name = prompt("Enter a new name for the playlist:");
-            if (list_name !== null && list_name !== "") {
-                sendPOST("/e/rp/", JSON.stringify({
+            var list_name = prompt('Enter a new name for the playlist:');
+            if (list_name !== null && list_name !== '') {
+                sendPOST('/e/rp/', JSON.stringify({
                     'old': obj.name,
                     'new': list_name
                 }));
@@ -138,8 +139,8 @@ Vue.component('playlist-videos', {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         },
         onDelete(obj) {
-            if (confirm("Are you sure you want to remove the video?")) {
-                sendPOST("/e/dv/", JSON.stringify([vm.cur_playlist_view.name, obj.title]));
+            if (confirm('Are you sure you want to remove the video?')) {
+                sendPOST('/e/dv/', JSON.stringify([vm.cur_playlist_view.name, obj.title]));
                 vm.cur_playlist_view.videos.splice(vm.cur_playlist_view.videos.indexOf(obj), 1);
             }
         }
@@ -155,7 +156,7 @@ var vm = new Vue({
         playing: !player.e.paused,
         volume: 400,
         random: false,
-        cur_screen: "playlists",
+        cur_screen: 'playlists',
         menu_active: false,
         scroll_title: false,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
@@ -187,9 +188,9 @@ var vm = new Vue({
             }
         },
         scroll_title: function (bool) {
-            var text = vm.cur_video === null ? "MusicTube" : vm.cur_video.title;
+            var text = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
             scrollTitle(text);
-            localStorage.setItem("scroll", bool);
+            localStorage.setItem('scroll', bool);
         }
     },
     methods: {
@@ -198,17 +199,17 @@ var vm = new Vue({
         },
         onPlaylistClick(view) {
             this.cur_playlist_view = view;
-            this.cur_screen = "playlist-videos";
+            this.cur_screen = 'playlist-videos';
         },
         updateCurrentTrack(video) {
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
-            scrollTitle(video.title + " <> ");
-            vm.player.title = `Loading...`;
-            sendGET("/u/" + video.url, function () {
+            scrollTitle(video.title + ' <> ');
+            vm.player.title = 'Loading...';
+            sendGET('/u/' + video.url, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
-                    vm.player.e.setAttribute("src", this.responseText);
+                    vm.player.e.setAttribute('src', this.responseText);
                     vm.player.e.play();
                     vm.playing = !vm.player.e.paused;
                 }
@@ -221,7 +222,7 @@ var vm = new Vue({
             }
         },
         onPlayPause() {
-            if (!vm.playing && vm.player.e.src !== "") {
+            if (!vm.playing && vm.player.e.src !== '') {
                 vm.player.e.play();
             } else if (vm.playing) {
                 vm.player.e.pause();
@@ -240,76 +241,76 @@ var vm = new Vue({
         },
         onRandom() {
             vm.random = !vm.random;
-            document.getElementById("random-button").classList.toggle("grey");
-            localStorage.setItem("random", vm.random);
+            document.getElementById('random-button').classList.toggle('grey');
+            localStorage.setItem('random', vm.random);
         },
         // EDITOR
         onAdd() {
-            name = document.getElementById('add-input').value;
+            var input = document.getElementById('add-input').value;
             switch (vm.cur_screen) {
-                case "playlists":
-                    if (name.includes("youtube.com/playlist")) {
-                        content = {
-                            url: name,
-                            private: false
-                        };
-                        sendPOST("/e/ip/", JSON.stringify(content), function () {
-                            if (this.readyState == 4 && this.status == 200) {
-                                vm.playlists = JSON.parse(this.responseText);
-                            }
-                        });
-                    } else {
-                        for (var i = 0, len = vm.playlists.length; i < len; i++) {
-                            if (name === vm.playlists[i].name) {
-                                alert("You already have a playlist with that name! Please choose another one.");
-                                return;
-                            }
-                        }
-                        new_playlist = {
-                            name: name,
-                            private: false,
-                            videos: []
-                        };
-                        vm.playlists.push(new_playlist);
-                        sendPOST("/e/np/", JSON.stringify(new_playlist));
-                    }
-                    break;
-                case "playlist-videos":
-                    if (!name.includes("youtube.com/watch?v=")) {
-                        alert("Not a valid URL! Please try again.");
-                        return;
-                    }
-                    new_video = {
-                        url: name,
-                        plistname: vm.cur_playlist_view.name
+            case 'playlists':
+                if (input.includes('youtube.com/playlist')) {
+                    var content = {
+                        url: input,
+                        private: false
                     };
-                    sendPOST("/e/nv/", JSON.stringify(new_video), function () {
+                    sendPOST('/e/ip/', JSON.stringify(content), function () {
                         if (this.readyState == 4 && this.status == 200) {
-                            vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
+                            vm.playlists = JSON.parse(this.responseText);
                         }
                     });
-                    break;
+                } else {
+                    for (var i = 0, len = vm.playlists.length; i < len; i++) {
+                        if (input === vm.playlists[i].input) {
+                            alert('You already have a playlist with that input! Please choose another one.');
+                            return;
+                        }
+                    }
+                    var new_playlist = {
+                        name: input,
+                        private: false,
+                        videos: []
+                    };
+                    vm.playlists.push(new_playlist);
+                    sendPOST('/e/np/', JSON.stringify(new_playlist));
+                }
+                break;
+            case 'playlist-videos':
+                if (!input.includes('youtube.com/watch?v=')) {
+                    alert('Not a valid URL! Please try again.');
+                    return;
+                }
+                var new_video = {
+                    url: input,
+                    plistname: vm.cur_playlist_view.name
+                };
+                sendPOST('/e/nv/', JSON.stringify(new_video), function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
+                    }
+                });
+                break;
             }
             vm.add = false;
-            document.getElementById('add-input').value = "";
+            document.getElementById('add-input').value = '';
         },
     }
 });
 
 // Check if volume is already in local storage; use default value if not
-if (localStorage.getItem("volume") !== null) {
-    updateVolume(localStorage.getItem("volume"));
+if (localStorage.getItem('volume') !== null) {
+    updateVolume(localStorage.getItem('volume'));
 } else {
     updateVolume(25);
 }
 
 // Get random state from local storage; toggle random if true
-document.getElementById("random-button").classList.toggle("grey");
-if (localStorage.getItem("random") === "true") {
+document.getElementById('random-button').classList.toggle('grey');
+if (localStorage.getItem('random') === 'true') {
     vm.onRandom();
 }
 
 // Get title scroll settings
-if (localStorage.getItem("scroll") === "true") {
+if (localStorage.getItem('scroll') === 'true') {
     vm.scroll_title = true;
 }
