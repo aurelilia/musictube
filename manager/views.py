@@ -39,9 +39,9 @@ def deletePlaylist(request):
 def deleteVideo(request):
     content = json.loads(request.POST['content'])
     playlist = get_object_or_404(Playlist, user=request.user, name=content[0])
-    video = get_object_or_404(Video, title=content[1])
-    playlist.videos.remove(video)
-    playlist.save()
+    for video in Video.objects.filter(title=content[1]):
+        playlist.videos.remove(video)
+        playlist.save()
     return HttpResponse('')
 
 
