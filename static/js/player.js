@@ -86,7 +86,7 @@ player.e.addEventListener('ended', function () {
 Vue.component('playlists', {
     props: ['playlists', 'editor'],
     template: `
-    <span v-if="!playlists.length">No playlists. Go to "Edit Playlists" to add one!</span>
+    <span v-if="!playlists.length">No playlists. Go into editor mode to add one!</span>
     <table v-else>
         <tr v-for="playlist in playlists" :key="playlist.id">
             <td class="playlist-thumb" v-if="playlist.videos !== null">
@@ -123,7 +123,7 @@ Vue.component('playlists', {
 Vue.component('playlist-videos', {
     props: ['playlists', 'cur_playlist_view', 'editor'],
     template: `
-    <span v-if="!cur_playlist_view.videos.length">No videos. Go to "Edit Playlists" to add one!</span>
+    <span v-if="!cur_playlist_view.videos.length">No videos. Go into editor mode to add one!</span>
     <table v-else>
         <tr v-for="video in cur_playlist_view.videos" :key="video.id"
             v-on:click="$emit('update:track', [cur_playlist_view, video])">
