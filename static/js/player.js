@@ -23,8 +23,6 @@ function sendPOST(location, content, whenReady) {
 function updateVolume(num) {
     if (num !== vm.volume) {
         vm.volume = num;
-        // Store volume in local storage, so the user doesn't lose it on reload
-        localStorage.setItem('volume', num);
     }
 }
 
@@ -60,6 +58,13 @@ window.onclick = function (event) {
     if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
         vm.menu_active = false;
     }
+};
+
+// Save user prefrences to localStorage on unload
+window.onunload = function () {
+    localStorage.setItem('scroll', vm.scroll_title);
+    localStorage.setItem('volume', vm.volume);
+    localStorage.setItem('random', vm.random);
 };
 
 
@@ -154,11 +159,11 @@ var vm = new Vue({
         playlists: playlist_data,
         player: player,
         playing: !player.e.paused,
-        volume: 400,
+        volume: 25,
         random: false,
         cur_screen: 'playlists',
         menu_active: false,
-        scroll_title: false,
+        scroll_title: true,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
         // looked at with the playlist-videos component
         cur_playlist: null,
@@ -190,7 +195,6 @@ var vm = new Vue({
         scroll_title: function (bool) {
             var text = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
             scrollTitle(text);
-            localStorage.setItem('scroll', bool);
         }
     },
     methods: {
@@ -238,10 +242,6 @@ var vm = new Vue({
             if (vm.playing) {
                 vm.cur_video_index += 1;
             }
-        },
-        onRandom() {
-            vm.random = !vm.random;
-            localStorage.setItem('random', vm.random);
         },
         // EDITOR
         onAdd() {
@@ -296,20 +296,9 @@ var vm = new Vue({
     }
 });
 
-// Check if volume is already in local storage; use default value if not
+// Check if preferences are already in local storage; use default value if not
 if (localStorage.getItem('volume') !== null) {
     updateVolume(localStorage.getItem('volume'));
-} else {
-    updateVolume(25);
-}
-
-// Get random state from local storage; toggle random if true
-document.getElementById('random-button').classList.toggle('grey');
-if (localStorage.getItem('random') === 'true') {
-    vm.onRandom();
-}
-
-// Get title scroll settings
-if (localStorage.getItem('scroll') === 'true') {
-    vm.scroll_title = true;
+    vm.random = localStorage.getItem('random') === 'true';
+    vm.scroll_title = localStorage.getItem('scroll') === 'true';
 }
