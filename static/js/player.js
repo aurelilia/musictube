@@ -241,7 +241,6 @@ var vm = new Vue({
         },
         onRandom() {
             vm.random = !vm.random;
-            document.getElementById('random-button').classList.toggle('grey');
             localStorage.setItem('random', vm.random);
         },
         // EDITOR
