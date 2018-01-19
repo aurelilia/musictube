@@ -30,19 +30,13 @@ function updatePosition(pos) {
 
 // Scrolling title
 var scroller = null;
-
 function scrollTitle(text) {
-    if (vm.scroll_title) {
-        if (document.title !== 'MusicTube') {
-            clearTimeout(scroller);
-        }
-        document.title = text;
+    clearTimeout(scroller);
+    document.title = text;
+    if (vm.scroll_title && text !== 'MusicTube') {
         scroller = setTimeout(function () {
             scrollTitle(text.substr(1) + text.substr(0, 1));
         }, 500);
-    } else {
-        clearTimeout(scroller);
-        document.title = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
     }
 }
 
@@ -186,7 +180,7 @@ var vm = new Vue({
                 vm.cur_video_index = 0;
             }
         },
-        scroll_title: function (bool) {
+        scroll_title: function () {
             var text = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
             scrollTitle(text);
         }
