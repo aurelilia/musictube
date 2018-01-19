@@ -19,13 +19,6 @@ function sendPOST(location, content, whenReady) {
 }
 
 
-// Volume slider
-function updateVolume(num) {
-    if (num !== vm.volume) {
-        vm.volume = num;
-    }
-}
-
 // Position slider
 function updatePosition(pos) {
     pos = Math.floor(pos);
@@ -176,6 +169,7 @@ var vm = new Vue({
     },
     watch: {
         volume: function (vol) {
+            // Setting volume in HTML tags is not possible.
             vm.player.e.volume = vol / 400;
         },
         cur_video_index: function (index) {
@@ -298,7 +292,7 @@ var vm = new Vue({
 
 // Check if preferences are already in local storage; use default value if not
 if (localStorage.getItem('volume') !== null) {
-    updateVolume(localStorage.getItem('volume'));
+    vm.volume = localStorage.getItem('volume');
     vm.random = localStorage.getItem('random') === 'true';
     vm.scroll_title = localStorage.getItem('scroll') === 'true';
 }

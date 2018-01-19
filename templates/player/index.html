@@ -53,9 +53,9 @@
                             <span class="volume-icon">
                                 <i class="fa fa-volume-up"></i>
                             </span>
-                            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" oninput="updateVolume(this.value)"
+                            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" v-on:input="volume = $event.target.value"
                                 :value="volume">
-                            <input type="number" class="volume-box" id="volume-box" min="0" max="100" onchange="updateVolume(this.value)" :value="volume">
+                            <input type="number" class="volume-box" id="volume-box" min="0" max="100" v-on:change="volume = $event.target.value" :value="volume">
                         </span>
                         <span class="hamburger-menu">
                             <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
