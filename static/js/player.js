@@ -85,10 +85,10 @@ Vue.component('playlists', {
                 <img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height="50px" v-for="(video, index) in playlist.videos.slice(0, 3)" :class="'thumb-' + (index + 1)"></img>
             </td>
             <td class="playlist-thumb" v-else></td>
-            <td class="name" v-on:click="$emit('update:view', playlist)">{{ playlist.name }}</td>
-            <td class="context" v-on:click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
-            <td class="rename" v-if="editor"><i class="fa fa-edit" v-on:click="onRename(playlist)"></i></td>
-            <td class="delete" v-if="editor"><i class="fa fa-trash-o" v-on:click="onDelete(playlist)"></i></td>
+            <td class="name" @click="$emit('update:view', playlist)">{{ playlist.name }}</td>
+            <td class="context" @click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
+            <td class="rename" v-if="editor"><i class="fa fa-edit" @click="onRename(playlist)"></i></td>
+            <td class="delete" v-if="editor"><i class="fa fa-trash-o" @click="onDelete(playlist)"></i></td>
         </tr>
     </table>
     `,
@@ -118,11 +118,11 @@ Vue.component('playlist-videos', {
     <span v-if="!cur_playlist_view.videos.length">No videos. Go into editor mode to add one!</span>
     <table v-else>
         <tr v-for="video in cur_playlist_view.videos" :key="video.id"
-            v-on:click="$emit('update:track', [cur_playlist_view, video])">
+            @click="$emit('update:track', [cur_playlist_view, video])">
             <td class="thumb"><img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
-            <td class="delete" v-if="editor"><i class="fa fa-trash-o" v-on:click="onDelete(video)"></i></td>
+            <td class="delete" v-if="editor"><i class="fa fa-trash-o" @click="onDelete(video)"></i></td>
         </tr>
     </table>
     `,

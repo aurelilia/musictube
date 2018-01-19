@@ -16,20 +16,20 @@
             <transition name="navbar-fade" mode="out-in">
                 <ul v-if="!editor" key="play">
                     <li class="logo">
-                        <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
+                        <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="cur_screen = 'playlists'">
                     </li>
                     <li class="controls">
-                        <p id="prev-button" v-on:click="onPrevTrack">
+                        <p id="prev-button" @click="onPrevTrack">
                             <i class="fa fa-backward"></i>
                         </p>
-                        <p id="play-button" v-on:click="onPlayPause">
+                        <p id="play-button" @click="onPlayPause">
                             <i class="fa fa-play" v-show="!playing"></i>
                             <i class="fa fa-pause" v-show="playing"></i>
                         </p>
-                        <p id="random-button" v-on:click="random = !random" :class="{ 'grey': !random }">
+                        <p id="random-button" @click="random = !random" :class="{ 'grey': !random }">
                             <i class="fa fa-random"></i>
                         </p>
-                        <p id="next-button" v-on:click="onNextTrack">
+                        <p id="next-button" @click="onNextTrack">
                             <i class="fa fa-forward"></i>
                         </p>
                     </li>
@@ -53,52 +53,52 @@
                             <span class="volume-icon">
                                 <i class="fa fa-volume-up"></i>
                             </span>
-                            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" v-on:input="volume = $event.target.value"
+                            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="volume = $event.target.value"
                                 :value="volume">
-                            <input type="number" class="volume-box" id="volume-box" min="0" max="100" v-on:change="volume = $event.target.value" :value="volume">
+                            <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="volume = $event.target.value" :value="volume">
                         </span>
                         <span class="hamburger-menu">
-                            <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
+                            <i class="fa fa-bars" @click="menu_active = !menu_active"></i>
                         </span>
                     </li>
                 </ul>
                 <ul v-else key="edit">
                     <li class="logo">
-                        <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" v-on:click="cur_screen = 'playlists'">
+                        <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="cur_screen = 'playlists'">
                     </li>
                     <li class="controls">
                         <p class="add-icon">
-                            <i class="fa fa-plus" v-on:click="add = !add"></i>
+                            <i class="fa fa-plus" @click="add = !add"></i>
                         </p>
-                        <form v-on:submit.prevent="onAdd()">
+                        <form @submit.prevent="onAdd()">
                             <transition name="navbar-fade">
                                 <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL...">
                             </transition>
                         </form>
                     </li>
                     <li class="right-aligned">
-                        <span class="exit" v-on:click="editor = !editor">
+                        <span class="exit" @click="editor = !editor">
                             Return to player
                         </span>
                         <span class="hamburger-menu">
-                            <i class="fa fa-bars" v-on:click="menu_active = !menu_active"></i>
+                            <i class="fa fa-bars" @click="menu_active = !menu_active"></i>
                         </span>
                     </li>
                 </ul>
             </transition>
 
             <div id="menu-item" class="menu-dropdown" v-show="menu_active">
-                <a class="menu-item" v-on:click="cur_screen = 'playlists'">My Playlists</a>
+                <a class="menu-item" @click="cur_screen = 'playlists'">My Playlists</a>
                 <a class="menu-item" href="/logout/">Log out</a>
 
-                <a class="menu-item" v-on:click="scroll_title = !scroll_title" v-show="scroll_title">
+                <a class="menu-item" @click="scroll_title = !scroll_title" v-show="scroll_title">
                     <i class="fa fa-check-square-o" aria-hidden="true"></i> Scroll Title</a>
-                <a class="menu-item" v-on:click="scroll_title = !scroll_title" v-show="!scroll_title">
+                <a class="menu-item" @click="scroll_title = !scroll_title" v-show="!scroll_title">
                     <i class="fa fa-square-o" aria-hidden="true"></i> Scroll Title</a>
 
-                <a class="menu-item" v-on:click="editor = !editor" v-show="editor">
+                <a class="menu-item" @click="editor = !editor" v-show="editor">
                     <i class="fa fa-check-square-o" aria-hidden="true"></i> Editor Mode</a>
-                <a class="menu-item" v-on:click="editor = !editor" v-show="!editor">
+                <a class="menu-item" @click="editor = !editor" v-show="!editor">
                     <i class="fa fa-square-o" aria-hidden="true"></i> Editor Mode</a>
             </div>
         </div>
@@ -109,7 +109,7 @@
                 </component>
             </transition>
         </div>
-        <audio id="player" autoplay></audio>
+        <audio id="player" autoplay @ended="editor = !editor"></audio>
     </div>
 
     <p id="json" style="display:none"> {{ json }}</p>
