@@ -43,7 +43,7 @@
                             <span class="position" v-if="cur_video !== null">
                                 <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
                                 <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100"
-                                    oninput="updatePosition(this.value)" :value="player.position">
+                                    @input="player.e.currentTime = Math.floor($event.target.value)" :value="player.position">
                             </span>
                         </transition>
                     </li>

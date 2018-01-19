@@ -19,15 +19,6 @@ function sendPOST(location, content, whenReady) {
 }
 
 
-// Position slider
-function updatePosition(pos) {
-    pos = Math.floor(pos);
-    if (pos !== vm.player.position) {
-        vm.player.position = pos;
-        vm.player.e.currentTime = pos;
-    }
-}
-
 // Scrolling title
 var scroller = null;
 function scrollTitle(text) {
@@ -58,22 +49,6 @@ window.onunload = function () {
 /* VUE */
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
-
-// Add player object
-var player = {
-    e: document.getElementById('player'),
-    title: 'No track playing.',
-    position: 0
-};
-player.e.pause();
-player.e.addEventListener('timeupdate', function () {
-    vm.player.position = Math.floor(player.e.currentTime);
-});
-player.e.addEventListener('ended', function () {
-    updatePosition(0);
-    vm.onNextTrack();
-});
-
 
 Vue.component('playlists', {
     props: ['playlists', 'editor'],
@@ -144,9 +119,6 @@ var vm = new Vue({
     el: '#vue-app',
     data: {
         playlists: playlist_data,
-        player: player,
-        playing: !player.e.paused,
-        volume: 25,
         random: false,
         cur_screen: 'playlists',
         menu_active: false,
@@ -159,11 +131,19 @@ var vm = new Vue({
         cur_video_index: 0,
         // EDITOR
         editor: false,
-        add: false
+        add: false,
+        // Player/audio element + related vars
+        player: {
+            e: document.getElementById('player'),
+            title: 'No track playing.',
+            position: 0
+        },
+        playing: false,
+        volume: 25,
     },
     watch: {
         volume: function (vol) {
-            // Setting volume in HTML tags is not possible.
+            // Setting volume in HTML tags is not possible, so v-bind isn't an option.
             vm.player.e.volume = vol / 400;
         },
         cur_video_index: function (index) {
@@ -174,7 +154,6 @@ var vm = new Vue({
                 index = Math.floor((Math.random() * vm.cur_playlist.videos.length) + 1);
             }
             if (index >= 0 && index < vm.cur_playlist.videos.length) {
-                vm.player.e.pause();
                 vm.updateCurrentTrack(vm.cur_playlist.videos[index]);
             } else {
                 vm.cur_video_index = 0;
@@ -194,6 +173,8 @@ var vm = new Vue({
             this.cur_screen = 'playlist-videos';
         },
         updateCurrentTrack(video) {
+            vm.player.e.pause();
+            vm.player.e.currentTime = 0;
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
             scrollTitle(video.title + ' <> ');
@@ -203,7 +184,7 @@ var vm = new Vue({
                     vm.player.title = video.title;
                     vm.player.e.setAttribute('src', this.responseText);
                     vm.player.e.play();
-                    vm.playing = !vm.player.e.paused;
+                    vm.playing = true;
                 }
             });
         },
@@ -283,6 +264,15 @@ var vm = new Vue({
         },
     }
 });
+
+
+// Pause the player; add some event handlers to it
+vm.player.e.pause();
+vm.player.e.addEventListener('timeupdate', function () {
+    vm.player.position = Math.floor(vm.player.e.currentTime);
+});
+vm.player.e.addEventListener('ended', vm.onNextTrack);
+
 
 // Check if preferences are already in local storage; use default value if not
 if (localStorage.getItem('volume') !== null) {
