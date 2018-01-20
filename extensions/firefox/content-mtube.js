@@ -5,13 +5,20 @@ function click(selector) {
 browser.runtime.onMessage.addListener(request => {
     switch (request) {
     case 'pause':
+        if (document.getElementsByClassName('fa-play')[0].style['display'] === 'none') {
+            click('play-button');
+        }
+        break;
+    case 'play':
+        if (document.getElementsByClassName('fa-pause')[0].style['display'] === 'none') {
+            click('play-button');
+        }
+        break;
+    case 'play-pause':
         click('play-button');
         break;
-    case 'prev':
-        click('prev-button');
-        break;
-    case 'next':
-        click('next-button');
+    default:
+        click(request + '-button');
         break;
     }
 });
