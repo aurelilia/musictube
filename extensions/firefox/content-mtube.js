@@ -2,7 +2,7 @@ function click(selector) {
     document.getElementById(selector).click();
 }
 
-browser.runtime.onMessage.addListener(request => {
+browser.runtime.onMessage.addListener((request) => {
     switch (request) {
     case 'pause':
         if (document.getElementsByClassName('fa-play')[0].style['display'] === 'none') {

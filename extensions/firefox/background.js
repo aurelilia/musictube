@@ -16,7 +16,7 @@ function handleUpdated(tabId, changeInfo, tabInfo) {
 }
 
 browser.tabs.onUpdated.addListener(handleUpdated);
-browser.commands.onCommand.addListener(function (command) {
+browser.commands.onCommand.addListener((command) => {
     action = command;
     browser.tabs.query({
         url: '*://mtube.dynu.net/*'

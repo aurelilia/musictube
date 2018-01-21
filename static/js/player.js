@@ -25,21 +25,21 @@ function scrollTitle(text) {
     clearTimeout(scroller);
     document.title = text;
     if (vm.scroll_title && text !== 'MusicTube') {
-        scroller = setTimeout(function () {
+        scroller = setTimeout(() => {
             scrollTitle(text.substr(1) + text.substr(0, 1));
         }, 500);
     }
 }
 
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function (event) {
+window.onclick = (event) => {
     if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
         vm.menu_active = false;
     }
 };
 
 // Save user prefrences to localStorage on unload
-window.onunload = function () {
+window.onunload = () => {
     localStorage.setItem('scroll', vm.scroll_title);
     localStorage.setItem('volume', vm.volume);
     localStorage.setItem('random', vm.random);
@@ -142,11 +142,11 @@ var vm = new Vue({
         volume: 25,
     },
     watch: {
-        volume: function (vol) {
+        volume: (vol) => {
             // Setting volume in HTML tags is not possible, so v-bind isn't an option.
             vm.player.e.volume = vol / 400;
         },
-        cur_video_index: function (index) {
+        cur_video_index: (index) => {
             if (vm.cur_playlist.videos[index] === vm.cur_video) {
                 return;
             }
@@ -159,7 +159,7 @@ var vm = new Vue({
                 vm.cur_video_index = 0;
             }
         },
-        scroll_title: function () {
+        scroll_title: () => {
             var text = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
             scrollTitle(text);
         }
@@ -222,7 +222,7 @@ var vm = new Vue({
                         url: input,
                         private: false
                     };
-                    sendPOST('/e/ip/', JSON.stringify(content), function () {
+                    sendPOST('/e/ip/', JSON.stringify(content), function() {
                         if (this.readyState == 4 && this.status == 200) {
                             vm.playlists = JSON.parse(this.responseText);
                         }
@@ -252,7 +252,7 @@ var vm = new Vue({
                     url: input,
                     plistname: vm.cur_playlist_view.name
                 };
-                sendPOST('/e/nv/', JSON.stringify(new_video), function () {
+                sendPOST('/e/nv/', JSON.stringify(new_video), function() {
                     if (this.readyState == 4 && this.status == 200) {
                         vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
                     }
@@ -268,7 +268,7 @@ var vm = new Vue({
 
 // Pause the player; add some event handlers to it
 vm.player.e.pause();
-vm.player.e.addEventListener('timeupdate', function () {
+vm.player.e.addEventListener('timeupdate', () => {
     vm.player.position = Math.floor(vm.player.e.currentTime);
 });
 vm.player.e.addEventListener('ended', vm.onNextTrack);
