@@ -22,8 +22,7 @@
                         <i class="fa fa-backward"></i>
                     </p>
                     <p id="play-button" @click="onPlayPause">
-                        <i class="fa fa-play" v-show="!playing"></i>
-                        <i class="fa fa-pause" v-show="playing"></i>
+                        <i class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
                     </p>
                     <p id="random-button" @click="random = !random" :class="{ 'grey': !random }">
                         <i class="fa fa-random"></i>
@@ -90,15 +89,14 @@
             <a class="menu-item" @click="cur_screen = 'playlists'">My Playlists</a>
             <a class="menu-item" href="/logout/">Log out</a>
 
-            <a class="menu-item" @click="scroll_title = !scroll_title" v-show="scroll_title">
-                <i class="fa fa-check-square-o" aria-hidden="true"></i> Scroll Title</a>
-            <a class="menu-item" @click="scroll_title = !scroll_title" v-show="!scroll_title">
-                <i class="fa fa-square-o" aria-hidden="true"></i> Scroll Title</a>
-
-            <a class="menu-item" @click="editor = !editor" v-show="editor">
-                <i class="fa fa-check-square-o" aria-hidden="true"></i> Editor Mode</a>
-            <a class="menu-item" @click="editor = !editor" v-show="!editor">
-                <i class="fa fa-square-o" aria-hidden="true"></i> Editor Mode</a>
+            <a class="menu-item" @click="scroll_title = !scroll_title">
+                <i class="fa" :class="{'fa-check-square-o': scroll_title, 'fa-square-o': !scroll_title}" aria-hidden="true"></i>
+                Scroll Title
+            </a>
+            <a class="menu-item" @click="editor = !editor">
+                <i class="fa" :class="{'fa-check-square-o': editor, 'fa-square-o': !editor}" aria-hidden="true"></i>
+                Editor Mode
+            </a>
         </div>
 
         <div class="content">
@@ -108,7 +106,7 @@
                 </component>
             </transition>
         </div>
-        
+
         <audio id="player" autoplay @ended="editor = !editor"></audio>
     </div>
 
