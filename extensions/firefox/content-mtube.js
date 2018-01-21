@@ -5,12 +5,8 @@ function click(selector) {
 browser.runtime.onMessage.addListener((request) => {
     switch (request) {
     case 'pause':
-        if (document.getElementsByClassName('fa-play')[0].style['display'] === 'none') {
-            click('play-button');
-        }
-        break;
     case 'play':
-        if (document.getElementsByClassName('fa-pause')[0].style['display'] === 'none') {
+        if (document.getElementById('fa-play').classList.contains('fa-' + request)) {
             click('play-button');
         }
         break;

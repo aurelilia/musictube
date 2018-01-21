@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "MusicTube",
-    "version": "0.2",
+    "version": "0.3",
 
     "description": "Adds extra functionality to MusicTube.",
 

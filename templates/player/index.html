@@ -22,7 +22,7 @@
                         <i class="fa fa-backward"></i>
                     </p>
                     <p id="play-button" @click="onPlayPause">
-                        <i class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
+                        <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
                     </p>
                     <p id="random-button" @click="random = !random" :class="{ 'grey': !random }">
                         <i class="fa fa-random"></i>
