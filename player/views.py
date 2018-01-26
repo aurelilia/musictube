@@ -11,7 +11,7 @@ from musictube.models import Playlist
 def home(request):
     """ Returns the main page. """
     context = {'json': fetch(request)}
-    return render(request, 'player/index.html', context=context)
+    return render(request, 'index.html', context=context)
 
 
 @login_required

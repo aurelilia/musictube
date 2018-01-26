@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpack_loader',
     'musictube',
     'musictube.player',
     'musictube.manager'
@@ -120,7 +121,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/musictube/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'public')
 
 
 # Various settings
@@ -133,3 +134,17 @@ USE_X_FORWARDED_PORT = True
 
 # Login URL
 LOGIN_URL = '/login/'
+
+
+# Webpack integration
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'musictube/dist'),
+    os.path.join(BASE_DIR, 'musictube/static')
+)
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': '',
+        'STATS_FILE': os.path.join(BASE_DIR, 'musictube/webpack-stats.json'),
+    }
+}

@@ -1,3 +1,8 @@
+import Vue from 'vue'
+import playlists from './components/playlists.vue'
+import videos from './components/videos.vue'
+import './sass/main.sass'
+
 // Interact with server via GET request. 
 // 'whenReady' is a function executed on state change.
 function sendGET(location, whenReady) {
@@ -50,73 +55,12 @@ window.onunload = () => {
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
 
-Vue.component('playlists', {
-    props: ['playlists', 'editor'],
-    template: `
-    <span v-if="!playlists.length">No playlists. Go into editor mode to add one!</span>
-    <table v-else>
-        <tr v-for="playlist in playlists" :key="playlist.id">
-            <td class="playlist-thumb" v-if="playlist.videos !== null">
-                <img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height="50px" v-for="(video, index) in playlist.videos.slice(0, 3)" :class="'thumb-' + (index + 1)"></img>
-            </td>
-            <td class="playlist-thumb" v-else></td>
-            <td class="name" @click="$emit('update:view', playlist)">{{ playlist.name }}</td>
-            <td class="context" @click="$emit('update:view', playlist)">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title":"titles" }}</td>
-            <td class="rename" v-if="editor"><i class="fa fa-edit" @click="onRename(playlist)"></i></td>
-            <td class="delete" v-if="editor"><i class="fa fa-trash-o" @click="onDelete(playlist)"></i></td>
-        </tr>
-    </table>
-    `,
-    methods: {
-        onDelete(obj) {
-            if (confirm('Are you sure you want to delete the playlist?')) {
-                sendPOST('/e/dp/', obj.name);
-                vm.playlists.splice(vm.playlists.indexOf(obj), 1);
-            }
-        },
-        onRename(obj) {
-            var list_name = prompt('Enter a new name for the playlist:');
-            if (list_name !== null && list_name !== '') {
-                sendPOST('/e/rp/', JSON.stringify({
-                    'old': obj.name,
-                    'new': list_name
-                }));
-                obj.name = list_name;
-            }
-        }
-    }
-});
-
-Vue.component('playlist-videos', {
-    props: ['playlists', 'cur_playlist_view', 'editor'],
-    template: `
-    <span v-if="!cur_playlist_view.videos.length">No videos. Go into editor mode to add one!</span>
-    <table v-else>
-        <tr v-for="video in cur_playlist_view.videos" :key="video.id"
-            @click="$emit('update:track', [cur_playlist_view, video])">
-            <td class="thumb"><img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
-            <td class="name">{{ video.title }}</td>
-            <td class="context">{{ formatSeconds(video.length) }}</td>
-            <td class="delete" v-if="editor"><i class="fa fa-trash-o" @click="onDelete(video)"></i></td>
-        </tr>
-    </table>
-    `,
-    methods: {
-        formatSeconds(secs) {
-            return new Date(1000 * secs).toISOString().substr(14, 5);
-        },
-        onDelete(obj) {
-            if (confirm('Are you sure you want to remove the video?')) {
-                sendPOST('/e/dv/', JSON.stringify([vm.cur_playlist_view.name, obj.title]));
-                vm.cur_playlist_view.videos.splice(vm.cur_playlist_view.videos.indexOf(obj), 1);
-            }
-        }
-    }
-});
-
-
 var vm = new Vue({
     el: '#vue-app',
+    components: {
+        playlists: playlists, 
+        videos: videos
+    },
     data: {
         playlists: playlist_data,
         random: false,
@@ -124,7 +68,7 @@ var vm = new Vue({
         menu_active: false,
         scroll_title: true,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
-        // looked at with the playlist-videos component
+        // looked at with the videos component
         cur_playlist: null,
         cur_playlist_view: null,
         cur_video: null,
@@ -170,7 +114,7 @@ var vm = new Vue({
         },
         onPlaylistClick(view) {
             this.cur_playlist_view = view;
-            this.cur_screen = 'playlist-videos';
+            this.cur_screen = 'videos';
         },
         updateCurrentTrack(video) {
             vm.player.e.pause();
@@ -243,7 +187,7 @@ var vm = new Vue({
                     sendPOST('/e/np/', JSON.stringify(new_playlist));
                 }
                 break;
-            case 'playlist-videos':
+            case 'videos':
                 if (!input.includes('youtube.com/watch?v=')) {
                     alert('Not a valid URL! Please try again.');
                     return;
