@@ -3,19 +3,6 @@ import playlists from './components/playlists.vue'
 import videos from './components/videos.vue'
 import './sass/main.sass'
 
-// Interact via XMLHTTP request.
-// 'whenReady' is a function executed on state change.
-function sendRequest(type, location, content, whenReady) {
-    var form = new FormData();
-    form.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
-    if (type === 'POST') form.append('content', content);
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = whenReady;
-    request.open(type, location);
-    request.send(form);
-}
-
-
 // Scrolling title
 var scroller = null;
 function scrollTitle(text) {
@@ -47,12 +34,11 @@ window.onunload = () => {
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
 
+Vue.component('playlists', playlists);
+Vue.component('videos', videos);
+
 var vm = new Vue({
     el: '#vue-app',
-    components: {
-        playlists: playlists, 
-        videos: videos
-    },
     data: {
         playlists: playlist_data,
         random: false,
@@ -104,6 +90,17 @@ var vm = new Vue({
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         },
+        // Interact via XMLHTTP request.
+        // 'whenReady' is a function executed on state change.
+        sendRequest(type, location, content, whenReady) {
+            var form = new FormData();
+            form.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
+            if (type === 'POST') form.append('content', content);
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = whenReady;
+            request.open(type, location);
+            request.send(form);
+        },
         onPlaylistClick(view) {
             this.cur_playlist_view = view;
             this.cur_screen = 'videos';
@@ -115,7 +112,7 @@ var vm = new Vue({
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
             scrollTitle(video.title + ' <> ');
             vm.player.title = 'Loading...';
-            sendRequest('GET', '/u/' + video.url, null, function () {
+            vm.sendRequest('GET', '/u/' + video.url, null, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
                     vm.player.e.setAttribute('src', this.responseText);
@@ -158,7 +155,7 @@ var vm = new Vue({
                         url: input,
                         private: false
                     };
-                    sendRequest('POST', '/e/ip/', JSON.stringify(content), function() {
+                    vm.sendRequest('POST', '/e/ip/', JSON.stringify(content), function() {
                         if (this.readyState == 4 && this.status == 200) {
                             vm.playlists = JSON.parse(this.responseText);
                         }
@@ -176,7 +173,7 @@ var vm = new Vue({
                         videos: []
                     };
                     vm.playlists.push(new_playlist);
-                    sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
+                    vm.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
                 }
                 break;
             case 'videos':
@@ -188,7 +185,7 @@ var vm = new Vue({
                     url: input,
                     plistname: vm.cur_playlist_view.name
                 };
-                sendRequest('POST', '/e/nv/', JSON.stringify(new_video), function() {
+                vm.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), function() {
                     if (this.readyState == 4 && this.status == 200) {
                         vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
                     }
