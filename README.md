@@ -16,7 +16,7 @@ Additionally, you'll have to create two files in django's BASE_DIR:
 key: Put your SECRET_KEY in here. If this is missing, a dev env will be assumed and a default key be used.
 database: Put your django DATABASE settings in here (serialized in JSON).
 
-### Webpack Setup
+### Webpack/Frontend Setup
 
 ``` bash
 # install dependencies
@@ -24,4 +24,7 @@ npm install
 
 # build for production
 npm run build
+
+# Manually compile SASS for login page
+sass ./static/sass/login.sass > ./static/css/login.css
 ```

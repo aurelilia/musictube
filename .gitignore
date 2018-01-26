@@ -6,6 +6,7 @@ key
 *.css.map
 .vscode
 package-lock.json
+webpack-stats.json
 
 # Taken from webpack vue template
 .DS_Store

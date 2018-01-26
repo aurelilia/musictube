@@ -1,21 +1,11 @@
-{% load static %}
-<html>
+{% extends "registration/base.html" %}
 
-<head>
-    <link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/png" />
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <title>MusicTube - Login</title>
-</head>
+{% block title %}MusicTube - Login{% endblock %}
 
-<body>
-    <img alt="MusicTube" src="{% static 'img/logo-full.png' %}" height="200px">
+{% block content %}
     <form method="post">
         {% csrf_token %} {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
     <a class=register href="/register">Register</a>
-</body>
-
-</html>
+{% endblock %}
