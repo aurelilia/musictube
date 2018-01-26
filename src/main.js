@@ -3,23 +3,15 @@ import playlists from './components/playlists.vue'
 import videos from './components/videos.vue'
 import './sass/main.sass'
 
-// Interact with server via GET request. 
+// Interact via XMLHTTP request.
 // 'whenReady' is a function executed on state change.
-function sendGET(location, whenReady) {
-    var form = new FormData();
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = whenReady;
-    request.open('GET', location);
-    request.send(form);
-}
-// Interact via POST request.
-function sendPOST(location, content, whenReady) {
+function sendRequest(type, location, content, whenReady) {
     var form = new FormData();
     form.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
-    form.append('content', content);
+    if (type === 'POST') form.append('content', content);
     var request = new XMLHttpRequest();
     request.onreadystatechange = whenReady;
-    request.open('POST', location);
+    request.open(type, location);
     request.send(form);
 }
 
@@ -123,7 +115,7 @@ var vm = new Vue({
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
             scrollTitle(video.title + ' <> ');
             vm.player.title = 'Loading...';
-            sendGET('/u/' + video.url, function () {
+            sendRequest('GET', '/u/' + video.url, null, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
                     vm.player.e.setAttribute('src', this.responseText);
@@ -166,7 +158,7 @@ var vm = new Vue({
                         url: input,
                         private: false
                     };
-                    sendPOST('/e/ip/', JSON.stringify(content), function() {
+                    sendRequest('POST', '/e/ip/', JSON.stringify(content), function() {
                         if (this.readyState == 4 && this.status == 200) {
                             vm.playlists = JSON.parse(this.responseText);
                         }
@@ -184,7 +176,7 @@ var vm = new Vue({
                         videos: []
                     };
                     vm.playlists.push(new_playlist);
-                    sendPOST('/e/np/', JSON.stringify(new_playlist));
+                    sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
                 }
                 break;
             case 'videos':
@@ -196,7 +188,7 @@ var vm = new Vue({
                     url: input,
                     plistname: vm.cur_playlist_view.name
                 };
-                sendPOST('/e/nv/', JSON.stringify(new_video), function() {
+                sendRequest('POST', '/e/nv/', JSON.stringify(new_video), function() {
                     if (this.readyState == 4 && this.status == 200) {
                         vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
                     }

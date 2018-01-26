@@ -20,7 +20,7 @@ export default {
         },
         onDelete(obj) {
             if (confirm('Are you sure you want to remove the video?')) {
-                sendPOST('/e/dv/', JSON.stringify([vm.cur_playlist_view.name, obj.title]));
+                sendRequest('POST', '/e/dv/', JSON.stringify([vm.cur_playlist_view.name, obj.title]));
                 vm.cur_playlist_view.videos.splice(vm.cur_playlist_view.videos.indexOf(obj), 1);
             }
         }
