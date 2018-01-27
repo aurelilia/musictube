@@ -1,7 +1,9 @@
-import Vue from 'vue'
-import playlists from './components/playlists.vue'
-import videos from './components/videos.vue'
+import Vue from 'vue';
+import playlists from './components/playlists.vue';
+import videos from './components/videos.vue';
+import settings from './components/settings.vue';
 
+const THEMES = ['blue', 'transparent'];
 
 // Prevent document from being seen until it is fulled loaded
 document.body.hidden = true;
@@ -19,6 +21,7 @@ window.onunload = () => {
     localStorage.setItem('scroll', vm.scroll_title);
     localStorage.setItem('volume', vm.volume);
     localStorage.setItem('random', vm.random);
+    localStorage.setItem('theme', vm.theme);
 };
 
 
@@ -28,17 +31,17 @@ var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
 
 Vue.component('playlists', playlists);
 Vue.component('videos', videos);
+Vue.component('settings', settings);
 
 var vm = new Vue({
     el: '#vue-app',
     data: {
         // --- App state info ---
-        random: false,
+        themes: THEMES,
         cur_screen: 'playlists',
         menu_active: false,
-        scroll_title: true,
         scroller_interval_id: null,
-
+        
         // --- Playlists/Videos ---
         playlists: playlist_data,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
@@ -47,11 +50,11 @@ var vm = new Vue({
         cur_playlist_view: null,
         cur_video: null,
         cur_video_index: 0,
-
+        
         // --- Editor ---
         editor: false,
         add: false,
-
+        
         // --- Player/audio element ---
         player: {
             e: document.getElementById('player'),
@@ -59,7 +62,12 @@ var vm = new Vue({
             position: 0
         },
         playing: false,
+        
+        // --- User preferences ---
+        scroll_title: true,
+        random: false,
         volume: 25,
+        theme: THEMES[0],
     },
     watch: {
         volume: (vol) => {
@@ -145,7 +153,7 @@ var vm = new Vue({
                 } else {
                     video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
                 }
-            }
+            };
             image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
         },
 
@@ -160,16 +168,28 @@ var vm = new Vue({
             history.pushState({}, 'MusicTube', '/');
             vm.updateScreen();
         },
+        onSettingsClick() {
+            if (window.location.pathname === '/settings/') return;
+            history.pushState({}, 'MusicTube', '/settings/');
+            vm.updateScreen();
+        },
         updateScreen() {
             var uri = window.location.pathname;
-            if(uri === '/') {
+            if (uri === '/') {
                 vm.cur_screen = 'playlists';
+            } else if (uri === '/settings/') {
+                vm.cur_screen = 'settings';
             } else {
                 vm.cur_playlist_view = vm.playlists.filter((obj) => {
                     return obj.id == uri.split('/')[1];
                 })[0];
                 vm.cur_screen = 'videos';
             }
+        },
+        updateTheme() {
+            // Maybe consider dynamically loading SASS if that's possible
+            vm.theme = document.getElementById('settings-theme').value;
+            if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload();
         },
         onPlayPause() {
             if (!vm.playing && vm.player.e.src !== '') {
@@ -259,11 +279,11 @@ if (localStorage.getItem('volume') != null) {
     vm.volume = localStorage.getItem('volume');
     vm.random = localStorage.getItem('random') === 'true';
     vm.scroll_title = localStorage.getItem('scroll') === 'true';
+    vm.theme = localStorage.getItem('theme');
 }
 
 // Wait for SASS theme to load, then unhide the page hidden at line 7 of this file
-var theme = localStorage.getItem('theme') != undefined ? localStorage.getItem('theme') : 'transparent';
-import(`./sass/theme_${theme}.sass`).then(() => {
+import(`./sass/theme_${vm.theme}.sass`).then(() => {
     document.body.hidden = false;
 });
 

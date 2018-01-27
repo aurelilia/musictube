@@ -29,5 +29,6 @@ urlpatterns = [
     path('register/', CreateView.as_view(template_name='registration/register.html', form_class=UserCreationForm, success_url='/' )),
     path('accounts/profile/', RedirectView.as_view(url='/', permanent=True)),
     path('<int:playlist>/', include('musictube.player.urls')),
+    path('settings/', include('musictube.player.urls')),
     path('', include('musictube.player.urls'))
 ]

@@ -88,22 +88,19 @@
 
         <div id="menu-item" class="menu-dropdown" v-show="menu_active">
             <a class="menu-item" @click="onBackClick">My Playlists</a>
+            <a class="menu-item" @click="onSettingsClick">Settings</a>
             <a class="menu-item" href="/logout/">Log out</a>
-
-            <a class="menu-item" @click="scroll_title = !scroll_title">
-                <i class="fa" :class="{'fa-check-square-o': scroll_title, 'fa-square-o': !scroll_title}" aria-hidden="true"></i>
-                Scroll Title
-            </a>
-            <a class="menu-item" @click="editor = !editor">
-                <i class="fa" :class="{'fa-check-square-o': editor, 'fa-square-o': !editor}" aria-hidden="true"></i>
-                Editor Mode
-            </a>
         </div>
 
         <div class="content">
             <transition name="component-fade" mode="out-in">
-                <component :is=cur_screen :view="cur_playlist_view" @update:view="onPlaylistClick" :track="playing" @update:track="updateCurrentPlaylistAndTrack"
-                    :playlists="playlists" :cur_playlist_view="cur_playlist_view" :editor="editor">
+                <component :is=cur_screen 
+                           :view="cur_playlist_view" @update:view="onPlaylistClick" 
+                           :track="playing" @update:track="updateCurrentPlaylistAndTrack"
+                           :scroll_title="scroll_title" @update:scroll_title="scroll_title = !scroll_title"
+                           :theme="theme" @update:theme="updateTheme"
+                           :playlists="playlists" :cur_playlist_view="cur_playlist_view" :editor="editor"
+                           :themes="themes">
                 </component>
             </transition>
         </div>
