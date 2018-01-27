@@ -151,10 +151,12 @@ var vm = new Vue({
 
         // --- Event handlers ---
         onPlaylistClick(playlist) {
+            if (window.location.pathname === '/${playlist.id}/') return;
             history.pushState({}, playlist.name, playlist.id + '/');
             vm.updateScreen();
         },
         onBackClick() {
+            if (window.location.pathname === '/') return;
             history.pushState({}, 'MusicTube', '/');
             vm.updateScreen();
         },
