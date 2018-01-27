@@ -6,17 +6,6 @@ import videos from './components/videos.vue'
 // Prevent document from being seen until it is fulled loaded
 document.body.hidden = true;
 
-// Scrolling title
-var scroller = null;
-function scrollTitle(text) {
-    clearTimeout(scroller);
-    document.title = text;
-    if (vm.scroll_title && text !== 'MusicTube') {
-        scroller = setTimeout(() => {
-            scrollTitle(text.substr(1) + text.substr(0, 1));
-        }, 500);
-    }
-}
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = (event) => {
@@ -48,6 +37,8 @@ var vm = new Vue({
         cur_screen: 'playlists',
         menu_active: false,
         scroll_title: true,
+        // setInterval ID
+        scroller: null,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
         // looked at with the videos component
         cur_playlist: null,
@@ -92,6 +83,15 @@ var vm = new Vue({
     methods: {
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
+        }, 
+        scrollTitle(text) {
+            clearTimeout(scroller);
+            document.title = text;
+            if (vm.scroll_title && text !== 'MusicTube') {
+                scroller = setTimeout(() => {
+                    vm.scrollTitle(text.substr(1) + text.substr(0, 1));
+                }, 500);
+            }
         },
         // Interact via XMLHTTP request.
         // 'whenReady' is a function executed on state change.
@@ -126,7 +126,7 @@ var vm = new Vue({
             vm.player.e.currentTime = 0;
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
-            scrollTitle(video.title + ' <> ');
+            vm.scrollTitle(video.title);
             vm.player.title = 'Loading...';
             vm.updateThumbnail(video);
             vm.sendRequest('GET', '/u/' + video.url, null, function () {
