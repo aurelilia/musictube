@@ -4,7 +4,7 @@
 <table v-else>
     <tr v-for="video in cur_playlist_view.videos" :key="video.id"
         @click="$emit('update:track', [cur_playlist_view, video])">
-        <td class="thumb"><img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height=60px></img></td>
+        <td class="thumb"><img :src="`https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`" height=60px></img></td>
         <td class="name">{{ video.title }}</td>
         <td class="context">{{ formatSeconds(video.length) }}</td>
         <td class="delete" v-if="editor"><i class="fa fa-trash-o" @click="onDelete(video)"></i></td>

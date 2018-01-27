@@ -141,17 +141,17 @@ var vm = new Vue({
             var image = new Image();
             image.onload = function () {
                 if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
-                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg';
+                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`;
                 } else {
-                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
+                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
                 }
             }
-            image.src = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
+            image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
         },
 
         // --- Event handlers ---
         onPlaylistClick(playlist) {
-            if (window.location.pathname === '/${playlist.id}/') return;
+            if (window.location.pathname === `/${playlist.id}/`) return;
             history.pushState({}, playlist.name, playlist.id + '/');
             vm.updateScreen();
         },
@@ -263,7 +263,7 @@ if (localStorage.getItem('volume') != null) {
 
 // Wait for SASS theme to load, then unhide the page hidden at line 7 of this file
 var theme = localStorage.getItem('theme') != undefined ? localStorage.getItem('theme') : 'transparent';
-import('./sass/theme_' + theme + '.sass').then(() => {
+import(`./sass/theme_${theme}.sass`).then(() => {
     document.body.hidden = false;
 });
 

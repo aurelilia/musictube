@@ -3,7 +3,7 @@
 <table v-else>
     <tr v-for="playlist in playlists" :key="playlist.id">
         <td class="playlist-thumb" v-if="playlist.videos !== null">
-            <img :src="'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg'" height="50px" v-for="(video, index) in playlist.videos.slice(0, 3)" :class="'thumb-' + (index + 1)" :key="index"></img>
+            <img :src="`https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`" height="50px" v-for="(video, index) in playlist.videos.slice(0, 3)" :class="'thumb-' + (index + 1)" :key="index"></img>
         </td>
         <td class="playlist-thumb" v-else></td>
         <td class="name" @click="$emit('update:view', playlist)">{{ playlist.name }}</td>

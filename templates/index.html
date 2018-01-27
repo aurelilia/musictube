@@ -12,7 +12,7 @@
 
 <body>
     <div id="vue-app">
-        <div class="bg-img" id="bg-img" :style="'background-image: url(' + cur_video.thumbnail + ');'" v-if="cur_video != null && cur_video.thumbnail != null"></div>
+        <div class="bg-img" id="bg-img" :style="`background-image: url(${cur_video.thumbnail});`" v-if="cur_video != null && cur_video.thumbnail != null"></div>
         <transition name="navbar-fade" mode="out-in">
             <nav v-if="!editor" key="play">
                 <div class="logo">
@@ -34,7 +34,7 @@
                 </div>
                 {% verbatim %}
                 <div class="thumb-nav" v-if="cur_video !== null">
-                    <img :src="'https://i.ytimg.com/vi/' + cur_video.url + '/mqdefault.jpg'" height="50px"></img>
+                    <img :src="`https://i.ytimg.com/vi/${cur_video.url}/mqdefault.jpg`" height="50px"></img>
                 </div>
                 <div class="track">
                     <p class="track-title" id="track-title">{{ player.title }}</p>
