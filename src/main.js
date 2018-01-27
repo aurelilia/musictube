@@ -32,23 +32,27 @@ Vue.component('videos', videos);
 var vm = new Vue({
     el: '#vue-app',
     data: {
-        playlists: playlist_data,
+        // --- App state info ---
         random: false,
         cur_screen: 'playlists',
         menu_active: false,
         scroll_title: true,
-        // setInterval ID
-        scroller: null,
+        scroller_interval_id: null,
+
+        // --- Playlists/Videos ---
+        playlists: playlist_data,
         // Current playlist + video are the ones being played, cur_playlist_view is the one being
         // looked at with the videos component
         cur_playlist: null,
         cur_playlist_view: null,
         cur_video: null,
         cur_video_index: 0,
-        // EDITOR
+
+        // --- Editor ---
         editor: false,
         add: false,
-        // Player/audio element + related vars
+
+        // --- Player/audio element ---
         player: {
             e: document.getElementById('player'),
             title: 'No track playing.',
@@ -77,22 +81,14 @@ var vm = new Vue({
         },
         scroll_title: () => {
             var text = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
-            scrollTitle(text);
+            vm.setTitle(text);
         }
     },
     methods: {
+        // --- Helper methods ---
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         }, 
-        scrollTitle(text) {
-            clearTimeout(scroller);
-            document.title = text;
-            if (vm.scroll_title && text !== 'MusicTube') {
-                scroller = setTimeout(() => {
-                    vm.scrollTitle(text.substr(1) + text.substr(0, 1));
-                }, 500);
-            }
-        },
         // Interact via XMLHTTP request.
         // 'whenReady' is a function executed on state change.
         sendRequest(type, location, content, whenReady) {
@@ -104,31 +100,27 @@ var vm = new Vue({
             request.open(type, location);
             request.send(form);
         },
-        // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
-        updateThumbnail(video) {
-            var image = new Image();
-            image.onload = function () {
-                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
-                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg';
-                } else {
-                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
-                }
+        setTitle(text) {
+            clearTimeout(vm.scroller_interval_id);
+            document.title = text;
+            if (vm.scroll_title && text !== 'MusicTube') {
+                vm.scroller_interval_id = setTimeout(() => {
+                    vm.setTitle(text.substr(1) + text.substr(0, 1));
+                }, 500);
             }
-            image.onerror = function () { };
-            image.src = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
         },
-        onPlaylistClick(view) {
-            this.cur_playlist_view = view;
-            this.cur_screen = 'videos';
-        },
+
+        // --- Playlist/Video playing related methods ---
         updateCurrentTrack(video) {
             vm.player.e.pause();
             vm.player.e.currentTime = 0;
+
             vm.cur_video = video;
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
-            vm.scrollTitle(video.title);
+            vm.setTitle(video.title);
             vm.player.title = 'Loading...';
             vm.updateThumbnail(video);
+
             vm.sendRequest('GET', '/u/' + video.url, null, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
@@ -144,6 +136,24 @@ var vm = new Vue({
                 vm.updateCurrentTrack(info[1]);
             }
         },
+        // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
+        updateThumbnail(video) {
+            var image = new Image();
+            image.onload = function () {
+                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
+                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg';
+                } else {
+                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
+                }
+            }
+            image.src = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
+        },
+
+        // --- Event handlers ---
+        onPlaylistClick(view) {
+            this.cur_playlist_view = view;
+            this.cur_screen = 'videos';
+        },
         onPlayPause() {
             if (!vm.playing && vm.player.e.src !== '') {
                 vm.player.e.play();
@@ -153,18 +163,19 @@ var vm = new Vue({
             vm.playing = !vm.player.e.paused;
         },
         onPrevTrack() {
-            if (vm.playing) {
-                vm.cur_video_index -= 1;
-            }
+            if (vm.playing) vm.cur_video_index -= 1;
         },
         onNextTrack() {
-            if (vm.playing) {
-                vm.cur_video_index += 1;
-            }
+            if (vm.playing) vm.cur_video_index += 1;
         },
-        // EDITOR
+
+        // --- Editor methods ---
         onAdd() {
             var input = document.getElementById('add-input').value;
+            if (input === '') {
+                alert('Please enter a name.');
+                return;
+            }
             switch (vm.cur_screen) {
             case 'playlists':
                 if (input.includes('youtube.com/playlist')) {
@@ -172,7 +183,7 @@ var vm = new Vue({
                         url: input,
                         private: false
                     };
-                    vm.sendRequest('POST', '/e/ip/', JSON.stringify(content), function() {
+                    vm.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
                         if (this.readyState == 4 && this.status == 200) {
                             vm.playlists = JSON.parse(this.responseText);
                         }
@@ -180,7 +191,7 @@ var vm = new Vue({
                 } else {
                     for (var i = 0, len = vm.playlists.length; i < len; i++) {
                         if (input === vm.playlists[i].input) {
-                            alert('You already have a playlist with that input! Please choose another one.');
+                            alert('You already have a playlist with that name! Please choose another one.');
                             return;
                         }
                     }
@@ -202,7 +213,7 @@ var vm = new Vue({
                     url: input,
                     plistname: vm.cur_playlist_view.name
                 };
-                vm.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), function() {
+                vm.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
                     if (this.readyState == 4 && this.status == 200) {
                         vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
                     }
