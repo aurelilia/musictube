@@ -104,6 +104,19 @@ var vm = new Vue({
             request.open(type, location);
             request.send(form);
         },
+        // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
+        updateThumbnail(video) {
+            var image = new Image();
+            image.onload = function () {
+                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
+                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/mqdefault.jpg';
+                } else {
+                    video.thumbnail = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
+                }
+            }
+            image.onerror = function () { };
+            image.src = 'https://i.ytimg.com/vi/' + video.url + '/maxresdefault.jpg';
+        },
         onPlaylistClick(view) {
             this.cur_playlist_view = view;
             this.cur_screen = 'videos';
@@ -115,6 +128,7 @@ var vm = new Vue({
             vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
             scrollTitle(video.title + ' <> ');
             vm.player.title = 'Loading...';
+            vm.updateThumbnail(video);
             vm.sendRequest('GET', '/u/' + video.url, null, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     vm.player.title = video.title;
@@ -211,14 +225,14 @@ vm.player.e.addEventListener('ended', vm.onNextTrack);
 
 
 // Check if preferences are already in local storage; use default value if not
-if (localStorage.getItem('volume') !== null) {
+if (localStorage.getItem('volume') != null) {
     vm.volume = localStorage.getItem('volume');
     vm.random = localStorage.getItem('random') === 'true';
     vm.scroll_title = localStorage.getItem('scroll') === 'true';
 }
 
 // Wait for SASS theme to load, then unhide the page hidden at line 7 of this file
-var theme = localStorage.getItem('theme') != undefined ? localStorage.getItem('theme') : 'blue';
+var theme = localStorage.getItem('theme') != undefined ? localStorage.getItem('theme') : 'transparent';
 import('./sass/theme_' + theme + '.sass').then(() => {
     document.body.hidden = false;
 });
