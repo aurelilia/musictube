@@ -63,7 +63,7 @@
             </nav>
             <nav v-else key="edit">
                 <div class="logo">
-                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="cur_screen = 'playlists'">
+                    <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="onBackClick">
                 </div>
                 <div class="controls">
                     <p class="add-icon">
@@ -87,7 +87,7 @@
         </transition>
 
         <div id="menu-item" class="menu-dropdown" v-show="menu_active">
-            <a class="menu-item" @click="cur_screen = 'playlists'">My Playlists</a>
+            <a class="menu-item" @click="onBackClick">My Playlists</a>
             <a class="menu-item" href="/logout/">Log out</a>
 
             <a class="menu-item" @click="scroll_title = !scroll_title">
