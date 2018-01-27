@@ -1,11 +1,24 @@
-@import colors
-
 // General
 body
     margin: 0 0 5%
     padding: 0
     font-family: 'Open Sans', sans-serif
     background-color: $bg
+
+.bg-img 
+    position: fixed
+    top: -1%
+    left: -1%
+    right: 0
+    z-index: -1
+
+    display: block
+    background-size: cover;
+    width: 102%
+    height: 102%
+
+    filter: blur(5px)
+
 
 .content
     margin-top: 120px
@@ -26,7 +39,7 @@ nav
     height: 75px
     top: 0
     background-color: $navbar
-    box-shadow: 0 5px 10px 3px rgba(153 , 153, 153, .4)
+    box-shadow: 0 5px 10px 3px $shadow
     position: fixed
     display: flex
     justify-content: flex-start
@@ -41,20 +54,20 @@ nav
 .menu-dropdown
     position: fixed
     right: 0
-    background-color: $bg
+    background-color: $menu
     min-width: 200px
-    box-shadow: 0 5px 10px 3px rgba(153 , 153, 153, .4)
+    box-shadow: 0 5px 10px 3px $shadow
     z-index: 100
     top: 75px
 
 a
-    color: #000
+    color: $menu-link
     padding: 12px 16px
     text-decoration: none
     display: block
 
 a:hover
-    background-color: #eee
+    background-color: $menu-hover
 
 
 // Navbar items
@@ -125,7 +138,7 @@ input[type=text]
     white-space: nowrap
 
 .volume-box
-    background-color: $navbar
+    background-color: rgba(#000, 0)
     color: $wtext
     border: 0
     width: 45px
@@ -137,7 +150,7 @@ input[type=text]
 
 
 // Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
-$range-handle-color: $bg
+$range-handle-color: $sliders
 $range-handle-color-hover: $wtext
 $range-handle-size: 15px
 
@@ -208,7 +221,7 @@ tr:nth-child(odd)
     background-color: $tr
 
 tr:hover
-    background-color: #ddd !important
+    background-color: $tr-hover !important
 
 td
     padding: 10px

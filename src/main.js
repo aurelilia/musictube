@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import playlists from './components/playlists.vue'
 import videos from './components/videos.vue'
-import './sass/main.sass'
+
+
+// Prevent document from being seen until it is fulled loaded
+document.body.hidden = true;
 
 // Scrolling title
 var scroller = null;
@@ -213,3 +216,9 @@ if (localStorage.getItem('volume') !== null) {
     vm.random = localStorage.getItem('random') === 'true';
     vm.scroll_title = localStorage.getItem('scroll') === 'true';
 }
+
+// Wait for SASS theme to load, then unhide the page hidden at line 7 of this file
+var theme = localStorage.getItem('theme') != undefined ? localStorage.getItem('theme') : 'blue';
+import('./sass/theme_' + theme + '.sass').then(() => {
+    document.body.hidden = false;
+});

@@ -12,6 +12,7 @@
 
 <body>
     <div id="vue-app">
+        <div class="bg-img" id="bg-img" :style="'background-image: url(https://i.ytimg.com/vi/' + cur_video.url + '/maxresdefault.jpg);'" v-if="cur_video !== null"></div>
         <transition name="navbar-fade" mode="out-in">
             <nav v-if="!editor" key="play">
                 <div class="logo">
