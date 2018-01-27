@@ -1,5 +1,6 @@
 <template>
-<span v-if="!cur_playlist_view.videos.length">No videos. Go into editor mode to add one!</span>
+<span v-if="cur_playlist_view == undefined">Playlist not found! Either it is private, or it does not exist.</span>
+<span v-else-if="!cur_playlist_view.videos.length">No videos. Go into editor mode to add one!</span>
 <table v-else>
     <tr v-for="video in cur_playlist_view.videos" :key="video.id"
         @click="$emit('update:track', [cur_playlist_view, video])">

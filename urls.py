@@ -12,6 +12,8 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+
+    TODO: Find a way to use only 1 path for player.home
 """
 from django.contrib import admin
 from django.urls import path, include
@@ -26,6 +28,6 @@ urlpatterns = [
     path('logout/', auth_views.logout, {'template_name': 'registration/logout.html'}, name='logout'),
     path('register/', CreateView.as_view(template_name='registration/register.html', form_class=UserCreationForm, success_url='/' )),
     path('accounts/profile/', RedirectView.as_view(url='/', permanent=True)),
-    path('e/', include('musictube.manager.urls')),
+    path('<int:playlist>/', include('musictube.player.urls')),
     path('', include('musictube.player.urls'))
 ]

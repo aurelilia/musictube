@@ -8,7 +8,7 @@ from musictube.models import Playlist
 
 
 @login_required
-def home(request):
+def home(request, **kwargs):
     """ Returns the main page. """
     context = {'json': fetch(request)}
     return render(request, 'index.html', context=context)

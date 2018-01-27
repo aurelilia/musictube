@@ -21,6 +21,22 @@ window.onunload = () => {
     localStorage.setItem('random', vm.random);
 };
 
+// Allow user to use back + forward buttons to navigate the playlists
+function updateScreenByURI() {
+    var uri = window.location.pathname;
+    if (uri === '/') {
+        vm.cur_screen = 'playlists';
+    } else {
+        vm.cur_playlist_view = vm.playlists.filter((obj) => {
+            return obj.id == uri.split('/')[1];
+        })[0];
+        vm.cur_screen = 'videos';
+    }
+    
+}
+
+window.onpopstate = updateScreenByURI;
+
 
 /* VUE */
 // Get user's playlist data from the HTML the server provided
@@ -151,8 +167,13 @@ var vm = new Vue({
 
         // --- Event handlers ---
         onPlaylistClick(view) {
-            this.cur_playlist_view = view;
-            this.cur_screen = 'videos';
+            vm.cur_playlist_view = view;
+            vm.cur_screen = 'videos';
+            history.pushState({}, vm.cur_playlist_view.name, vm.cur_playlist_view.id + '/');
+        },
+        onBackClick() {
+            vm.cur_screen = 'playlists';
+            history.pushState({}, 'MusicTube', '/');
         },
         onPlayPause() {
             if (!vm.playing && vm.player.e.src !== '') {
@@ -247,3 +268,5 @@ var theme = localStorage.getItem('theme') != undefined ? localStorage.getItem('t
 import('./sass/theme_' + theme + '.sass').then(() => {
     document.body.hidden = false;
 });
+
+updateScreenByURI();
