@@ -150,8 +150,8 @@ var vm = new Vue({
         },
 
         // --- Event handlers ---
-        onPlaylistClick(view) {
-            history.pushState({}, vm.cur_playlist_view.name, vm.cur_playlist_view.id + '/');
+        onPlaylistClick(playlist) {
+            history.pushState({}, playlist.name, playlist.id + '/');
             vm.updateScreen();
         },
         onBackClick() {
