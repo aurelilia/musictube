@@ -33,7 +33,7 @@ Vue.component('playlists', playlists);
 Vue.component('videos', videos);
 Vue.component('settings', settings);
 
-var vm = new Vue({
+window.vm = new Vue({
     el: '#vue-app',
     data: {
         // --- App state info ---
