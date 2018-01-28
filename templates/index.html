@@ -90,6 +90,10 @@
             <a class="menu-item" @click="onBackClick">My Playlists</a>
             <a class="menu-item" @click="onSettingsClick">Settings</a>
             <a class="menu-item" href="/logout/">Log out</a>
+            <a class="menu-item" @click="editor = !editor">
+                <i class="fa" :class="{'fa-check-square-o': editor, 'fa-square-o': !editor}" aria-hidden="true"></i>
+                Editor Mode
+            </a>
         </div>
 
         <div class="content">

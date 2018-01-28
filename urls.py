@@ -28,6 +28,7 @@ urlpatterns = [
     path('logout/', auth_views.logout, {'template_name': 'registration/logout.html'}, name='logout'),
     path('register/', CreateView.as_view(template_name='registration/register.html', form_class=UserCreationForm, success_url='/' )),
     path('accounts/profile/', RedirectView.as_view(url='/', permanent=True)),
+    path('e/', include('musictube.manager.urls')),
     path('<int:playlist>/', include('musictube.player.urls')),
     path('settings/', include('musictube.player.urls')),
     path('', include('musictube.player.urls'))
