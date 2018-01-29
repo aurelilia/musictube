@@ -246,4 +246,62 @@ export default {
     margin: 0 5px 3px 0 !important
     width: 60%
 
+
+// Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
+$range-handle-color: $sliders
+$range-handle-color-hover: $wtext
+$range-handle-size: 15px
+
+$range-track-color: $grey
+$range-track-height: 3px
+
+input[type=range]
+  -webkit-appearance: none
+  height: $range-track-height
+  border-radius: 1px
+  background: $range-track-color
+  outline: none
+  padding: 0
+  margin: 0
+
+  // Range Handle
+  &::-webkit-slider-thumb
+    appearance: none
+    width: $range-handle-size
+    height: $range-handle-size
+    border-radius: 50%
+    background: $range-handle-color
+    cursor: pointer
+    transition: background .15s ease-in-out
+
+    &:hover
+      background: $range-handle-color-hover
+
+  &:active::-webkit-slider-thumb
+    background: $range-handle-color-hover
+
+  &::-moz-range-thumb
+    width: $range-handle-size
+    height: $range-handle-size
+    border: 0
+    border-radius: 50%
+    background: $range-handle-color
+    cursor: pointer
+    transition: background .15s ease-in-out
+
+    &:hover
+      background: $range-handle-color-hover
+
+  &:active::-moz-range-thumb
+    background: $range-handle-color-hover
+
+// Firefox Overrides
+::-moz-range-track
+    background: $range-track-color
+    border: 0
+
+input::-moz-focus-inner,
+input::-moz-focus-outer
+  border: 0
+
 </style>

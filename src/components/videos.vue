@@ -30,4 +30,10 @@ export default {
 }
 </script>
 
+<style lang="sass">
+@import ../sass/colors
 
+.thumb
+    width: 65px
+
+</style>

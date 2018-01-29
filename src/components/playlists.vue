@@ -40,3 +40,24 @@ export default {
  
 }
 </script>
+
+<style lang="sass">
+@import ../sass/colors
+
+.playlist-thumb
+    position: relative
+    min-width: 110px
+    width: 110px
+    height: 90px
+
+.playlist-thumb img
+    position: absolute
+    border: 1px solid $wtext
+
+@for $i from 1 through 3
+    .thumb-#{$i}
+        left: 10px * $i
+        top: ($i * -10) + 40
+        z-index: ($i * -10) + 40
+
+</style>

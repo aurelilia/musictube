@@ -62,65 +62,6 @@ a:hover
     cursor: default
 
 
-
-// Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
-$range-handle-color: $sliders
-$range-handle-color-hover: $wtext
-$range-handle-size: 15px
-
-$range-track-color: $grey
-$range-track-height: 3px
-
-input[type=range]
-  -webkit-appearance: none
-  height: $range-track-height
-  border-radius: 1px
-  background: $range-track-color
-  outline: none
-  padding: 0
-  margin: 0
-
-  // Range Handle
-  &::-webkit-slider-thumb
-    appearance: none
-    width: $range-handle-size
-    height: $range-handle-size
-    border-radius: 50%
-    background: $range-handle-color
-    cursor: pointer
-    transition: background .15s ease-in-out
-
-    &:hover
-      background: $range-handle-color-hover
-
-  &:active::-webkit-slider-thumb
-    background: $range-handle-color-hover
-
-  &::-moz-range-thumb
-    width: $range-handle-size
-    height: $range-handle-size
-    border: 0
-    border-radius: 50%
-    background: $range-handle-color
-    cursor: pointer
-    transition: background .15s ease-in-out
-
-    &:hover
-      background: $range-handle-color-hover
-
-  &:active::-moz-range-thumb
-    background: $range-handle-color-hover
-
-// Firefox Overrides
-::-moz-range-track
-    background: $range-track-color
-    border: 0
-
-input::-moz-focus-inner,
-input::-moz-focus-outer
-  border: 0
-
-
 // lists
 tr:nth-child(odd)
     background-color: $tr
@@ -140,53 +81,14 @@ tr .delete,
     text-align: center
     font-size: 1.25em
 
-.thumb
-    width: 65px
-
-.playlist-thumb
-    position: relative
-    min-width: 110px
-    width: 110px
-    height: 90px
-
-.playlist-thumb img
-    position: absolute
-    border: 1px solid $wtext
-
-@for $i from 1 through 3
-    .thumb-#{$i}
-        left: 10px * $i
-        top: ($i * -10) + 40
-        z-index: ($i * -10) + 40
-
 
 // Settings
 .settings
     color: $settings-text
     background-color: $tr
-    padding: 20px
-    margin: 0
-
-.settings-title
-    margin: 0
-    padding: 0
-    text-align: center
-    font-size: 1.3em
-
-.settings-theme-text
-    display: inline-block
-    padding: 0 20px
-    margin: 5px 0 20px
 
 .settings-theme
-    background-color: rgba(#000, 0)
-    border: none
     border-bottom: 1px solid $settings-text
-
-    -moz-appearance: none
-    -webkit-appearance: none
-    appearance: none
-    width: 20%
 
 
 // Transitions

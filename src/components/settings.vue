@@ -19,3 +19,31 @@ export default {
     props: ['themes', 'theme', 'scroll_title'],
 }
 </script>
+
+<style lang="sass">
+
+.settings
+    padding: 20px
+    margin: 0
+
+.settings-title
+    margin: 0
+    padding: 0
+    text-align: center
+    font-size: 1.3em
+
+.settings-theme-text
+    display: inline-block
+    padding: 0 20px
+    margin: 5px 0 20px
+
+.settings-theme
+    background-color: rgba(#000, 0)
+    border: none
+
+    -moz-appearance: none
+    -webkit-appearance: none
+    appearance: none
+    width: 20%
+
+</style>
