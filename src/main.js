@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import player from './components/player.vue';
 import playlists from './components/playlists.vue';
 import videos from './components/videos.vue';
 import settings from './components/settings.vue';
@@ -29,6 +30,7 @@ window.onunload = () => {
 // Get user's playlist data from the HTML the server provided
 var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
 
+Vue.component('player', player);
 Vue.component('playlists', playlists);
 Vue.component('videos', videos);
 Vue.component('settings', settings);
@@ -40,57 +42,22 @@ window.vm = new Vue({
         themes: THEMES,
         cur_screen: 'playlists',
         menu_active: false,
-        scroller_interval_id: null,
-        
+        thumbnail: null,
+
         // --- Playlists/Videos ---
         playlists: playlist_data,
-        // Current playlist + video are the ones being played, cur_playlist_view is the one being
-        // looked at with the videos component
-        cur_playlist: null,
+        // play: playing with the player component; view: looked at with the videos component
         cur_playlist_view: null,
-        cur_video: null,
-        cur_video_index: 0,
+        cur_playlist_play: null,
+        new_video: 0,
         
         // --- Editor ---
         editor: false,
         add: false,
         
-        // --- Player/audio element ---
-        player: {
-            e: document.getElementById('player'),
-            title: 'No track playing.',
-            position: 0
-        },
-        playing: false,
-        
         // --- User preferences ---
         scroll_title: true,
-        random: false,
-        volume: 25,
         theme: THEMES[0],
-    },
-    watch: {
-        volume: (vol) => {
-            // Setting volume in HTML tags is not possible, so v-bind isn't an option.
-            vm.player.e.volume = vol / 400;
-        },
-        cur_video_index: (index) => {
-            if (vm.cur_playlist.videos[index] === vm.cur_video) {
-                return;
-            }
-            if (vm.random) {
-                index = Math.floor((Math.random() * vm.cur_playlist.videos.length) + 1);
-            }
-            if (index >= 0 && index < vm.cur_playlist.videos.length) {
-                vm.updateCurrentTrack(vm.cur_playlist.videos[index]);
-            } else {
-                vm.cur_video_index = 0;
-            }
-        },
-        scroll_title: () => {
-            var text = vm.cur_video === null ? 'MusicTube' : vm.cur_video.title;
-            vm.setTitle(text);
-        }
     },
     methods: {
         // --- Helper methods ---
@@ -107,54 +74,6 @@ window.vm = new Vue({
             request.onreadystatechange = whenReady;
             request.open(type, location);
             request.send(form);
-        },
-        setTitle(text) {
-            clearTimeout(vm.scroller_interval_id);
-            document.title = text;
-            if (vm.scroll_title && text !== 'MusicTube') {
-                vm.scroller_interval_id = setTimeout(() => {
-                    vm.setTitle(text.substr(1) + text.substr(0, 1));
-                }, 500);
-            }
-        },
-
-        // --- Playlist/Video playing related methods ---
-        updateCurrentTrack(video) {
-            vm.player.e.pause();
-            vm.player.e.currentTime = 0;
-
-            vm.cur_video = video;
-            vm.cur_video_index = vm.cur_playlist.videos.indexOf(vm.cur_video);
-            vm.setTitle(video.title);
-            vm.player.title = 'Loading...';
-            vm.updateThumbnail(video);
-
-            vm.sendRequest('GET', '/u/' + video.url, null, function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    vm.player.title = video.title;
-                    vm.player.e.setAttribute('src', this.responseText);
-                    vm.player.e.play();
-                    vm.playing = true;
-                }
-            });
-        },
-        updateCurrentPlaylistAndTrack(info) {
-            if (!vm.editor) {
-                vm.cur_playlist = info[0];
-                vm.updateCurrentTrack(info[1]);
-            }
-        },
-        // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
-        updateThumbnail(video) {
-            var image = new Image();
-            image.onload = function () {
-                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
-                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`;
-                } else {
-                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
-                }
-            };
-            image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
         },
 
         // --- Event handlers ---
@@ -191,21 +110,7 @@ window.vm = new Vue({
             vm.theme = document.getElementById('settings-theme').value;
             if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload();
         },
-        onPlayPause() {
-            if (!vm.playing && vm.player.e.src !== '') {
-                vm.player.e.play();
-            } else if (vm.playing) {
-                vm.player.e.pause();
-            }
-            vm.playing = !vm.player.e.paused;
-        },
-        onPrevTrack() {
-            if (vm.playing) vm.cur_video_index -= 1;
-        },
-        onNextTrack() {
-            if (vm.playing) vm.cur_video_index += 1;
-        },
-
+        
         // --- Editor methods ---
         onAdd() {
             var input = document.getElementById('add-input').value;
@@ -264,12 +169,6 @@ window.vm = new Vue({
 });
 
 
-// Pause the player; add some event handlers to it
-vm.player.e.pause();
-vm.player.e.addEventListener('timeupdate', () => {
-    vm.player.position = Math.floor(vm.player.e.currentTime);
-});
-vm.player.e.addEventListener('ended', vm.onNextTrack);
 
 // Update screen on back/forward button click
 window.onpopstate = vm.updateScreen;
@@ -288,3 +187,7 @@ import(`./sass/theme_${vm.theme}.sass`).then(() => {
 });
 
 vm.updateScreen();
+
+
+// TODO: Move out some common functions to another file that can be imported
+// TODO: Properly do transition animations again

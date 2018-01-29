@@ -5,20 +5,6 @@ body
     font-family: 'Open Sans', sans-serif
     background-color: $bg
 
-.bg-img 
-    position: fixed
-    top: -1%
-    left: -1%
-    right: 0
-    z-index: -1
-
-    display: block
-    background-size: cover;
-    width: 102%
-    height: 102%
-
-    filter: blur(7px)
-
 
 .content
     margin-top: 120px
@@ -47,9 +33,35 @@ nav
     color: $wtext
     z-index: 100
 
+// Navbar items
+.logo
+   padding: 0 50px
+
+.add-icon
+    font-size: 1.3em
+
+input[type=text]
+    border: 0
+    border-bottom: 2px solid $wtext
+    background-color: $navbar
+    color: $wtext
+    margin: 20px
+    margin-bottom: 0
+    font-size: .6em
+    font-family: 'Open Sans', sans-serif
+    text-align: center
+
+// Right-aligned part of navbar
+.exit
+    margin: 0 10px
+    flex: 1
+    text-align: right
+    
+
 // Navbar hamburger menu
 .hamburger-menu
     font-size: 1.5em
+    padding-right: 50px
 
 .menu-dropdown
     position: fixed
@@ -70,84 +82,6 @@ a:hover
     background-color: $menu-hover
     cursor: default
 
-
-// Navbar items
-.logo
-   padding: 0 50px
-
-.controls
-    display: flex
-    flex-direction: row
-    align-items: center
-    padding: 0 30px 0 0
-    font-size: 1.8em
-
-.controls *
-    padding: 0 5px
-
-.grey
-    color: $random-off
-
-.add-icon
-    font-size: 1.3em
-
-input[type=text]
-    border: 0
-    border-bottom: 2px solid $wtext
-    background-color: $navbar
-    color: $wtext
-    margin: 20px
-    margin-bottom: 0
-    font-size: .6em
-    font-family: 'Open Sans', sans-serif
-    text-align: center
-
-// Track position info+slider
-.track
-    flex: 1
-
-.thumb-nav img
-    margin-right: 10px
-    margin-top: 3px
-    border: 2px solid $wtext
-
-.track-title,
-.position-text
-    margin: 0
-    padding: 0
-
-.position
-    display: flex
-    flex-flow: row
-    white-space: nowrap
-
-
-// Right-aligned part of navbar
-.right-aligned
-    padding: 0 50px
-    flex: 1
-    text-align: right
-    display: flex
-    justify-content: flex-end
-
-.exit
-    margin: 0 10px
-
-// Volume control
-.volume
-    padding: 0 20px
-    white-space: nowrap
-
-.volume-box
-    background-color: rgba(#000, 0)
-    color: $wtext
-    border: 0
-    width: 45px
-    border-bottom: 1px solid $wtext
-    margin-right: 20px
-
-.volume-icon
-    padding: 0 5px
 
 
 // Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
@@ -357,4 +291,3 @@ tr .delete,
     .position-slider,
     .position-text
         display: none
-
