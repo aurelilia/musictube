@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import player from './components/player.vue';
+import editor from './components/editor.vue';
 import playlists from './components/playlists.vue';
 import videos from './components/videos.vue';
 import settings from './components/settings.vue';
@@ -12,9 +13,7 @@ document.body.hidden = true;
 
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = (event) => {
-    if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
-        vm.menu_active = false;
-    }
+    if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) vm.menu_active = false;
 };
 
 // Save user prefrences to localStorage on unload
@@ -31,6 +30,7 @@ window.onunload = () => {
 var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
 
 Vue.component('player', player);
+Vue.component('editor', editor);
 Vue.component('playlists', playlists);
 Vue.component('videos', videos);
 Vue.component('settings', settings);
@@ -41,6 +41,7 @@ window.vm = new Vue({
         // --- App state info ---
         themes: THEMES,
         cur_screen: 'playlists',
+        editor: false,
         menu_active: false,
         thumbnail: null,
 
@@ -50,10 +51,6 @@ window.vm = new Vue({
         cur_playlist_view: null,
         cur_playlist_play: null,
         new_video: 0,
-        
-        // --- Editor ---
-        editor: false,
-        add: false,
         
         // --- User preferences ---
         scroll_title: true,
@@ -76,7 +73,7 @@ window.vm = new Vue({
             request.send(form);
         },
 
-        // --- Event handlers ---
+        // Event handlers
         onPlaylistClick(playlist) {
             if (window.location.pathname === `/${playlist.id}/`) return;
             history.pushState({}, playlist.name, playlist.id + '/');
@@ -110,64 +107,8 @@ window.vm = new Vue({
             vm.theme = document.getElementById('settings-theme').value;
             if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload();
         },
-        
-        // --- Editor methods ---
-        onAdd() {
-            var input = document.getElementById('add-input').value;
-            if (input === '') {
-                alert('Please enter a name.');
-                return;
-            }
-            switch (vm.cur_screen) {
-            case 'playlists':
-                if (input.includes('youtube.com/playlist')) {
-                    var content = {
-                        url: input,
-                        private: false
-                    };
-                    vm.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
-                        if (this.readyState == 4 && this.status == 200) {
-                            vm.playlists = JSON.parse(this.responseText);
-                        }
-                    });
-                } else {
-                    for (var i = 0, len = vm.playlists.length; i < len; i++) {
-                        if (input === vm.playlists[i].input) {
-                            alert('You already have a playlist with that name! Please choose another one.');
-                            return;
-                        }
-                    }
-                    var new_playlist = {
-                        name: input,
-                        private: false,
-                        videos: []
-                    };
-                    vm.playlists.push(new_playlist);
-                    vm.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
-                }
-                break;
-            case 'videos':
-                if (!input.includes('youtube.com/watch?v=')) {
-                    alert('Not a valid URL! Please try again.');
-                    return;
-                }
-                var new_video = {
-                    url: input,
-                    plistname: vm.cur_playlist_view.name
-                };
-                vm.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
-                    if (this.readyState == 4 && this.status == 200) {
-                        vm.cur_playlist_view.videos.push(JSON.parse(this.responseText));
-                    }
-                });
-                break;
-            }
-            vm.add = false;
-            document.getElementById('add-input').value = '';
-        },
     }
 });
-
 
 
 // Update screen on back/forward button click

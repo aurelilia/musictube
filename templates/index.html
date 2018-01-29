@@ -18,26 +18,25 @@
             <div class="logo">
                 <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="onBackClick">
             </div>
+
             <player class="navbar-content"
-                    :cur_playlist="cur_playlist_play" 
+                    :cur_playlist="cur_playlist_play"
                     :new_video="new_video"
                     :scroll_title="scroll_title"
                     @update:thumbnail="(t) => {thumbnail = t;}"
-                    v-show="!editor" key="2">
+                    v-show="!editor" key="1">
             </player>
-            <div class="navbar-content" v-show="editor" key="1">
-                <div class="controls">
-                    <p class="add-icon">
-                        <i class="fa fa-plus" @click="add = !add"></i>
-                    </p>
-                    <form @submit.prevent="onAdd()">
-                        <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL..."/>
-                    </form>
-                </div>
-                <span class="exit" @click="editor = !editor">
-                    Return to player
-                </span>
-            </div>
+            <editor class="navbar-content"
+                    :editor="editor"
+                    :playlists="playlists"
+                    :cur_playlist_view="cur_playlist_view"
+                    :cur_screen="cur_screen"
+                    @update:editor="editor = !editor"
+                    @update:playlists="(p) => {playlists = p;}"
+                    @update:cur_playlist_view="(p) => {cur_playlist_view = p; playlists[playlists.indexOf(cur_playlist_view)] = p;}"
+                    v-if="editor" key="2">
+            </editor>
+
             <div class="hamburger-menu">
                 <i class="fa fa-bars" @click="menu_active = !menu_active"></i>
             </div>

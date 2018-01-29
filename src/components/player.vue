@@ -223,6 +223,9 @@ export default {
     flex-flow: row
     white-space: nowrap
 
+.position-slider
+    margin: 12px 0 0 10px !important
+    width: 150%
 
 .volume
     padding: 0 20px 0 20%
@@ -239,5 +242,8 @@ export default {
 .volume-icon
     padding: 0 5px
 
+.volume-slider
+    margin: 0 5px 3px 0 !important
+    width: 60%
 
 </style>
