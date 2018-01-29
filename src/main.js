@@ -24,43 +24,12 @@ window.onunload = () => {
     localStorage.setItem('theme', vm.theme);
 };
 
-
-/* VUE */
-// Get user's playlist data from the HTML the server provided
-var playlist_data = JSON.parse(document.getElementById('json').innerHTML);
-
-Vue.component('player', player);
-Vue.component('editor', editor);
-Vue.component('playlists', playlists);
-Vue.component('videos', videos);
-Vue.component('settings', settings);
-
-window.vm = new Vue({
-    el: '#vue-app',
-    data: {
-        // --- App state info ---
-        themes: THEMES,
-        cur_screen: 'playlists',
-        editor: false,
-        menu_active: false,
-        thumbnail: null,
-
-        // --- Playlists/Videos ---
-        playlists: playlist_data,
-        // play: playing with the player component; view: looked at with the videos component
-        cur_playlist_view: null,
-        cur_playlist_play: null,
-        new_video: 0,
-        
-        // --- User preferences ---
-        scroll_title: true,
-        theme: THEMES[0],
-    },
+// Mixin containing some common functions
+Vue.mixin({
     methods: {
-        // --- Helper methods ---
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
-        }, 
+        },
         // Interact via XMLHTTP request.
         // 'whenReady' is a function executed on state change.
         sendRequest(type, location, content, whenReady) {
@@ -72,8 +41,41 @@ window.vm = new Vue({
             request.open(type, location);
             request.send(form);
         },
+    }
+})
 
+window.vm = new Vue({
+    el: '#vue-app',
+    components: {
+        player: player,
+        editor: editor,
+        playlists: playlists,
+        videos: videos,
+        settings: settings
+    },
+    data: {
+        // --- App state info ---
+        themes: THEMES,
+        cur_screen: 'playlists',
+        editor: false,
+        menu_active: false,
+        thumbnail: null,
+
+        // --- Playlists/Videos ---
+        // Get user's playlist data from the HTML/JSON the server provided
+        playlists: JSON.parse(document.getElementById('json').innerHTML),
+        // play: playing with the player component; view: looked at with the videos component
+        cur_playlist_view: null,
+        cur_playlist_play: null,
+        new_video: 0,
+        
+        // --- User preferences ---
+        scroll_title: true,
+        theme: THEMES[0],
+    },
+    methods: {
         // Event handlers
+        // TODO: Combine these first 3 into one function
         onPlaylistClick(playlist) {
             if (window.location.pathname === `/${playlist.id}/`) return;
             history.pushState({}, playlist.name, playlist.id + '/');
@@ -129,6 +131,5 @@ import(`./sass/theme_${vm.theme}.sass`).then(() => {
 
 vm.updateScreen();
 
-
-// TODO: Move out some common functions to another file that can be imported
 // TODO: Properly do transition animations again
+// TODO: L78

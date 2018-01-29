@@ -99,9 +99,6 @@ export default {
     },
     methods: {
         // --- Helper methods ---
-        formatSeconds(secs) {
-            return new Date(1000 * secs).toISOString().substr(14, 5);
-        }, 
         setTitle(text) {
             clearTimeout(this.scroller_interval_id);
             document.title = text;
@@ -114,7 +111,6 @@ export default {
 
         // --- Playlist/Video playing related methods ---
         updateCurrentTrack: function (video) {
-            console.log(this.player);
             this.player.e.pause();
             this.player.e.currentTime = 0;
 
@@ -126,7 +122,7 @@ export default {
 
             // 'this' is overridden, but we still need access to the component's data.
             var comp = this;
-            this.$parent.sendRequest('GET', '/u/' + video.url, null, function () {
+            this.sendRequest('GET', '/u/' + video.url, null, function () {
                 if (this.readyState == 4 && this.status == 200) {
                     comp.player.title = video.title;
                     comp.player.e.setAttribute('src', this.responseText);
@@ -228,7 +224,7 @@ export default {
     width: 150%
 
 .volume
-    padding: 0 20px 0 20%
+    padding: 0 20px
     white-space: nowrap
 
 .volume-box

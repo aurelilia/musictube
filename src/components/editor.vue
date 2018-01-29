@@ -40,7 +40,7 @@ export default {
                         private: false
                     };
                     var that = this;
-                    this.$parent.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
+                    this.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
                         if (this.readyState == 4 && this.status == 200) {
                             that.$emit('update:playlists', JSON.parse(this.responseText));
                         }
@@ -59,7 +59,7 @@ export default {
                     };
                     playlists.push(new_playlist);
                     this.$emit('update:playlists', playlists);
-                    this.$parent.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
+                    this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
                 }
                 break;
             case 'videos':
@@ -74,7 +74,7 @@ export default {
                     plistname: playlist.name
                 };
                 var that = this;
-                this.$parent.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
+                this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
                     if (this.readyState == 4 && this.status == 200) {
                         playlist.videos.push(JSON.parse(this.responseText));
                         that.$emit('update:cur_playlist_view', playlist);

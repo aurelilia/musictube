@@ -16,13 +16,10 @@
 export default {
     props: ['playlists', 'cur_playlist_view', 'editor'],
     methods: {
-        formatSeconds(secs) {
-            return new Date(1000 * secs).toISOString().substr(14, 5);
-        },
         onDelete(obj) {
             if (confirm('Are you sure you want to remove the video?')) {
                 var vm = this.$parent;
-                vm.sendRequest('POST', '/e/dv/', JSON.stringify([vm.cur_playlist_view.name, obj.title]));
+                this.sendRequest('POST', '/e/dv/', JSON.stringify([vm.cur_playlist_view.name, obj.title]));
                 vm.cur_playlist_view.videos.splice(vm.cur_playlist_view.videos.indexOf(obj), 1);
             }
         }

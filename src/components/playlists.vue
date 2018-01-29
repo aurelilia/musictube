@@ -21,15 +21,14 @@ export default {
         onDelete(obj) {
             if (confirm('Are you sure you want to delete the playlist?')) {
                 var vm = this.$parent;
-                vm.sendRequest('POST', '/e/dp/', obj.name);
+                this.sendRequest('POST', '/e/dp/', obj.name);
                 vm.playlists.splice(vm.playlists.indexOf(obj), 1);
             }
         },
         onRename(obj) {
             var list_name = prompt('Enter a new name for the playlist:');
             if (list_name !== null && list_name !== '') {
-                var vm = this.$parent;
-                vm.sendRequest('POST', '/e/rp/', JSON.stringify({
+                this.sendRequest('POST', '/e/rp/', JSON.stringify({
                     'old': obj.name,
                     'new': list_name
                 }));
