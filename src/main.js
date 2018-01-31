@@ -7,31 +7,15 @@ import settings from './components/settings.vue';
 
 const THEMES = ['blue', 'transparent'];
 
-// Prevent document from being seen until it is fulled loaded
+// Prevent document from being seen until it is fully loaded
 document.body.hidden = true;
 
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = (event) => {
-    if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) vm.menu_active = false;
-};
-
-// Save user prefrences to localStorage on unload
-window.onunload = () => {
-    localStorage.setItem('scroll', vm.scroll_title);
-    localStorage.setItem('volume', vm.volume);
-    localStorage.setItem('random', vm.random);
-    localStorage.setItem('theme', vm.theme);
-};
-
-// Mixin containing some common functions
 Vue.mixin({
     methods: {
         formatSeconds(secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5);
         },
         // Interact via XMLHTTP request.
-        // 'whenReady' is a function executed on state change.
         sendRequest(type, location, content, whenReady) {
             var form = new FormData();
             form.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value);
@@ -62,7 +46,6 @@ window.vm = new Vue({
         thumbnail: null,
 
         // --- Playlists/Videos ---
-        // Get user's playlist data from the HTML/JSON the server provided
         playlists: JSON.parse(document.getElementById('json').innerHTML),
         // play: playing with the player component; view: looked at with the videos component
         cur_playlist_view: null,
@@ -72,64 +55,66 @@ window.vm = new Vue({
         // --- User preferences ---
         scroll_title: true,
         theme: THEMES[0],
+        random: false,
+        volume: 25,
+    },
+    created() {
+        // --- Window events
+        window.onclick = (event) => {
+            if (!event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) this.menu_active = false;
+        };
+
+        window.onunload = () => {
+            localStorage.setItem('scroll', this.scroll_title);
+            localStorage.setItem('volume', this.volume);
+            localStorage.setItem('random', this.random);
+            localStorage.setItem('theme', this.theme);
+        };
+
+        window.onpopstate = this.updateScreen;
+
+        // --- Loading stuff ---
+        if (localStorage.getItem('volume') != null) {
+            this.volume = localStorage.getItem('volume');
+            this.random = localStorage.getItem('random') === 'true';
+            this.scroll_title = localStorage.getItem('scroll') === 'true';
+            this.theme = localStorage.getItem('theme');
+        }
+
+        // Wait for SASS theme to load, then unhide the page hidden at line 7 of this file
+        import(`./sass/theme_${this.theme}.sass`).then(() => {
+            document.body.hidden = false;
+        });
+
+        this.updateScreen();
     },
     methods: {
         // Event handlers
-        // TODO: Combine these first 3 into one function
-        onPlaylistClick(playlist) {
-            if (window.location.pathname === `/${playlist.id}/`) return;
-            history.pushState({}, playlist.name, playlist.id + '/');
-            vm.updateScreen();
-        },
-        onBackClick() {
-            if (window.location.pathname === '/') return;
-            history.pushState({}, 'MusicTube', '/');
-            vm.updateScreen();
-        },
-        onSettingsClick() {
-            if (window.location.pathname === '/settings/') return;
-            history.pushState({}, 'MusicTube', '/settings/');
-            vm.updateScreen();
+        onNavigate(location) {
+            if (window.location.pathname === location) return;
+            history.pushState({}, 'MusicTube', location);
+            this.updateScreen();
         },
         updateScreen() {
             var uri = window.location.pathname;
-            if (uri === '/') {
-                vm.cur_screen = 'playlists';
-            } else if (uri === '/settings/') {
-                vm.cur_screen = 'settings';
-            } else {
-                vm.cur_playlist_view = vm.playlists.filter((obj) => {
+            var uri_to_component = {
+                '/': 'playlists',
+                '/settings/': 'settings',
+            }
+            this.cur_screen = uri_to_component[uri];
+
+            if (this.cur_screen === undefined) {
+                this.cur_playlist_view = this.playlists.filter((obj) => {
                     return obj.id == uri.split('/')[1];
                 })[0];
-                vm.cur_screen = 'videos';
+                this.cur_screen = 'videos';
             }
         },
         updateTheme() {
-            // Maybe consider dynamically loading SASS if that's possible
-            vm.theme = document.getElementById('settings-theme').value;
+            this.theme = document.getElementById('settings-theme').value;
             if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload();
         },
     }
 });
 
-
-// Update screen on back/forward button click
-window.onpopstate = vm.updateScreen;
-
-// Check if preferences are already in local storage; use default value if not
-if (localStorage.getItem('volume') != null) {
-    vm.volume = localStorage.getItem('volume');
-    vm.random = localStorage.getItem('random') === 'true';
-    vm.scroll_title = localStorage.getItem('scroll') === 'true';
-    vm.theme = localStorage.getItem('theme');
-}
-
-// Wait for SASS theme to load, then unhide the page hidden at line 7 of this file
-import(`./sass/theme_${vm.theme}.sass`).then(() => {
-    document.body.hidden = false;
-});
-
-vm.updateScreen();
-
 // TODO: Properly do transition animations again
-// TODO: L78

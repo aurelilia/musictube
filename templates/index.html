@@ -16,14 +16,18 @@
 
         <nav>
             <div class="logo">
-                <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="onBackClick">
+                <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="onNavigate('/')">
             </div>
 
             <player class="navbar-content"
                     :cur_playlist="cur_playlist_play"
                     :new_video="new_video"
                     :scroll_title="scroll_title"
+                    :random="random"
+                    :volume="volume" 
+                    @update:volume="(v) => {volume = v;}"
                     @update:thumbnail="(t) => {thumbnail = t;}"
+                    @update:random="random = !random"
                     v-show="!editor" key="1">
             </player>
             <editor class="navbar-content"
@@ -43,8 +47,8 @@
         </nav>
 
         <div id="menu-item" class="menu-dropdown" v-show="menu_active">
-            <a class="menu-item" @click="onBackClick">My Playlists</a>
-            <a class="menu-item" @click="onSettingsClick">Settings</a>
+            <a class="menu-item" @click="onNavigate('/')">My Playlists</a>
+            <a class="menu-item" @click="onNavigate('/settings/')">Settings</a>
             <a class="menu-item" href="/logout/">Log out</a>
             <a class="menu-item" @click="editor = !editor">
                 <i class="fa" :class="{'fa-check-square-o': editor, 'fa-square-o': !editor}" aria-hidden="true"></i>
@@ -55,7 +59,7 @@
         <div class="content">
             <transition name="component-fade" mode="out-in">
                 <component :is=cur_screen 
-                           :view="cur_playlist_view" @update:view="onPlaylistClick" 
+                           :view="cur_playlist_view" @update:view="(p) => { onNavigate(`/${p.id}/`); }" 
                            @update:track="(v) => { if(!editor) { cur_playlist_play = v[0]; new_video = v[1]; }}"
                            :scroll_title="scroll_title" @update:scroll_title="scroll_title = !scroll_title"
                            :theme="theme" @update:theme="updateTheme"
@@ -68,7 +72,7 @@
         <audio id="player" autoplay @ended="editor = !editor"></audio>
     </div>
 
-    <p id="json" style="display:none"> {{ json }}</p>
+    <p id="json" style="display:none"> {{ json }} </p>
 
     {% render_bundle 'main' %}
     {% csrf_token %}

@@ -7,7 +7,7 @@
         <p id="play-button" @click="onPlayPause">
             <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
         </p>
-        <p id="random-button" @click="random = !random" :class="{ 'grey': !random }">
+        <p id="random-button" @click="$emit('update:random')" :class="{ 'grey': !random }">
             <i class="fa fa-random"></i>
         </p>
         <p id="next-button" @click="onNextTrack">
@@ -31,16 +31,16 @@
         <span class="volume-icon">
             <i class="fa fa-volume-up"></i>
         </span>
-        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="volume = $event.target.value"
+        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="$emit('update:volume', $event.target.value)"
             :value="volume">
-        <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="volume = $event.target.value" :value="volume">
+        <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="$emit('update:volume', $event.target.value)" :value="volume">
     </span>
 </div>
 </template>
 
 <script>
 export default {
-    props: ['cur_playlist', 'new_video', 'scroll_title'],
+    props: ['cur_playlist', 'new_video', 'scroll_title', 'random', 'volume'],
     data: function () {
         return {
             // State info
@@ -55,10 +55,6 @@ export default {
                 position: 0
             },
             playing: false,
-
-            // --- User preferences ---
-            random: false,
-            volume: 25,
         }
     },
     mounted: function () {
