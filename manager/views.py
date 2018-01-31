@@ -12,7 +12,7 @@ from musictube.models import Playlist, Video
 def addPlaylist(request):
     content = json.loads(request.POST['content'])
     if not Playlist.objects.filter(user=request.user, name=content['name']):
-        playlist = Playlist(name=content['name'], user=request.user, private=content['private'])
+        playlist = Playlist(name=content['name'], user=request.user)
         playlist.save()
     return HttpResponse('')
 
@@ -49,7 +49,7 @@ def deleteVideo(request):
 def importPlaylist(request):
     content = json.loads(request.POST['content'])
     plist_pafy = pafy.playlist.get_playlist(content['url'])
-    playlist = Playlist(name=plist_pafy['title'], user=request.user, private=content['private'])
+    playlist = Playlist(name=plist_pafy['title'], user=request.user)
     playlist.save()
     for pafy_item in plist_pafy['items']:
         pafy_vid = pafy_item['pafy']

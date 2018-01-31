@@ -8,7 +8,7 @@ from musictube.models import Playlist
 
 
 @login_required
-def home(request, **kwargs):
+def home(request):
     """ Returns the main page. """
     context = {'json': fetch(request)}
     return render(request, 'index.html', context=context)
@@ -16,19 +16,7 @@ def home(request, **kwargs):
 
 @login_required
 def fetch(request):
-    """ API for getting info, using JSON
-        [{
-            name: name,
-            videos: [{
-                title: title,
-                url: url,
-                length: length
-            }]
-            private: bool,
-            user_id: id,
-            id: id
-        }]
-    """
+    """ API for getting info, using JSON """
     playlists_query = Playlist.objects.filter(user=request.user)
     playlists = list(playlists_query.all().values())
 

@@ -1,10 +1,8 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'player'
 urlpatterns = [
-    path('<int:playlist>/', views.home, name='home'),
-    path('settings/', views.home, name='home'),
-    path('', views.home, name='home'),
-    path('u/<url>', views.directURL, name='directURL')
+    path('u/<url>', views.directURL, name='directURL'),
+    re_path('^', views.home, name='home')
 ]
