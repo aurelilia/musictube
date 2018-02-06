@@ -16,7 +16,12 @@
 
     <p id="json" style="display:none"> {{ json }} </p>
 
+    {% if DEBUG == False %}
+        {% render_bundle 'manifest' %}
+        {% render_bundle 'vendor' %}
+    {% endif %}
     {% render_bundle 'main' %}
+
     {% csrf_token %}
 </body>
 
