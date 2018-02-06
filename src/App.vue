@@ -2,7 +2,7 @@
     <div class="app">
         <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail})`"></div>
 
-        <nav-bar></nav-bar>
+        <nav-bar/>
 
         <div id="menu-item" class="menu-dropdown" v-show="menu_active">
             <a class="menu-item" @click="$store.commit('navigate', '/')">My Playlists</a>
@@ -16,7 +16,7 @@
 
         <div class="content">
             <transition name="component-fade" mode="out-in">
-                <component :is="screen"></component>
+                <component :is="screen"/>
             </transition>
         </div>
 

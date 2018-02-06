@@ -16,6 +16,20 @@ function sendRequest (type, location, content, whenReady) {
     request.send(form)
 }
 
+// Generate store mutator for toggling a boolean. If a value is specified, force it instead of flipping
+function toggleGen (prop) {
+    return function (state, force) {
+        state[prop] = force !== undefined ? force : !state[prop]
+    }
+}
+
+// Generate store mutator for setting state prop to argument.
+function setterGen (prop) {
+    return function (state, val) {
+        state[prop] = val
+    }
+}
+
 Vue.use(Vuex)
 Vue.mixin({
     methods: {
@@ -52,6 +66,18 @@ const store = new Vuex.Store({
                 state.scroll_title = localStorage.getItem('scroll') === 'true'
             }
         },
+        toggleMenu: toggleGen('menu_active'),
+        toggleEditor: toggleGen('editor_active'),
+        toggleScrolling: toggleGen('scroll_title'),
+        toggleRandom: toggleGen('random'),
+        togglePlaying: toggleGen('playing'),
+        setPlaylists: setterGen('playlists'),
+        setThumbnail: setterGen('thumbnail'),
+        setVolume: setterGen('volume'),
+        setTheme (state, theme) {
+            localStorage.setItem('theme', theme)
+            if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload()
+        },
         navigate (state, location) {
             if (window.location.pathname === location) return
             history.pushState({}, 'MusicTube', location)
@@ -79,45 +105,11 @@ const store = new Vuex.Store({
         },
         updateCurrentTrackByIndex (state, index) {
             if (state.playlist_playing.videos[index] === state.video_playing) return
-            if (state.random) {
-                index = Math.floor((Math.random() * state.playlist_playing.videos.length) + 1)
-            }
-            if (index >= 0 && index < state.playlist_playing.videos.length) {
-                state.video_playing = state.playlist_playing.videos[index]
-            } else {
-                state.video_playing = state.playlist_playing.videos[0]
-            }
-        },
-        toggleMenu (state) {
-            state.menu_active = !state.menu_active
-        },
-        toggleEditor (state) {
-            state.editor_active = !state.editor_active
-        },
-        toggleScrolling (state) {
-            state.scroll_title = !state.scroll_title
-        },
-        toggleRandom (state) {
-            state.random = !state.random
-        },
-        togglePlaying (state, play) {
-            state.playing = play !== undefined ? play : !state.playing
-        },
-        setTheme (state, theme) {
-            localStorage.setItem('theme', theme)
-            if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload()
-        },
-        setPlaylists (state, playlists) {
-            state.playlists = playlists
-        },
-        setThumbnail (state, thumbnail) {
-            state.thumbnail = thumbnail
-        },
-        setVolume (state, vol) {
-            state.volume = vol
-        },
-        addVideoToPlaylist (state, video) {
-            state.playlist_viewing.videos = state.playlist_viewing.videos.concat(video)
+
+            if (state.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length) + 1)
+            if (index < 0 || index >= state.playlist_playing.videos.length) index = 0
+
+            state.video_playing = state.playlist_playing.videos[index]
         },
         deletePlaylist (state, playlist) {
             if (confirm('Are you sure you want to delete the playlist?')) {
@@ -126,14 +118,17 @@ const store = new Vuex.Store({
             }
         },
         renamePlaylist (state, playlist) {
-            var list_name = prompt('Enter a new name for the playlist:')
-            if (list_name !== null && list_name !== '') {
+            var new_name = prompt('Enter a new name for the playlist:')
+            if (new_name !== null && new_name !== '') {
                 sendRequest('POST', '/e/rp/', JSON.stringify({
                     'old': playlist.name,
-                    'new': list_name
+                    'new': new_name
                 }))
-                state.playlists[state.playlists.indexOf(playlist)].name = list_name
+                state.playlists[state.playlists.indexOf(playlist)].name = new_name
             }
+        },
+        addVideoToPlaylist (state, video) {
+            state.playlist_viewing.videos = state.playlist_viewing.videos.concat(video)
         },
         deleteVideo (state, video) {
             if (confirm('Are you sure you want to remove the video?')) {
