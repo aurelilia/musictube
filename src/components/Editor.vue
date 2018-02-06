@@ -1,22 +1,28 @@
 <template>
-<div class="navbar-content" v-show="editor" key="1">
-    <div class="controls">
-        <p class="add-icon">
-            <i class="fa fa-plus" @click="add = !add"></i>
-        </p>
-        <form @submit.prevent="onAdd()">
-            <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL..."/>
-        </form>
+    <div class="navbar-content">
+        <div class="controls">
+            <p class="add-icon">
+                <i class="fa fa-plus" @click="add = !add"></i>
+            </p>
+            <form @submit.prevent="onAdd()">
+                <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL..."/>
+            </form>
+        </div>
+        <span class="exit" @click="$store.commit('toggleEditor')">
+            Return to player
+        </span>
     </div>
-    <span class="exit" @click="$emit('update:editor')">
-        Return to player
-    </span>
-</div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-    props: ['cur_screen', 'playlists', 'cur_playlist_view', 'editor'],
+    computed: mapState([
+        'screen',
+        'playlists',
+        'playlist_viewing'
+    ]),
     data: function () {
         return {
             add: false
@@ -30,7 +36,7 @@ export default {
                 return;
             }
 
-            switch (this.cur_screen) {
+            switch (this.screen) {
             case 'playlists':
                 var playlists = this.playlists;
 
@@ -42,7 +48,7 @@ export default {
                     var that = this;
                     this.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
                         if (this.readyState == 4 && this.status == 200) {
-                            that.$emit('update:playlists', JSON.parse(this.responseText));
+                            that.$store.commit('setPlaylists', JSON.parse(this.responseText));
                         }
                     });
                 } else {
@@ -58,12 +64,12 @@ export default {
                         videos: []
                     };
                     playlists.push(new_playlist);
-                    this.$emit('update:playlists', playlists);
+                    this.$store.commit('setPlaylists', playlists);
                     this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
                 }
                 break;
             case 'videos':
-                var playlist = this.cur_playlist_view;
+                var playlist = this.playlist_viewing;
                 if (!input.includes('youtube.com/watch?v=')) {
                     alert('Not a valid URL! Please try again.');
                     return;
@@ -76,8 +82,7 @@ export default {
                 var that = this;
                 this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
                     if (this.readyState == 4 && this.status == 200) {
-                        playlist.videos.push(JSON.parse(this.responseText));
-                        that.$emit('update:cur_playlist_view', playlist);
+                        that.$store.commit('update:playlist_viewing', JSON.parse(this.responseText));
                     }
                 });
                 break;

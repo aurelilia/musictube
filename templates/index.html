@@ -12,64 +12,6 @@
 
 <body>
     <div id="vue-app">
-        <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail});`" v-if="thumbnail != null"></div>
-
-        <nav>
-            <div class="logo">
-                <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="onNavigate('/')">
-            </div>
-
-            <player class="navbar-content"
-                    :cur_playlist="cur_playlist_play"
-                    :new_video="new_video"
-                    :scroll_title="scroll_title"
-                    :random="random"
-                    :volume="volume" 
-                    @update:volume="(v) => {volume = v;}"
-                    @update:thumbnail="(t) => {thumbnail = t;}"
-                    @update:random="random = !random"
-                    v-show="!editor" key="1">
-            </player>
-            <editor class="navbar-content"
-                    :editor="editor"
-                    :playlists="playlists"
-                    :cur_playlist_view="cur_playlist_view"
-                    :cur_screen="cur_screen"
-                    @update:editor="editor = !editor"
-                    @update:playlists="(p) => {playlists = p;}"
-                    @update:cur_playlist_view="(p) => {cur_playlist_view = p; playlists[playlists.indexOf(cur_playlist_view)] = p;}"
-                    v-if="editor" key="2">
-            </editor>
-
-            <div class="hamburger-menu">
-                <i class="fa fa-bars" @click="menu_active = !menu_active"></i>
-            </div>
-        </nav>
-
-        <div id="menu-item" class="menu-dropdown" v-show="menu_active">
-            <a class="menu-item" @click="onNavigate('/')">My Playlists</a>
-            <a class="menu-item" @click="onNavigate('/settings/')">Settings</a>
-            <a class="menu-item" href="/logout/">Log out</a>
-            <a class="menu-item" @click="editor = !editor">
-                <i class="fa" :class="{'fa-check-square-o': editor, 'fa-square-o': !editor}" aria-hidden="true"></i>
-                Editor Mode
-            </a>
-        </div>
-
-        <div class="content">
-            <transition name="component-fade" mode="out-in">
-                <component :is=cur_screen 
-                           :view="cur_playlist_view" @update:view="(p) => { onNavigate(`/${p.id}/`); }" 
-                           @update:track="(v) => { if(!editor) { cur_playlist_play = v[0]; new_video = v[1]; }}"
-                           :scroll_title="scroll_title" @update:scroll_title="scroll_title = !scroll_title"
-                           :theme="theme" @update:theme="updateTheme"
-                           :playlists="playlists" :cur_playlist_view="cur_playlist_view" :editor="editor"
-                           :themes="themes">
-                </component>
-            </transition>
-        </div>
-
-        <audio id="player" autoplay @ended="editor = !editor"></audio>
     </div>
 
     <p id="json" style="display:none"> {{ json }} </p>

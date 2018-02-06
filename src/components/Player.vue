@@ -1,95 +1,101 @@
 <template>
-<div class="player">
-    <div class="controls">
-        <p id="prev-button" @click="onPrevTrack">
-            <i class="fa fa-backward"></i>
-        </p>
-        <p id="play-button" @click="onPlayPause">
-            <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
-        </p>
-        <p id="random-button" @click="$emit('update:random')" :class="{ 'grey': !random }">
-            <i class="fa fa-random"></i>
-        </p>
-        <p id="next-button" @click="onNextTrack">
-            <i class="fa fa-forward"></i>
-        </p>
-    </div>
-    <div class="thumb-nav" v-if="cur_video !== null">
-        <img :src="`https://i.ytimg.com/vi/${cur_video.url}/mqdefault.jpg`" height="50px">
-    </div>
-    <div class="track">
-        <p class="track-title" id="track-title">{{ player.title }}</p>
-        <transition name="position-fade">
-            <span class="position" v-if="cur_video !== null">
-                <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(cur_video.length) }}</p>
-                <input type="range" class="position-slider" id="position-slider" min="0" :max="cur_video.length" step="cur_video.length / 100"
-                    @input="player.e.currentTime = Math.floor($event.target.value)" :value="player.position">
+    <div class="player">
+
+        <div class="controls">
+            <p id="prev-button" @click="onPrevTrack">
+                <i class="fa fa-backward"></i>
+            </p>
+            <p id="play-button" @click="onPlayPause">
+                <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
+            </p>
+            <p id="random-button" @click="$store.commit('toggleRandom')" :class="{ 'grey': !random }">
+                <i class="fa fa-random"></i>
+            </p>
+            <p id="next-button" @click="onNextTrack">
+                <i class="fa fa-forward"></i>
+            </p>
+        </div>
+
+        <div class="thumb-nav" v-if="video_playing !== null">
+            <img :src="`https://i.ytimg.com/vi/${video_playing.url}/mqdefault.jpg`" height="50px">
+        </div>
+
+        <div class="track">
+            <p class="track-title" id="track-title">{{ player.title }}</p>
+            <transition name="position-fade">
+                <span class="position" v-if="video_playing !== null">
+                    <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(video_playing.length) }}</p>
+                    <input type="range" class="position-slider" id="position-slider" min="0" :max="video_playing.length" step="video_playing.length / 100"
+                        @input="player.e.currentTime = Math.floor($event.target.value)" :value="player.position">
+                </span>
+            </transition>
+        </div>
+
+        <span class="volume">
+            <span class="volume-icon">
+                <i class="fa fa-volume-up"></i>
             </span>
-        </transition>
-    </div>
-    <span class="volume">
-        <span class="volume-icon">
-            <i class="fa fa-volume-up"></i>
+            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="$store.commit('setVolume', $event.target.value)"
+                :value="volume">
+            <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="$store.commit('setVolume', $event.target.value)" :value="volume">
         </span>
-        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="$emit('update:volume', $event.target.value)"
-            :value="volume">
-        <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="$emit('update:volume', $event.target.value)" :value="volume">
-    </span>
-</div>
+
+        <audio id="player" autoplay></audio>
+
+    </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
-    props: ['cur_playlist', 'new_video', 'scroll_title', 'random', 'volume'],
+    computed: Object.assign({
+        video_id () {
+            return this.playlist_playing.videos.indexOf(this.video_playing)
+        }
+        },
+        mapState([
+            'playlist_playing',
+            'video_playing',
+            'playing',
+            'scroll_title',
+            'random',
+            'volume'
+        ])
+    ),
     data: function () {
         return {
-            // State info
-            cur_video: null,
-            cur_video_index: 0,
             scroller_interval_id: 0,
-
-            // --- Player/audio element ---
             player: {
-                e: document.getElementById('player'),
+                e: null,
                 title: 'No track playing.',
                 position: 0
             },
-            playing: false,
         }
     },
     mounted: function () {
         // Pause the player; add some event handlers to it
+        this.player.e = document.getElementById('player');
         this.player.e.pause();
         this.player.e.addEventListener('timeupdate', () => {
             this.player.position = Math.floor(this.player.e.currentTime);
         });
         this.player.e.addEventListener('ended', this.onNextTrack);
+        this.player.e.volume = this.volume / 400;
     },
     watch: {
-        new_video: function (video) {
-            // new_video is updated when videos component selects a new video
-            if (video === this.cur_video) return;
-            this.updateCurrentTrack(video);    
+        video_playing: function (video) {
+            this.updateCurrentTrack(video);
+        },
+        playing: function (playing) {
+            playing ? this.player.e.play() : this.player.e.pause()
         },
         volume: function (vol) {
             // Setting volume in HTML tags is not possible, so v-bind isn't an option.
             this.player.e.volume = vol / 400;
         },
-        cur_video_index: function (index) {
-            if (this.cur_playlist.videos[index] === this.cur_video) {
-                return;
-            }
-            if (this.random) {
-                index = Math.floor((Math.random() * this.cur_playlist.videos.length) + 1);
-            }
-            if (index >= 0 && index < this.cur_playlist.videos.length) {
-                this.updateCurrentTrack(this.cur_playlist.videos[index]);
-            } else {
-                this.cur_video_index = 0;
-            }
-        },
         scroll_title: function () {
-            var text = this.cur_video == null ? 'MusicTube' : this.cur_video.title;
+            var text = this.video_playing == null ? 'MusicTube' : this.video_playing.title;
             this.setTitle(text);
         }
     },
@@ -107,11 +113,9 @@ export default {
 
         // --- Playlist/Video playing related methods ---
         updateCurrentTrack: function (video) {
-            this.player.e.pause();
+            this.$store.commit('togglePlaying', false)
             this.player.e.currentTime = 0;
 
-            this.cur_video = video;
-            this.cur_video_index = this.cur_playlist.videos.indexOf(this.cur_video);
             this.setTitle(video.title);
             this.player.title = 'Loading...';
             this.updateThumbnail(video);
@@ -122,8 +126,7 @@ export default {
                 if (this.readyState == 4 && this.status == 200) {
                     comp.player.title = video.title;
                     comp.player.e.setAttribute('src', this.responseText);
-                    comp.player.e.play();
-                    comp.playing = true;
+                    comp.$store.commit('togglePlaying', true)
                 }
             });
         },
@@ -137,23 +140,21 @@ export default {
                 } else {
                     video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
                 }
-                that.$emit('update:thumbnail', video.thumbnail);
+                that.$store.commit('setThumbnail', video.thumbnail);
             };
             image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
         },
         onPlayPause() {
-            if (!this.playing && this.player.e.src !== '') {
-                this.player.e.play();
-            } else if (this.playing) {
-                this.player.e.pause();
-            }
-            this.playing = !this.player.e.paused;
+            if (this.player.e.src === '') return
+            this.$store.commit('togglePlaying')
         },
         onPrevTrack() {
-            if (this.playing) this.cur_video_index -= 1;
+            if(this.video_playing != null)
+                this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) - 1);
         },
         onNextTrack() {
-            if (this.playing) this.cur_video_index += 1;
+            if(this.video_playing != null)
+                this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) + 1);
         },
     }
 }
