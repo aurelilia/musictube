@@ -9,15 +9,15 @@
 
         <p class="settings-theme-text">Theme</p>
         <select class="settings-theme" id="settings-theme" @change="$store.commit('setTheme', $event.target.value)" :selected="getTheme">
-            <option v-for="t in themes" :value="t" :key="t" :selected="t === theme">{{ t }}</option>
+            <option v-for="t in themes" :value="t" :key="t" :selected="t === getTheme">{{ t }}</option>
         </select>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 
-const THEMES = ['blue', 'transparent'];
+const THEMES = ['blue', 'transparent']
 
 export default {
     data: function () {
@@ -30,8 +30,8 @@ export default {
         'theme'
     ]),
     methods: {
-        getTheme() {
-            return localStorage.getItem('theme');
+        getTheme () {
+            return localStorage.getItem('theme')
         }
     }
 }

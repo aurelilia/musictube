@@ -1,6 +1,6 @@
 <template>
     <div class="app">
-        <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail});`"></div>
+        <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail})`"></div>
 
         <nav-bar></nav-bar>
 
@@ -24,11 +24,11 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue';
-import Playlists from './components/Playlists.vue';
-import Videos from './components/Videos.vue';
-import Settings from './components/Settings.vue';
-import { mapState } from 'vuex';
+import NavBar from './components/NavBar.vue'
+import Playlists from './components/Playlists.vue'
+import Videos from './components/Videos.vue'
+import Settings from './components/Settings.vue'
+import { mapState } from 'vuex'
 
 export default {
     computed: mapState([
@@ -36,12 +36,12 @@ export default {
         'editor_active',
         'menu_active',
         'screen'
-        ]),
+    ]),
     components: {
         NavBar,
         Playlists,
         Videos,
         Settings
-    },
+    }
 }
 </script>

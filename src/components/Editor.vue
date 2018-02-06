@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 
 export default {
     computed: mapState([
@@ -29,67 +29,66 @@ export default {
         }
     },
     methods: {
-        onAdd() {
-            var input = document.getElementById('add-input').value;
+        onAdd () {
+            var input = document.getElementById('add-input').value
             if (input === '') {
-                alert('Please enter a name.');
-                return;
+                alert('Please enter a name.')
+                return
             }
+            var that = this
 
             switch (this.screen) {
             case 'playlists':
-                var playlists = this.playlists;
+                var playlists = this.playlists
 
                 if (input.includes('youtube.com/playlist')) {
                     var content = {
                         url: input,
                         private: false
-                    };
-                    var that = this;
+                    }
                     this.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
-                        if (this.readyState == 4 && this.status == 200) {
-                            that.$store.commit('setPlaylists', JSON.parse(this.responseText));
+                        if (this.readyState === 4 && this.status === 200) {
+                            that.$store.commit('setPlaylists', JSON.parse(this.responseText))
                         }
-                    });
+                    })
                 } else {
-                    for (var i = 0, len = this.playlists.length; i < len; i++) {
-                        if (input === this.playlists[i].name) {
-                            alert('You already have a playlist with that name! Please choose another one.');
-                            return;
-                        }
+                    if (this.playlists.find((plist) => {
+                        return input === plist.name
+                    }) !== undefined) {
+                        alert('You already have a playlist with that name! Please choose another one.')
+                        return
                     }
                     var new_playlist = {
                         name: input,
                         private: false,
                         videos: []
-                    };
-                    playlists.push(new_playlist);
-                    this.$store.commit('setPlaylists', playlists);
-                    this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist));
+                    }
+                    playlists.push(new_playlist)
+                    this.$store.commit('setPlaylists', playlists)
+                    this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist))
                 }
-                break;
+                break
             case 'videos':
-                var playlist = this.playlist_viewing;
+                var playlist = this.playlist_viewing
                 if (!input.includes('youtube.com/watch?v=')) {
-                    alert('Not a valid URL! Please try again.');
-                    return;
+                    alert('Not a valid URL! Please try again.')
+                    return
                 }
 
                 var new_video = {
                     url: input,
                     plistname: playlist.name
-                };
-                var that = this;
+                }
                 this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
-                    if (this.readyState == 4 && this.status == 200) {
-                        that.$store.commit('update:playlist_viewing', JSON.parse(this.responseText));
+                    if (this.readyState === 4 && this.status === 200) {
+                        that.$store.commit('update:playlist_viewing', JSON.parse(this.responseText))
                     }
-                });
-                break;
+                })
+                break
             }
-            this.add = false;
-            document.getElementById('add-input').value = '';
-        },
+            this.add = false
+            document.getElementById('add-input').value = ''
+        }
     }
 }
 
@@ -117,5 +116,5 @@ input[type=text]
     margin: 0 10px
     flex: 1
     text-align: right
-    
+
 </style>

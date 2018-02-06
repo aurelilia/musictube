@@ -138,7 +138,7 @@ LOGIN_URL = '/login/'
 
 # Webpack integration
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'musictube/dist'),
+    os.path.join(BASE_DIR, 'musictube/build/dist'),
     os.path.join(BASE_DIR, 'musictube/static')
 )
 

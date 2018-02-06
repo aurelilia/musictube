@@ -46,22 +46,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'vuex'
 
 export default {
     computed: Object.assign({
         video_id () {
             return this.playlist_playing.videos.indexOf(this.video_playing)
         }
-        },
-        mapState([
-            'playlist_playing',
-            'video_playing',
-            'playing',
-            'scroll_title',
-            'random',
-            'volume'
-        ])
+    },
+    mapState([
+        'playlist_playing',
+        'video_playing',
+        'playing',
+        'scroll_title',
+        'random',
+        'volume'
+    ])
     ),
     data: function () {
         return {
@@ -70,92 +70,90 @@ export default {
                 e: null,
                 title: 'No track playing.',
                 position: 0
-            },
+            }
         }
     },
     mounted: function () {
-        // Pause the player; add some event handlers to it
-        this.player.e = document.getElementById('player');
-        this.player.e.pause();
+        // Pause the player add some event handlers to it
+        this.player.e = document.getElementById('player')
+        this.player.e.pause()
         this.player.e.addEventListener('timeupdate', () => {
-            this.player.position = Math.floor(this.player.e.currentTime);
-        });
-        this.player.e.addEventListener('ended', this.onNextTrack);
-        this.player.e.volume = this.volume / 400;
+            this.player.position = Math.floor(this.player.e.currentTime)
+        })
+        this.player.e.addEventListener('ended', this.onNextTrack)
+        this.player.e.volume = this.volume / 400
     },
     watch: {
         video_playing: function (video) {
-            this.updateCurrentTrack(video);
+            this.updateCurrentTrack(video)
         },
         playing: function (playing) {
             playing ? this.player.e.play() : this.player.e.pause()
         },
         volume: function (vol) {
             // Setting volume in HTML tags is not possible, so v-bind isn't an option.
-            this.player.e.volume = vol / 400;
+            this.player.e.volume = vol / 400
         },
         scroll_title: function () {
-            var text = this.video_playing == null ? 'MusicTube' : this.video_playing.title;
-            this.setTitle(text);
+            var text = this.video_playing == null ? 'MusicTube' : this.video_playing.title
+            this.setTitle(text)
         }
     },
     methods: {
         // --- Helper methods ---
-        setTitle(text) {
-            clearTimeout(this.scroller_interval_id);
-            document.title = text;
+        setTitle (text) {
+            clearTimeout(this.scroller_interval_id)
+            document.title = text
             if (this.scroll_title && text !== 'MusicTube') {
                 this.scroller_interval_id = setTimeout(() => {
-                    this.setTitle(text.substr(1) + text.substr(0, 1));
-                }, 500);
+                    this.setTitle(text.substr(1) + text.substr(0, 1))
+                }, 500)
             }
         },
 
         // --- Playlist/Video playing related methods ---
         updateCurrentTrack: function (video) {
             this.$store.commit('togglePlaying', false)
-            this.player.e.currentTime = 0;
+            this.player.e.currentTime = 0
 
-            this.setTitle(video.title);
-            this.player.title = 'Loading...';
-            this.updateThumbnail(video);
+            this.setTitle(video.title)
+            this.player.title = 'Loading...'
+            this.updateThumbnail(video)
 
             // 'this' is overridden, but we still need access to the component's data.
-            var comp = this;
+            var comp = this
             this.sendRequest('GET', '/u/' + video.url, null, function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    comp.player.title = video.title;
-                    comp.player.e.setAttribute('src', this.responseText);
+                if (this.readyState === 4 && this.status === 200) {
+                    comp.player.title = video.title
+                    comp.player.e.setAttribute('src', this.responseText)
                     comp.$store.commit('togglePlaying', true)
                 }
-            });
+            })
         },
         // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
-        updateThumbnail(video) {
-            var image = new Image();
-            var that = this;
+        updateThumbnail (video) {
+            var image = new Image()
+            var that = this
             image.onload = function () {
                 if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
-                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`;
+                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`
                 } else {
-                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
+                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`
                 }
-                that.$store.commit('setThumbnail', video.thumbnail);
-            };
-            image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`;
+                that.$store.commit('setThumbnail', video.thumbnail)
+            }
+            image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`
         },
-        onPlayPause() {
+        onPlayPause () {
             if (this.player.e.src === '') return
             this.$store.commit('togglePlaying')
         },
-        onPrevTrack() {
-            if(this.video_playing != null)
-                this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) - 1);
+        onPrevTrack () {
+            if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) - 1)
         },
-        onNextTrack() {
-            if(this.video_playing != null)
-                this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) + 1);
-        },
+        onNextTrack () {
+            if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) + 1)
+        }
     }
 }
 </script>
@@ -163,7 +161,7 @@ export default {
 <style lang="sass">
 @import ../sass/colors
 
-.bg-img 
+.bg-img
     position: fixed
     top: -1%
     left: -1%
@@ -171,18 +169,16 @@ export default {
     z-index: -1
 
     display: block
-    background-size: cover;
+    background-size: cover
     width: 102%
     height: 102%
 
     filter: blur(7px)
 
-
 .navbar-content
     flex: 1
     display: flex
     align-items: center
-
 
 .controls
     display: flex
@@ -196,7 +192,6 @@ export default {
 
 .grey
     color: $random-off
-
 
 .track
     flex: 1
@@ -238,7 +233,6 @@ export default {
 .volume-slider
     margin: 0 5px 3px 0 !important
     width: 60%
-
 
 // Sliders. Code taken from https://codepen.io/seanstopnik/pen/CeLqA
 $range-handle-color: $sliders

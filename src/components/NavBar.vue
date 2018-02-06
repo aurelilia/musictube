@@ -1,7 +1,7 @@
 <template>
     <nav>
         <div class="logo">
-            <img alt="musictube" src="{% static 'img/logo.png' %}" height="50px" @click="$store.commit('navigate', '/')">
+            <img alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.commit('navigate', '/')">
         </div>
 
         <player class="navbar-content" v-show="!$store.state.editor_active"></player>
@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import Player from './Player.vue';
-import Editor from './Editor.vue';
+import Player from './Player.vue'
+import Editor from './Editor.vue'
 
 export default {
     components: {
