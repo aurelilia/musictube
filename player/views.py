@@ -5,12 +5,12 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
 from musictube.models import Playlist
-
+from musictube.settings import DEBUG
 
 @login_required
 def home(request):
     """ Returns the main page. """
-    context = {'json': fetch(request)}
+    context = {'json': fetch(request), 'DEBUG': DEBUG}
     return render(request, 'index.html', context=context)
 
 
