@@ -7,6 +7,8 @@ key
 .vscode
 package-lock.json
 webpack-stats.json
+db.sqlite3
+build/dist
 
 # Taken from webpack vue template
 .DS_Store

@@ -83,7 +83,7 @@ if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+            'NAME': os.path.join(BASE_DIR, 'musictube/db.sqlite3'),
         }
     }
 else:
@@ -138,13 +138,13 @@ LOGIN_URL = '/login/'
 
 # Webpack integration
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'musictube/build/dist'),
+    os.path.join(BASE_DIR, 'build/dist'),
     os.path.join(BASE_DIR, 'musictube/static')
 )
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': '',
-        'STATS_FILE': os.path.join(BASE_DIR, 'musictube/webpack-stats.json'),
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
