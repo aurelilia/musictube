@@ -60,6 +60,7 @@ export default {
         'playing',
         'scroll_title',
         'random',
+        'video_thumbnail',
         'volume'
     ])
     ),
@@ -118,7 +119,7 @@ export default {
 
             this.setTitle(video.title)
             this.player.title = 'Loading...'
-            this.updateThumbnail(video)
+            if (this.video_thumbnail) this.updateThumbnail(video)
 
             // 'this' is overridden, but we still need access to the component's data.
             var comp = this

@@ -2,9 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App.vue'
 
-// Prevent document from being seen until it is fully loaded
-document.body.hidden = true
-
 // Interact via XMLHTTP request.
 function sendRequest (type, location, content, whenReady) {
     var form = new FormData()
@@ -52,7 +49,8 @@ const store = new Vuex.Store({
 
         video_playing: null,
         playing: false,
-        thumbnail: null,
+        thumbnail: require('./assets/bg.jpg'),
+        video_thumbnail: true,
 
         scroll_title: true,
         random: false,
@@ -64,20 +62,18 @@ const store = new Vuex.Store({
                 state.volume = localStorage.getItem('volume')
                 state.random = localStorage.getItem('random') === 'true'
                 state.scroll_title = localStorage.getItem('scroll') === 'true'
+                state.video_thumbnail = localStorage.getItem('thumbnailbg') === 'true'
             }
         },
         toggleMenu: toggleGen('menu_active'),
         toggleEditor: toggleGen('editor_active'),
         toggleScrolling: toggleGen('scroll_title'),
+        toggleThumbnail: toggleGen('video_thumbnail'),
         toggleRandom: toggleGen('random'),
         togglePlaying: toggleGen('playing'),
         setPlaylists: setterGen('playlists'),
         setThumbnail: setterGen('thumbnail'),
         setVolume: setterGen('volume'),
-        setTheme (state, theme) {
-            localStorage.setItem('theme', theme)
-            if (confirm('The page needs to be reloaded to apply the theme. Reload now?')) location.reload()
-        },
         navigate (state, location) {
             if (window.location.pathname === location) return
             history.pushState({}, 'MusicTube', location)
@@ -144,22 +140,5 @@ new Vue({
     el: '#vue-app',
     components: { App },
     store,
-    template: `<App/>`,
-    created () {
-        window.onunload = () => {
-            localStorage.setItem('scroll', this.$store.state.scroll_title)
-            localStorage.setItem('volume', this.$store.state.volume)
-            localStorage.setItem('random', this.$store.state.random)
-        }
-
-        window.onpopstate = this.$store.commit('updateCurrentScreen')
-
-        var theme = localStorage.getItem('theme')
-        import(`./sass/theme_${theme === null ? 'transparent' : theme}.sass`).then(() => {
-            document.body.hidden = false
-        })
-
-        this.$store.commit('updateCurrentScreen')
-        this.$store.commit('loadSettings')
-    }
+    template: `<App/>`
 })
