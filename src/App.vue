@@ -15,7 +15,7 @@
         </div>
 
         <div class="content">
-            <transition name="component-fade" mode="out-in">
+            <transition name="component" mode="out-in">
                 <component :is="screen"/>
             </transition>
         </div>
@@ -97,30 +97,16 @@ tr .delete,
     text-align: center
     font-size: 1.25em
 
-// Transitions
-.component-fade-enter-active,
-.component-fade-leave-active
-  transition: opacity .3s ease
+.component-enter-active, .component-leave-active
+    transition: opacity .3s ease-in-out, transform .3s ease-in-out
 
-.position-fade-enter-active,
-.position-fade-leave-active
-  transition: opacity .5s
+.component-enter
+    opacity: 0
+    transform: translateX(-75px)
 
-.component-fade-enter,
-.component-fade-leave-to,
-.position-fade-enter,
-.position-fade-leave-to
-  opacity: 0
-
-.navbar-fade-enter-active,
-.navbar-fade-leave-active
-  transition: color .3s ease
-
-.navbar-fade-enter,
-.navbar-fade-leave-to,
-.position-fade-enter,
-.position-fade-leave-to
-    color: $navbar !important
+.component-leave-to
+    opacity: 0
+    transform: translateX(75px)
 
 // Media queries for smaller devices
 @media only screen and (max-device-width: 1024px)

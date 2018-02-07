@@ -22,7 +22,7 @@
 
         <div class="track">
             <p class="track-title" id="track-title">{{ player.title }}</p>
-            <transition name="position-fade">
+            <transition name="position">
                 <span class="position" v-if="video_playing !== null">
                     <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(video_playing.length) }}</p>
                     <input type="range" class="position-slider" id="position-slider" min="0" :max="video_playing.length" step="video_playing.length / 100"
@@ -177,7 +177,6 @@ export default {
     filter: blur(7px)
 
 .navbar-content
-    flex: 1
     display: flex
     align-items: center
 
@@ -291,5 +290,14 @@ input[type=range]
 input::-moz-focus-inner,
 input::-moz-focus-outer
   border: 0
+
+// Transition
+.position-enter-active
+    .position-slider
+        transition: width 1.5s ease-in-out
+
+.position-enter
+    .position-slider
+        width: 1px
 
 </style>
