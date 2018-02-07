@@ -4,8 +4,10 @@
             <img alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.commit('navigate', '/')">
         </div>
 
-        <player class="navbar-content" v-show="!$store.state.editor_active"/>
-        <editor class="navbar-content" v-show="$store.state.editor_active"/>
+        <transition-group class="navbar-fade" name="navbar" mode="out-in">
+            <player class="navbar-content" v-show="!$store.state.editor_active" key="player"/>
+            <editor class="navbar-content" v-show="$store.state.editor_active" key="editor"/>
+        </transition-group>
 
         <div class="hamburger-menu">
             <i class="fa fa-bars" @click="$store.commit('toggleMenu')"></i>
@@ -69,5 +71,26 @@ a
 a:hover
     background-color: $menu-hover
     cursor: default
+
+.navbar-fade
+    position: relative
+    flex: 1
+    height: 100%
+
+.navbar-content
+    position: absolute
+    width: 100%
+    height: 100%
+
+.navbar-enter-active, .navbar-leave-active
+    transition: opacity .2s ease-in-out, transform .2s ease-in-out
+
+.navbar-enter
+    opacity: 0
+    transform: translateY(-75px)
+
+.navbar-leave-to
+    opacity: 0
+    transform: translateY(75px)
 
 </style>
