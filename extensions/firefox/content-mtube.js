@@ -1,5 +1,5 @@
 function click(selector) {
-    document.getElementById(selector).click();
+    document.getElementById(selector).click()
 }
 
 browser.runtime.onMessage.addListener((request) => {
@@ -7,14 +7,14 @@ browser.runtime.onMessage.addListener((request) => {
     case 'pause':
     case 'play':
         if (document.getElementById('fa-play').classList.contains('fa-' + request)) {
-            click('play-button');
+            click('play-button')
         }
-        break;
+        break
     case 'play-pause':
-        click('play-button');
-        break;
+        click('play-button')
+        break
     default:
-        click(request + '-button');
-        break;
+        click(request + '-button')
+        break
     }
-});
+})
