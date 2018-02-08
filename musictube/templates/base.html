@@ -1,0 +1,14 @@
+{% load static %}
+<html>
+
+<head>
+    <link rel="shortcut icon" href="/static/img/fav.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    {% block css %}<link rel="stylesheet" href="/static/css/login.css">{% endblock %}
+    <title>{% block title %}MusicTube{% endblock %}</title>
+</head>
+
+<body>{% block content %}{% endblock %}</body>
+
+</html>

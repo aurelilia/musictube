@@ -1,28 +1,17 @@
-{% load static %}
+{% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
-<html>
 
-<head>
-    <link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <title>MusicTube</title>
-</head>
+{% block css %}<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">{% endblock %}
 
-<body>
-    <div id="vue-app">
-    </div>
-
+{% block content %}
+    <div id="vue-app"></div>
+    
     <p id="json" style="display:none"> {{ json }} </p>
-
-    {% if DEBUG == False %}
-        {% render_bundle 'manifest' %}
-        {% render_bundle 'vendor' %}
-    {% endif %}
+    
+    {% if DEBUG == False %} 
+        {% render_bundle 'manifest' %} 
+        {% render_bundle 'vendor' %} 
+    {% endif %} 
     {% render_bundle 'main' %}
-
     {% csrf_token %}
-</body>
-
-</html>
+{% endblock %}

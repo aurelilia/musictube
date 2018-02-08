@@ -1,10 +1,11 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
 {% block title %}MusicTube - Register{% endblock %}
 
 {% block content %}
+    <img alt="MusicTube" src="/static/img/logo-full.png" height="200px">
     <form method="post">
-        {% csrf_token %} {{ form.as_p }}
+        {% csrf_token %} {{ form }}
         <button type="submit">Register</button>
     </form>
 {% endblock %}

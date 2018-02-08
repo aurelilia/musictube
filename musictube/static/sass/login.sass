@@ -1,9 +1,9 @@
-// TODO: Maybe find a way to move this to webpack.
-// Variables
-@import colors
+$bg: #f8f8f8
+$navbar: #3066a7
+$wtext: #fff
+$gtext: #bbb
+$btext: #222
 
-
-// General
 body
     margin: 0
     font-family: 'Open Sans', sans-serif;
@@ -27,26 +27,27 @@ input
     font-size: 1.5em
     font-family: 'Open Sans', sans-serif
     text-align: center
+    width: 100%
 
 button
     background-color: $navbar
     color: $wtext
-    margin-top: 20px    
+    margin-top: 20px
     border: 0
     padding: 15px 132px
     text-align: center
     font-size: 16px
+    display: block
+    width: 100%
 
 img
     display: block
     margin: 50px
     text-align: center
 
-span,
-ul
-    visibility: hidden
-    font-size: 0
-
 a
     text-decoration: none
     color: $navbar
+
+.errorlist
+    color: #f00
