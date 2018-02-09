@@ -196,6 +196,10 @@ export default {
 .controls *
     padding: 0 5px
 
+// fa-play and fa-pause have different widths, which causes the entire navbar to shift by 2px
+#play-button
+    width: 35px
+
 .grey
     color: $random-off
 

@@ -30,7 +30,6 @@ export default {
 
 .settings
     padding: 20px
-    margin: 0
     box-shadow: 0 5px 10px 3px $shadow
     color: $settings-text
     background-color: $tr

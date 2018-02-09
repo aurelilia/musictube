@@ -14,9 +14,9 @@
             </a>
         </div>
 
-        <div class="content">
+        <div class="wrapper">
             <transition name="component" mode="out-in">
-                <component :is="screen"/>
+                <component class="content" :is="screen"/>
             </transition>
         </div>
 
@@ -65,16 +65,22 @@ export default {
 @import './sass/colors'
 
 body
-    margin: 0 0 5%
-    padding: 0
+    margin: 0 0
     font-family: 'Open Sans', sans-serif
     background-color: $bg
+    overflow: visible
+
+.wrapper
+    position: fixed
+    top: 75px
+    overflow: auto
+    width: 100%
+    height: calc(100% - 75px)
 
 .content
-    margin-top: 120px
-    margin-left: auto
-    margin-right: auto
+    margin: 45px auto 60px
     width: 90%
+    overflow: visible
 
 // Both Playlists and Videos component use the same styling, so it's in here.
 table
