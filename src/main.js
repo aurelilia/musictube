@@ -101,7 +101,7 @@ const store = new Vuex.Store({
         updateCurrentTrackByIndex (state, index) {
             if (state.playlist_playing.videos[index] === state.video_playing) return
 
-            if (state.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length) + 1)
+            if (state.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length))
             if (index < 0 || index >= state.playlist_playing.videos.length) index = 0
 
             state.video_playing = state.playlist_playing.videos[index]

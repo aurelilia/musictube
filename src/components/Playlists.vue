@@ -1,5 +1,5 @@
 <template>
-    <span v-if="!playlists.length">No playlists. Go into editor mode to add one!</span>
+    <span class="no-avail" v-if="!playlists.length">No playlists. Go into editor mode to add one!</span>
     <table v-else>
         <tr v-for="playlist in playlists" :key="playlist.id">
             <td class="playlist-thumb" v-if="playlist.videos !== null">

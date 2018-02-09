@@ -53,25 +53,6 @@ nav
     font-size: 1.5em
     padding-right: 50px
 
-.menu-dropdown
-    position: fixed
-    right: 0
-    background-color: $menu
-    min-width: 200px
-    box-shadow: 0 5px 10px 3px $shadow
-    z-index: 100
-    top: 75px
-
-a
-    color: $menu-link
-    padding: 12px 16px
-    text-decoration: none
-    display: block
-
-a:hover
-    background-color: $menu-hover
-    cursor: default
-
 .navbar-fade
     position: relative
     flex: 1

@@ -4,15 +4,17 @@
 
         <nav-bar/>
 
-        <div id="menu-item" class="menu-dropdown" v-show="menu_active">
-            <a class="menu-item" @click="$store.commit('navigate', '/')">My Playlists</a>
-            <a class="menu-item" @click="$store.commit('navigate', '/settings/')">Settings</a>
-            <a class="menu-item" href="/logout/">Log out</a>
-            <a class="menu-item" @click="$store.commit('toggleEditor')">
-                <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"></i>
-                Editor Mode
-            </a>
-        </div>
+        <transition name="menu">
+            <div id="menu" class="menu-dropdown" v-if="menu_active">
+                <a class="menu-item" @click="$store.commit('navigate', '/')">My Playlists</a>
+                <a class="menu-item" @click="$store.commit('navigate', '/settings/')">Settings</a>
+                <a class="menu-item" href="/logout/">Log out</a>
+                <a class="menu-item" @click="$store.commit('toggleEditor')">
+                    <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"></i>
+                    Editor Mode
+                </a>
+            </div>
+        </transition>
 
         <div class="wrapper">
             <transition name="component" mode="out-in">
@@ -89,7 +91,33 @@ body
     width: 90%
     overflow: visible
 
+.menu-dropdown
+    position: fixed
+    right: 0
+    background-color: $menu
+    min-width: 200px
+    box-shadow: 0 5px 10px 3px $shadow
+    z-index: 100
+    top: 75px
+
+a
+    color: $menu-link
+    padding: 12px 16px
+    text-decoration: none
+    display: block
+
+a:hover
+    background-color: $menu-hover
+    cursor: default
+
 // Both Playlists and Videos component use the same styling, so it's in here.
+.no-avail
+    position: fixed
+    text-align: center
+    color: $wtext
+    top: 90px
+    width: 100%
+
 table
     width: 100%
     box-shadow: 0 5px 10px 3px $shadow
@@ -113,14 +141,14 @@ tr .delete,
     text-align: center
     font-size: 1.25em
 
-.component-enter-active, .component-leave-active
+.component-enter-active, .component-leave-active, .menu-enter-active, .menu-leave-active
     transition: opacity .3s ease-in-out, transform .3s ease-in-out
 
 .component-enter
     opacity: 0
     transform: translateX(-75px)
 
-.component-leave-to
+.component-leave-to, .menu-enter, .menu-leave-to
     opacity: 0
     transform: translateX(75px)
 

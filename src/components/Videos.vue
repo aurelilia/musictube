@@ -1,6 +1,6 @@
 <template>
-    <span v-if="playlist_viewing == undefined">Playlist not found! Either it is private, or it does not exist.</span>
-    <span v-else-if="!playlist_viewing.videos.length">No videos. Go into editor mode to add one!</span>
+    <span class="no-avail" v-if="playlist_viewing == undefined">Playlist not found! Either it is private, or it does not exist.</span>
+    <span class="no-avail" v-else-if="!playlist_viewing.videos.length">No videos. Go into editor mode to add one!</span>
     <table v-else>
         <tr v-for="video in playlist_viewing.videos" :key="video.id"
             @click="$store.commit('updateCurrentTrack', {video, playlist: playlist_viewing})">

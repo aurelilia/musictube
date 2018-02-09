@@ -1,11 +1,11 @@
 <template>
     <div class="navbar-content">
         <div class="controls">
-            <p class="add-icon">
-                <i class="fa fa-plus" @click="add = !add"></i>
-            </p>
+            <i class="fa fa-plus add-icon" @click="add = !add"></i>
             <form @submit.prevent="onAdd()">
-                <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL..."/>
+                <transition name="add-box">
+                    <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL..."/>
+                </transition>
             </form>
         </div>
         <span class="exit" @click="$store.commit('toggleEditor')">
@@ -111,6 +111,13 @@ input[type=text]
     font-size: .6em
     font-family: 'Open Sans', sans-serif
     text-align: center
+
+.add-box-enter-active, .add-box-leave-active
+    transition: opacity .3s ease-in-out, transform .3s ease-in-out
+
+.add-box-enter, .add-box-leave-to
+    opacity: 0
+    transform: translateX(-75px)
 
 .exit
     margin: 0 10px
