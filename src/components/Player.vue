@@ -31,7 +31,7 @@
             </transition>
         </div>
 
-        <span class="volume">
+        <span class="volume" @wheel.prevent="onVolumeWheel($event)">
             <span class="volume-icon">
                 <i class="fa fa-volume-up"></i>
             </span>
@@ -154,6 +154,12 @@ export default {
         },
         onNextTrack () {
             if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) + 1)
+        },
+        onVolumeWheel (e) {
+            var vol = parseInt(this.volume) + (Math.sign(e.deltaY) * -5)
+            vol = vol < 0 ? 0 : vol
+            vol = vol > 100 ? 100 : vol
+            this.$store.commit('setVolume', vol)
         }
     }
 }
@@ -216,7 +222,7 @@ export default {
     width: 150%
 
 .volume
-    padding: 0 20px
+    padding: 25px 20px
     white-space: nowrap
 
 .volume-box
