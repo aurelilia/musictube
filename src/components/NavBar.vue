@@ -10,7 +10,7 @@
         </transition-group>
 
         <div class="hamburger-menu">
-            <i class="fa fa-bars" @click="$store.commit('toggleMenu')"></i>
+            <i class="fa fa-bars" @click="$store.commit('toggleMenu')"/>
         </div>
     </nav>
 </template>

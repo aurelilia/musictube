@@ -3,16 +3,16 @@
 
         <div class="controls">
             <p id="prev-button" @click="onPrevTrack">
-                <i class="fa fa-backward"></i>
+                <i class="fa fa-backward"/>
             </p>
             <p id="play-button" @click="onPlayPause">
-                <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"></i>
+                <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"/>
             </p>
             <p id="random-button" @click="$store.commit('toggleRandom')" :class="{ 'grey': !random }">
-                <i class="fa fa-random"></i>
+                <i class="fa fa-random"/>
             </p>
             <p id="next-button" @click="onNextTrack">
-                <i class="fa fa-forward"></i>
+                <i class="fa fa-forward"/>
             </p>
         </div>
 
@@ -33,14 +33,14 @@
 
         <span class="volume" @wheel.prevent="onVolumeWheel($event)">
             <span class="volume-icon">
-                <i class="fa fa-volume-up"></i>
+                <i class="fa fa-volume-up"/>
             </span>
             <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="$store.commit('setVolume', $event.target.value)"
                 :value="volume">
             <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="$store.commit('setVolume', $event.target.value)" :value="volume">
         </span>
 
-        <audio id="player" autoplay></audio>
+        <audio id="player" autoplay/>
 
     </div>
 </template>
@@ -49,6 +49,16 @@
 import { mapState } from 'vuex'
 
 export default {
+    data: function () {
+        return {
+            scroller_interval_id: 0,
+            player: {
+                e: null,
+                title: 'No track playing.',
+                position: 0
+            }
+        }
+    },
     computed: Object.assign({
         video_id () {
             return this.playlist_playing.videos.indexOf(this.video_playing)
@@ -64,26 +74,6 @@ export default {
         'volume'
     ])
     ),
-    data: function () {
-        return {
-            scroller_interval_id: 0,
-            player: {
-                e: null,
-                title: 'No track playing.',
-                position: 0
-            }
-        }
-    },
-    mounted: function () {
-        // Pause the player add some event handlers to it
-        this.player.e = document.getElementById('player')
-        this.player.e.pause()
-        this.player.e.addEventListener('timeupdate', () => {
-            this.player.position = Math.floor(this.player.e.currentTime)
-        })
-        this.player.e.addEventListener('ended', this.onNextTrack)
-        this.player.e.volume = this.volume / 400
-    },
     watch: {
         video_playing: function (video) {
             this.updateCurrentTrack(video)
@@ -99,6 +89,16 @@ export default {
             var text = this.video_playing == null ? 'MusicTube' : this.video_playing.title
             this.setTitle(text)
         }
+    },
+    mounted: function () {
+        // Pause the player add some event handlers to it
+        this.player.e = document.getElementById('player')
+        this.player.e.pause()
+        this.player.e.addEventListener('timeupdate', () => {
+            this.player.position = Math.floor(this.player.e.currentTime)
+        })
+        this.player.e.addEventListener('ended', this.onNextTrack)
+        this.player.e.volume = this.volume / 400
     },
     methods: {
         // --- Helper methods ---

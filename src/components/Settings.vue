@@ -3,12 +3,12 @@
         <p class="settings-title">Settings</p>
 
         <a class="checkbox" @click="$store.commit('toggleScrolling')">
-            <i class="fa" :class="{'fa-check-square-o': scroll_title, 'fa-square-o': !scroll_title}" aria-hidden="true"></i>
+            <i class="fa" :class="{'fa-check-square-o': scroll_title, 'fa-square-o': !scroll_title}" aria-hidden="true"/>
             Scroll tab title
         </a>
 
         <a class="checkbox" @click="$store.commit('toggleThumbnail')">
-            <i class="fa" :class="{'fa-check-square-o': video_thumbnail, 'fa-square-o': !video_thumbnail}" aria-hidden="true"></i>
+            <i class="fa" :class="{'fa-check-square-o': video_thumbnail, 'fa-square-o': !video_thumbnail}" aria-hidden="true"/>
             Show thumbnail of currently playing video in background
         </a>
     </div>

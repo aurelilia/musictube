@@ -1,6 +1,6 @@
 <template>
     <div class="app">
-        <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail})`"></div>
+        <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail})`"/>
 
         <nav-bar/>
 
@@ -10,7 +10,7 @@
                 <a class="menu-item" @click="$store.commit('navigate', '/settings/')">Settings</a>
                 <a class="menu-item" href="/logout/">Log out</a>
                 <a class="menu-item" @click="$store.commit('toggleEditor')">
-                    <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"></i>
+                    <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"/>
                     Editor Mode
                 </a>
             </div>
@@ -33,18 +33,18 @@ import Settings from './components/Settings.vue'
 import { mapState } from 'vuex'
 
 export default {
-    computed: mapState([
-        'thumbnail',
-        'editor_active',
-        'menu_active',
-        'screen'
-    ]),
     components: {
         NavBar,
         Playlists,
         Videos,
         Settings
     },
+    computed: mapState([
+        'thumbnail',
+        'editor_active',
+        'menu_active',
+        'screen'
+    ]),
     created () {
         window.onunload = () => {
             localStorage.setItem('scroll', this.$store.state.scroll_title)

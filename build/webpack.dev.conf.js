@@ -70,10 +70,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new FriendlyErrorsPlugin({
             compilationSuccessInfo: {
                 messages: [`Dev Server is running here: http://localhost:8000`]
-            },
-            onErrors: config.dev.notifyOnErrors
-                ? utils.createNotifierCallback()
-                : undefined
+            }
         })
 
     ]
