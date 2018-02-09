@@ -50,7 +50,10 @@ export default {
             localStorage.setItem('random', this.$store.state.random)
         }
 
-        window.onpopstate = this.$store.commit('updateCurrentScreen')
+        window.onpopstate = () => {
+            // Assigning commit directly doesn't work.
+            this.$store.commit('updateCurrentScreen')
+        }
 
         this.$store.commit('updateCurrentScreen')
         this.$store.commit('loadSettings')
