@@ -18,8 +18,30 @@ import { mapState } from 'vuex'
 export default {
     computed: mapState([
         'playlist_viewing',
+        'playlist_playing',
+        'video_playing',
         'editor_active'
-    ])
+    ]),
+    watch: {
+        video_playing (video) {
+            if (this.playlist_playing !== this.playlist_viewing) return
+            var e = document.getElementsByTagName('tr')[this.playlist_playing.videos.indexOf(video)]
+            this.scrollIntoView(e)
+        }
+    },
+    methods: {
+        scrollIntoView (e) {
+            // Code taken from https://stackoverflow.com/a/5354536
+            var rect = e.getBoundingClientRect()
+            var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight)
+            var in_view = !(rect.bottom < 200 || rect.top - viewHeight >= -100)
+            if (in_view) return
+
+            var top = (rect.bottom < 200)
+            var offset = top ? (e.offsetTop) : (e.offsetTop - (viewHeight - Math.floor(viewHeight * 0.3)))
+            document.getElementById('wrapper').scrollTop = offset
+        }
+    }
 }
 </script>
 

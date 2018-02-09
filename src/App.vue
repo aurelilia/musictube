@@ -16,7 +16,7 @@
             </div>
         </transition>
 
-        <div class="wrapper">
+        <div class="wrapper" id="wrapper">
             <transition name="component" mode="out-in">
                 <component class="content" :is="screen"/>
             </transition>
@@ -81,10 +81,12 @@ body
 
 .wrapper
     position: fixed
-    top: 75px
+    top: 0
+    padding-top: 75px
     overflow: auto
     width: 100%
     height: calc(100% - 75px)
+    scroll-behavior: smooth
 
 .content
     margin: 45px auto 60px

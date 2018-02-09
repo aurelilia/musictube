@@ -122,12 +122,12 @@ export default {
             if (this.video_thumbnail) this.updateThumbnail(video)
 
             // 'this' is overridden, but we still need access to the component's data.
-            var comp = this
+            var self = this
             this.sendRequest('GET', '/u/' + video.url, null, function () {
                 if (this.readyState === 4 && this.status === 200) {
-                    comp.player.title = video.title
-                    comp.player.e.setAttribute('src', this.responseText)
-                    comp.$store.commit('togglePlaying', true)
+                    self.player.title = video.title
+                    self.player.e.setAttribute('src', this.responseText)
+                    self.$store.commit('togglePlaying', true)
                 }
             })
         },
