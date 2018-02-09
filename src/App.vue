@@ -55,6 +55,13 @@ export default {
             this.$store.commit('updateCurrentScreen')
         }
 
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = (event) => {
+            if (this.menu_active && !event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
+                this.$store.commit('toggleMenu', false)
+            }
+        }
+
         this.$store.commit('updateCurrentScreen')
         this.$store.commit('loadSettings')
     }

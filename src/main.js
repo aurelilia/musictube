@@ -93,7 +93,6 @@ const store = new Vuex.Store({
                 })
                 state.screen = 'videos'
             }
-            state.menu_active = false
         },
         updateCurrentTrack (state, { playlist, video }) {
             state.video_playing = video
