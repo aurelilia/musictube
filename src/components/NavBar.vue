@@ -1,17 +1,13 @@
 <template>
     <nav>
-        <div class="logo">
-            <img alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.commit('navigate', '/')">
-        </div>
+        <img class="logo" alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.commit('navigate', '/')">
 
         <transition-group class="navbar-fade" name="navbar" mode="out-in">
             <player class="navbar-content" v-show="!$store.state.editor_active" key="player"/>
             <editor class="navbar-content" v-show="$store.state.editor_active" key="editor"/>
         </transition-group>
 
-        <div class="hamburger-menu">
-            <i class="fa fa-bars" @click="$store.commit('toggleMenu')"/>
-        </div>
+        <i class="fa fa-bars hamburger-menu" @click="$store.commit('toggleMenu')"/>
     </nav>
 </template>
 

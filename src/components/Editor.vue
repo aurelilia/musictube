@@ -82,7 +82,7 @@ export default {
                 }
                 this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
                     if (this.readyState === 4 && this.status === 200) {
-                        that.$store.commit('update:playlist_viewing', JSON.parse(this.responseText))
+                        that.$store.commit('addVideoToPlaylist', JSON.parse(this.responseText))
                     }
                 })
                 break

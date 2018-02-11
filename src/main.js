@@ -123,7 +123,7 @@ const store = new Vuex.Store({
             }
         },
         addVideoToPlaylist (state, video) {
-            state.playlist_viewing.videos = state.playlist_viewing.videos.concat(video)
+            state.playlist_viewing.videos.push(video)
         },
         deleteVideo (state, video) {
             if (confirm('Are you sure you want to remove the video?')) {

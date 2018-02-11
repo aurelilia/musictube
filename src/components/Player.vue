@@ -2,18 +2,10 @@
     <div class="player">
 
         <div class="controls">
-            <p id="prev-button" @click="onPrevTrack">
-                <i class="fa fa-backward"/>
-            </p>
-            <p id="play-button" @click="onPlayPause">
-                <i id="fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}"/>
-            </p>
-            <p id="random-button" @click="$store.commit('toggleRandom')" :class="{ 'grey': !random }">
-                <i class="fa fa-random"/>
-            </p>
-            <p id="next-button" @click="onNextTrack">
-                <i class="fa fa-forward"/>
-            </p>
+            <i id="prev-button" class="fa fa-backward" @click="shiftVideoIndex(-1)"/>
+            <i id="play-button fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}" @click="onPlayPause"/>
+            <i id="random-button" class="fa fa-random" @click="$store.commit('toggleRandom')" :class="{ 'grey': !random }"/>
+            <i id="next-button" class="fa fa-forward" @click="shiftVideoIndex(1)"/>
         </div>
 
         <div class="thumb-nav" v-if="video_playing !== null">
@@ -21,23 +13,23 @@
         </div>
 
         <div class="track">
-            <p class="track-title" id="track-title">{{ player.title }}</p>
+            <span class="track-title" id="track-title">{{ player.title }}</span>
             <transition name="position">
                 <span class="position" v-if="video_playing !== null">
                     <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(video_playing.length) }}</p>
-                    <input type="range" class="position-slider" id="position-slider" min="0" :max="video_playing.length" step="video_playing.length / 100"
-                        @input="player.e.currentTime = Math.floor($event.target.value)" :value="player.position">
+                    <input type="range" class="position-slider" id="position-slider" min="0" :max="video_playing.length"
+                           step="video_playing.length / 100" @input="player.e.currentTime = Math.floor($event.target.value)"
+                           :value="player.position">
                 </span>
             </transition>
         </div>
 
         <span class="volume" @wheel.prevent="onVolumeWheel($event)">
-            <span class="volume-icon">
-                <i class="fa fa-volume-up"/>
-            </span>
-            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1" @input="$store.commit('setVolume', $event.target.value)"
-                :value="volume">
-            <input type="number" class="volume-box" id="volume-box" min="0" max="100" @change="$store.commit('setVolume', $event.target.value)" :value="volume">
+            <i class="fa fa-volume-up volume-icon"/>
+            <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1"
+                   @input="$store.commit('setVolume', $event.target.value)" :value="volume">
+            <input type="number" class="volume-box" id="volume-box" min="0" max="100"
+                   @change="$store.commit('setVolume', $event.target.value)" :value="volume">
         </span>
 
         <audio id="player" autoplay/>
@@ -146,14 +138,10 @@ export default {
             image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`
         },
         onPlayPause () {
-            if (this.player.e.src === '') return
-            this.$store.commit('togglePlaying')
+            if (this.player.e.src !== '') this.$store.commit('togglePlaying')
         },
-        onPrevTrack () {
-            if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) - 1)
-        },
-        onNextTrack () {
-            if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.playlist_playing.videos.indexOf(this.video_playing) + 1)
+        shiftVideoIndex (shift) {
+            if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.video_id + shift)
         },
         onVolumeWheel (e) {
             var vol = parseInt(this.volume) + (Math.sign(e.deltaY) * -5)
@@ -194,7 +182,7 @@ export default {
     font-size: 1.8em
 
 .controls *
-    padding: 0 5px
+    padding: 0 10px
 
 // fa-play and fa-pause have different widths, which causes the entire navbar to shift by 2px
 #play-button

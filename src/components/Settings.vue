@@ -1,6 +1,6 @@
 <template>
     <div class="settings">
-        <p class="settings-title">Settings</p>
+        <span class="settings-title">Settings</span>
 
         <a class="checkbox" @click="$store.commit('toggleScrolling')">
             <i class="fa" :class="{'fa-check-square-o': scroll_title, 'fa-square-o': !scroll_title}" aria-hidden="true"/>
