@@ -4,24 +4,11 @@
 
         <nav-bar/>
 
-        <transition name="menu">
-            <div id="menu" class="menu-dropdown" v-if="menu_active">
-                <a class="menu-item" @click="$store.commit('navigate', '/')">My Playlists</a>
-                <a class="menu-item" @click="$store.commit('navigate', '/settings/')">Settings</a>
-                <a class="menu-item" href="/logout/">Log out</a>
-                <a class="menu-item" @click="$store.commit('toggleEditor')">
-                    <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"/>
-                    Editor Mode
-                </a>
-            </div>
-        </transition>
-
         <div class="wrapper" id="wrapper">
             <transition name="component" mode="out-in">
                 <component class="content" :is="screen"/>
             </transition>
         </div>
-
     </div>
 </template>
 
@@ -41,8 +28,6 @@ export default {
     },
     computed: mapState([
         'thumbnail',
-        'editor_active',
-        'menu_active',
         'screen'
     ]),
     created () {
@@ -53,15 +38,7 @@ export default {
         }
 
         window.onpopstate = () => {
-            // Assigning commit directly doesn't work.
             this.$store.commit('updateCurrentScreen')
-        }
-
-        // Close the dropdown menu if the user clicks outside of it
-        window.onclick = (event) => {
-            if (this.menu_active && !event.target.matches('.menu-item') && !event.target.matches('.fa-bars')) {
-                this.$store.commit('toggleMenu', false)
-            }
         }
 
         this.$store.commit('updateCurrentScreen')
@@ -92,25 +69,6 @@ body
     margin: 45px auto 60px
     width: 90%
     overflow: visible
-
-.menu-dropdown
-    position: fixed
-    right: 0
-    background-color: $menu
-    min-width: 200px
-    box-shadow: 0 5px 10px 3px $shadow
-    z-index: 100
-    top: 75px
-
-a
-    color: $menu-link
-    padding: 12px 16px
-    text-decoration: none
-    display: block
-
-a:hover
-    background-color: $menu-hover
-    cursor: default
 
 // Both Playlists and Videos component use the same styling, so it's in here.
 .no-avail

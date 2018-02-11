@@ -89,7 +89,7 @@ export default {
         this.player.e.addEventListener('timeupdate', () => {
             this.player.position = Math.floor(this.player.e.currentTime)
         })
-        this.player.e.addEventListener('ended', this.onNextTrack)
+        this.player.e.addEventListener('ended', () => { this.shiftVideoIndex(1) })
         this.player.e.volume = this.volume / 400
     },
     methods: {

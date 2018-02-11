@@ -7,18 +7,20 @@
             <editor class="navbar-content" v-show="$store.state.editor_active" key="editor"/>
         </transition-group>
 
-        <i class="fa fa-bars hamburger-menu" @click="$store.commit('toggleMenu')"/>
+        <dropdown-menu/>
     </nav>
 </template>
 
 <script>
 import Player from './Player.vue'
 import Editor from './Editor.vue'
+import DropdownMenu from './Menu.vue'
 
 export default {
     components: {
         Player,
-        Editor
+        Editor,
+        DropdownMenu
     }
 }
 </script>
@@ -44,10 +46,6 @@ nav
 
 .logo
    padding: 0 50px
-
-.hamburger-menu
-    font-size: 1.5em
-    padding-right: 50px
 
 .navbar-fade
     position: relative
