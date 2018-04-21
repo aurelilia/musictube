@@ -8,7 +8,7 @@
         </a>
 
         <a class="checkbox" @click="$store.commit('toggleThumbnail')">
-            <i class="fa" :class="{'fa-check-square-o': video_thumbnail, 'fa-square-o': !video_thumbnail}" aria-hidden="true"/>
+            <i class="fa" :class="{'fa-check-square-o': use_video_thumbnail, 'fa-square-o': !use_video_thumbnail}" aria-hidden="true"/>
             Show thumbnail of currently playing video in background
         </a>
     </div>
@@ -20,7 +20,7 @@ import { mapState } from 'vuex'
 export default {
     computed: mapState([
         'scroll_title',
-        'video_thumbnail'
+        'use_video_thumbnail'
     ])
 }
 </script>

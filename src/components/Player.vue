@@ -62,7 +62,6 @@ export default {
         'playing',
         'scroll_title',
         'random',
-        'video_thumbnail',
         'volume'
     ])
     ),
@@ -111,7 +110,6 @@ export default {
 
             this.setTitle(video.title)
             this.player.title = 'Loading...'
-            if (this.video_thumbnail) this.updateThumbnail(video)
 
             // 'this' is overridden, but we still need access to the component's data.
             var self = this
@@ -122,20 +120,6 @@ export default {
                     self.$store.commit('togglePlaying', true)
                 }
             })
-        },
-        // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
-        updateThumbnail (video) {
-            var image = new Image()
-            var that = this
-            image.onload = function () {
-                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
-                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`
-                } else {
-                    video.thumbnail = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`
-                }
-                that.$store.commit('setThumbnail', video.thumbnail)
-            }
-            image.src = `https://i.ytimg.com/vi/${video.url}/maxresdefault.jpg`
         },
         onPlayPause () {
             if (this.player.e.src !== '') this.$store.commit('togglePlaying')

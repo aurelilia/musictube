@@ -12,7 +12,7 @@ from musictube.models import Playlist, Video
 def addPlaylist(request):
     content = json.loads(request.POST['content'])
     if not Playlist.objects.filter(user=request.user, name=content['name']):
-        playlist = Playlist(name=content['name'], user=request.user)
+        playlist = Playlist(name=content['name'], user=request.user, private=False)
         playlist.save()
     return HttpResponse('')
 

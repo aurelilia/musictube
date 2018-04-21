@@ -1,6 +1,6 @@
 <template>
     <div class="app">
-        <div class="bg-img" id="bg-img" :style="`background-image: url(${thumbnail})`"/>
+        <div class="bg-img" id="bg-img" :style="`background-image: url(${$store.getters.current_bg})`"/>
 
         <nav-bar/>
 
@@ -27,7 +27,6 @@ export default {
         Settings
     },
     computed: mapState([
-        'thumbnail',
         'screen'
     ]),
     created () {
