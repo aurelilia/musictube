@@ -47,7 +47,7 @@ export default {
                         url: input,
                         private: false
                     }
-                    this.sendRequest('POST', '/e/ip/', JSON.stringify(content), () => {
+                    this.sendRequest('POST', '/e/ip/', JSON.stringify(content), function () {
                         if (this.readyState === 4 && this.status === 200) {
                             that.$store.commit('setPlaylists', JSON.parse(this.responseText))
                         }
@@ -60,13 +60,14 @@ export default {
                         return
                     }
                     var new_playlist = {
-                        name: input,
-                        private: false,
-                        videos: []
+                        name: input
                     }
-                    playlists.push(new_playlist)
-                    this.$store.commit('setPlaylists', playlists)
-                    this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist))
+                    this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist), function () {
+                        if (this.readyState === 4 && this.status === 200) {
+                            playlists.push(JSON.parse(this.responseText))
+                            that.$store.commit('setPlaylists', playlists)
+                        }
+                    })
                 }
                 break
             case 'videos':
@@ -80,7 +81,7 @@ export default {
                     url: input,
                     plistname: playlist.name
                 }
-                this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), () => {
+                this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), function () {
                     if (this.readyState === 4 && this.status === 200) {
                         that.$store.commit('addVideoToPlaylist', JSON.parse(this.responseText))
                     }

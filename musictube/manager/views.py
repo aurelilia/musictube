@@ -14,6 +14,7 @@ def addPlaylist(request):
     if not Playlist.objects.filter(user=request.user, name=content['name']):
         playlist = Playlist(name=content['name'], user=request.user, private=False)
         playlist.save()
+        return JsonResponse(model_to_dict(playlist))
     return HttpResponse('')
 
 
