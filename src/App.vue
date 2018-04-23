@@ -6,7 +6,7 @@
 
         <div class="wrapper" id="wrapper">
             <transition name="component" mode="out-in">
-                <component class="content" :is="screen"/>
+                <component class="content" :is="$store.state.screen"/>
             </transition>
         </div>
     </div>
@@ -17,7 +17,6 @@ import NavBar from './components/NavBar.vue'
 import Playlists from './components/Playlists.vue'
 import Videos from './components/Videos.vue'
 import Settings from './components/Settings.vue'
-import { mapState } from 'vuex'
 
 export default {
     components: {
@@ -26,14 +25,9 @@ export default {
         Videos,
         Settings
     },
-    computed: mapState([
-        'screen'
-    ]),
     created () {
         window.onunload = () => {
-            localStorage.setItem('scroll', this.$store.state.scroll_title)
-            localStorage.setItem('volume', this.$store.state.volume)
-            localStorage.setItem('random', this.$store.state.random)
+            localStorage.setItem('settings', JSON.stringify(this.$store.state.settings))
         }
 
         window.onpopstate = () => {

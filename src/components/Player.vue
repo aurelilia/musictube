@@ -4,7 +4,7 @@
         <div class="controls">
             <i id="prev-button" class="fa fa-backward" @click="shiftVideoIndex(-1)"/>
             <i id="play-button fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}" @click="onPlayPause"/>
-            <i id="random-button" class="fa fa-random" @click="$store.commit('toggleRandom')" :class="{ 'grey': !random }"/>
+            <i id="random-button" class="fa fa-random" @click="$store.commit('toggleSetting', 'random')" :class="{ 'grey': !random }"/>
             <i id="next-button" class="fa fa-forward" @click="shiftVideoIndex(1)"/>
         </div>
 
@@ -27,9 +27,9 @@
         <span class="volume" @wheel.prevent="onVolumeWheel($event)">
             <i class="fa fa-volume-up volume-icon"/>
             <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1"
-                   @input="$store.commit('setVolume', $event.target.value)" :value="volume">
+                   @input="$store.commit('setSetting', { setting: 'volume', val: $event.target.value })" :value="volume">
             <input type="number" class="volume-box" id="volume-box" min="0" max="100"
-                   @change="$store.commit('setVolume', $event.target.value)" :value="volume">
+                   @change="$store.commit('setSetting', { setting: 'volume', val: $event.target.value })" :value="volume">
         </span>
 
         <audio id="player" autoplay/>
@@ -53,20 +53,21 @@ export default {
             }
         }
     },
-    computed: Object.assign({
+    computed: {
         video_id () {
             return this.playlist_playing.videos.indexOf(this.video_playing)
-        }
+        },
+        ...mapState([
+            'playlist_playing',
+            'video_playing',
+            'playing'
+        ]),
+        ...mapState({
+            random: state => state.settings.random,
+            scroll_title: state => state.settings.scroll_title,
+            volume: state => state.settings.volume
+        })
     },
-    mapState([
-        'playlist_playing',
-        'video_playing',
-        'playing',
-        'scroll_title',
-        'random',
-        'volume'
-    ])
-    ),
     watch: {
         video_playing: function (video) {
             this.updateCurrentTrack(video)
@@ -131,7 +132,7 @@ export default {
             var vol = parseInt(this.volume) + (Math.sign(e.deltaY) * -5)
             vol = vol < 0 ? 0 : vol
             vol = vol > 100 ? 100 : vol
-            this.$store.commit('setVolume', vol)
+            this.$store.commit('setSetting', { setting: 'volume', val: vol })
         }
     }
 }

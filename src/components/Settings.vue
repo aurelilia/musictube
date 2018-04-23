@@ -2,13 +2,13 @@
     <div class="settings">
         <span class="settings-title">Settings</span>
 
-        <a class="checkbox" @click="$store.commit('toggleScrolling')">
-            <i class="fa" :class="{'fa-check-square-o': scroll_title, 'fa-square-o': !scroll_title}" aria-hidden="true"/>
+        <a class="checkbox" @click="$store.commit('toggleSetting', 'scroll_title')">
+            <i class="fa" :class="{'fa-check-square-o': settings.scroll_title, 'fa-square-o': !settings.scroll_title}" aria-hidden="true"/>
             Scroll tab title
         </a>
 
-        <a class="checkbox" @click="$store.commit('toggleThumbnail')">
-            <i class="fa" :class="{'fa-check-square-o': use_video_thumbnail, 'fa-square-o': !use_video_thumbnail}" aria-hidden="true"/>
+        <a class="checkbox" @click="$store.commit('toggleSetting', 'use_video_thumbnail')">
+            <i class="fa" :class="{'fa-check-square-o': settings.use_video_thumbnail, 'fa-square-o': !settings.use_video_thumbnail}" aria-hidden="true"/>
             Show thumbnail of currently playing video in background
         </a>
     </div>
@@ -19,8 +19,7 @@ import { mapState } from 'vuex'
 
 export default {
     computed: mapState([
-        'scroll_title',
-        'use_video_thumbnail'
+        'settings'
     ])
 }
 </script>

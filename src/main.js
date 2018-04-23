@@ -4,17 +4,10 @@ import App from './App.vue'
 var axios = require('axios')
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
-// Generate store mutator for toggling a boolean. If a value is specified, force it instead of flipping
+// Return store mutator for toggling a boolean. If a value is specified, force it instead of flipping
 function toggleGen (prop) {
     return function (state, force) {
         state[prop] = force !== undefined ? force : !state[prop]
-    }
-}
-
-// Generate store mutator for setting state prop to argument.
-function setterGen (prop) {
-    return function (state, val) {
-        state[prop] = val
     }
 }
 
@@ -39,30 +32,33 @@ const store = new Vuex.Store({
 
         video_playing: null,
         playing: false,
-        use_video_thumbnail: true,
         video_thumbnail: '',
 
-        scroll_title: true,
-        random: false,
-        volume: 25
+        settings: {
+            scroll_title: true,
+            random: false,
+            volume: 25,
+            use_video_thumbnail: true
+        }
     },
     mutations: {
         loadSettings (state) {
-            if (localStorage.getItem('volume') != null) {
-                state.volume = localStorage.getItem('volume')
-                state.random = localStorage.getItem('random') === 'true'
-                state.scroll_title = localStorage.getItem('scroll') === 'true'
-                state.use_video_thumbnail = localStorage.getItem('thumbnailbg') === 'true'
+            if (localStorage.getItem('settings') != null) {
+                state.settings = JSON.parse(localStorage.getItem('settings'))
             }
+        },
+        toggleSetting (state, setting) {
+            state.settings[setting] = !state.settings[setting]
+        },
+        setSetting (state, { setting, val }) {
+            state.settings[setting] = val
+        },
+        addPlaylist (state, playlist) {
+            state.playlists.push(playlist)
         },
         toggleMenu: toggleGen('menu_active'),
         toggleEditor: toggleGen('editor_active'),
-        toggleScrolling: toggleGen('scroll_title'),
-        toggleThumbnail: toggleGen('use_video_thumbnail'),
-        toggleRandom: toggleGen('random'),
         togglePlaying: toggleGen('playing'),
-        setPlaylists: setterGen('playlists'),
-        setVolume: setterGen('volume'),
         navigate (state, location) {
             if (window.location.pathname === location) return
             history.pushState({}, 'MusicTube', location)
@@ -91,7 +87,7 @@ const store = new Vuex.Store({
         updateCurrentTrackByIndex (state, index) {
             if (state.playlist_playing.videos[index] === state.video_playing) return
 
-            if (state.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length))
+            if (state.settings.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length))
             if (index < 0 || index >= state.playlist_playing.videos.length) index = 0
 
             state.video_playing = state.playlist_playing.videos[index]
@@ -141,7 +137,7 @@ const store = new Vuex.Store({
     getters: {
         current_bg (state) {
             // Use default
-            if (!state.use_video_thumbnail || state.video_playing === null) return require('./assets/bg.jpg')
+            if (!state.settings.use_video_thumbnail || state.video_playing === null) return require('./assets/bg.jpg')
             return state.video_thumbnail
         }
     }

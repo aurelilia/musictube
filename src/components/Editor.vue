@@ -39,29 +39,21 @@ export default {
                 alert('Please enter a name.')
                 return
             }
-            var that = this
+            var self = this
 
             switch (this.screen) {
             case 'playlists':
-                var playlists = this.playlists
-
                 if (input.includes('youtube.com/playlist')) {
-                    axios.post('/e/ip/', {
-                        url: input,
-                        private: false
-                    }).then(function ({ data }) {
-                        that.$store.commit('setPlaylists', data)
+                    axios.post('/e/ip/', { url: input }).then(function ({ data }) {
+                        self.$store.commit('addPlaylist', data)
                     })
                 } else {
-                    if (this.playlists.find((plist) => {
-                        return input === plist.name
-                    }) !== undefined) {
+                    if (this.playlists.find((plist) => { return input === plist.name }) !== undefined) {
                         alert('You already have a playlist with that name! Please choose another one.')
                         return
                     }
                     axios.post('/e/np/', { name: input }).then(function ({ data }) {
-                        playlists.push({ data })
-                        that.$store.commit('setPlaylists', playlists)
+                        self.$store.commit('addPlaylist', data)
                     })
                 }
                 break
@@ -76,7 +68,7 @@ export default {
                     url: input,
                     plistname: playlist.name
                 }).then(function ({ data }) {
-                    that.$store.commit('addVideoToPlaylist', data)
+                    self.$store.commit('addVideoToPlaylist', data)
                 })
                 break
             }

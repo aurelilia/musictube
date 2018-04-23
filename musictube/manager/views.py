@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.forms.models import model_to_dict
-from musictube.player.views import fetch
 from musictube.models import Playlist, Video
 
 
@@ -51,7 +50,7 @@ def deleteVideo(request):
 def importPlaylist(request):
     data = json.loads(request.body)
     plist_pafy = pafy.playlist.get_playlist(data['url'])
-    playlist = Playlist(name=plist_pafy['title'], user=request.user)
+    playlist = Playlist(name=plist_pafy['title'], user=request.user, private=False)
     playlist.save()
     for pafy_item in plist_pafy['items']:
         pafy_vid = pafy_item['pafy']
@@ -59,7 +58,7 @@ def importPlaylist(request):
         video.save()
         playlist.videos.add(video)
     playlist.save()
-    return HttpResponse(fetch(request))
+    return JsonResponse(model_to_dict(playlist))
 
 
 @login_required
