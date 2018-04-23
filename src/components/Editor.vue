@@ -17,6 +17,9 @@
 <script>
 import { mapState } from 'vuex'
 
+var axios = require('axios')
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
 export default {
     data: function () {
         return {
@@ -43,14 +46,11 @@ export default {
                 var playlists = this.playlists
 
                 if (input.includes('youtube.com/playlist')) {
-                    var content = {
+                    axios.post('/e/ip/', {
                         url: input,
                         private: false
-                    }
-                    this.sendRequest('POST', '/e/ip/', JSON.stringify(content), function () {
-                        if (this.readyState === 4 && this.status === 200) {
-                            that.$store.commit('setPlaylists', JSON.parse(this.responseText))
-                        }
+                    }).then(function ({ data }) {
+                        that.$store.commit('setPlaylists', data)
                     })
                 } else {
                     if (this.playlists.find((plist) => {
@@ -59,14 +59,9 @@ export default {
                         alert('You already have a playlist with that name! Please choose another one.')
                         return
                     }
-                    var new_playlist = {
-                        name: input
-                    }
-                    this.sendRequest('POST', '/e/np/', JSON.stringify(new_playlist), function () {
-                        if (this.readyState === 4 && this.status === 200) {
-                            playlists.push(JSON.parse(this.responseText))
-                            that.$store.commit('setPlaylists', playlists)
-                        }
+                    axios.post('/e/np/', { name: input }).then(function ({ data }) {
+                        playlists.push({ data })
+                        that.$store.commit('setPlaylists', playlists)
                     })
                 }
                 break
@@ -77,14 +72,11 @@ export default {
                     return
                 }
 
-                var new_video = {
+                axios.post('/e/nv/', {
                     url: input,
                     plistname: playlist.name
-                }
-                this.sendRequest('POST', '/e/nv/', JSON.stringify(new_video), function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                        that.$store.commit('addVideoToPlaylist', JSON.parse(this.responseText))
-                    }
+                }).then(function ({ data }) {
+                    that.$store.commit('addVideoToPlaylist', data)
                 })
                 break
             }

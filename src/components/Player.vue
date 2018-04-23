@@ -40,6 +40,8 @@
 <script>
 import { mapState } from 'vuex'
 
+var axios = require('axios')
+
 export default {
     data: function () {
         return {
@@ -113,12 +115,10 @@ export default {
 
             // 'this' is overridden, but we still need access to the component's data.
             var self = this
-            this.sendRequest('GET', '/u/' + video.url, null, function () {
-                if (this.readyState === 4 && this.status === 200) {
-                    self.player.title = video.title
-                    self.player.e.setAttribute('src', this.responseText)
-                    self.$store.commit('togglePlaying', true)
-                }
+            axios.get('/u/' + video.url).then(function ({ data }) {
+                self.player.title = video.title
+                self.player.e.setAttribute('src', data['url'])
+                self.$store.commit('togglePlaying', true)
             })
         },
         onPlayPause () {

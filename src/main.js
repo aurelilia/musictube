@@ -1,17 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App.vue'
-
-// Interact via XMLHTTP request.
-function sendRequest (type, location, content, whenReady) {
-    var form = new FormData()
-    form.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value)
-    if (type === 'POST') form.append('content', content)
-    var request = new XMLHttpRequest()
-    request.onreadystatechange = whenReady
-    request.open(type, location)
-    request.send(form)
-}
+var axios = require('axios')
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 // Generate store mutator for toggling a boolean. If a value is specified, force it instead of flipping
 function toggleGen (prop) {
@@ -32,8 +23,7 @@ Vue.mixin({
     methods: {
         formatSeconds (secs) {
             return new Date(1000 * secs).toISOString().substr(14, 5)
-        },
-        sendRequest
+        }
     }
 })
 
@@ -121,17 +111,17 @@ const store = new Vuex.Store({
         },
         deletePlaylist (state, playlist) {
             if (confirm('Are you sure you want to delete the playlist?')) {
-                sendRequest('POST', '/e/dp/', playlist.name)
+                axios.post('/e/dp/', { name: playlist.name })
                 state.playlists.splice(state.playlists.indexOf(playlist), 1)
             }
         },
         renamePlaylist (state, playlist) {
             var new_name = prompt('Enter a new name for the playlist:')
             if (new_name !== null && new_name !== '') {
-                sendRequest('POST', '/e/rp/', JSON.stringify({
+                axios.post('/e/rp/', {
                     'old': playlist.name,
                     'new': new_name
-                }))
+                })
                 state.playlists[state.playlists.indexOf(playlist)].name = new_name
             }
         },
@@ -140,7 +130,10 @@ const store = new Vuex.Store({
         },
         deleteVideo (state, video) {
             if (confirm('Are you sure you want to remove the video?')) {
-                sendRequest('POST', '/e/dv/', JSON.stringify([state.playlist_viewing.name, video.title]))
+                axios.post('/e/dv/', {
+                    playlist: state.playlist_viewing.name,
+                    video: video.title
+                })
                 state.playlist_viewing.videos.splice(state.playlist_viewing.videos.indexOf(video), 1)
             }
         }

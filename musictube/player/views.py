@@ -1,7 +1,7 @@
 import json
 import pafy
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.serializers.json import DjangoJSONEncoder
 from musictube.models import Playlist
@@ -31,4 +31,4 @@ def fetch(request):
 def directURL(request, url):
     """ Takes youtube URL or id, returns audio URL from googlevideo. """
     video = pafy.new(url)
-    return HttpResponse(video.getbestaudio().url)
+    return JsonResponse({ 'url': video.getbestaudio().url })
