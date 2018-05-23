@@ -1,12 +1,12 @@
 <template>
     <div class="app">
         <div class="bg-img" id="bg-img" :style="`background-image: url(${$store.getters.current_bg})`"/>
-
+        <audio id="player" autoplay/>
         <nav-bar/>
 
         <div class="wrapper" id="wrapper">
             <transition name="component" mode="out-in">
-                <component class="content" :is="$store.state.screen"/>
+                <component class="content" :is="$store.getters.screen"/>
             </transition>
         </div>
     </div>
@@ -25,17 +25,16 @@ export default {
         Videos,
         Settings
     },
-    created () {
+    mounted () {
         window.onunload = () => {
             localStorage.setItem('settings', JSON.stringify(this.$store.state.settings))
         }
-
         window.onpopstate = () => {
-            this.$store.commit('updateCurrentScreen')
+            this.$store.commit('setUri', window.location.pathname)
         }
 
-        this.$store.commit('updateCurrentScreen')
         this.$store.commit('loadSettings')
+        this.$store.commit('setupPlayer')
     }
 }
 </script>
@@ -48,6 +47,20 @@ body
     font-family: 'Open Sans', sans-serif
     background-color: $bg
     overflow: visible
+
+.bg-img
+    position: fixed
+    top: -1%
+    left: -1%
+    right: 0
+    z-index: -1
+
+    display: block
+    background-size: cover
+    width: 102%
+    height: 102%
+
+    filter: blur(7px)
 
 .wrapper
     position: fixed
@@ -105,7 +118,6 @@ tr .delete,
     opacity: 0
     transform: translateX(75px)
 
-// Media queries for smaller devices
 @media only screen and (max-device-width: 1024px)
     .logo
         display: none

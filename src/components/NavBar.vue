@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <img class="logo" alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.commit('navigate', '/')">
+        <img class="logo" alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.dispatch('navigate', '/')">
 
         <transition-group class="navbar-fade" name="navbar" mode="out-in">
             <player class="navbar-content" v-show="!$store.state.editor_active" key="player"/>
@@ -14,7 +14,7 @@
 <script>
 import Player from './Player.vue'
 import Editor from './Editor.vue'
-import DropdownMenu from './Menu.vue'
+import DropdownMenu from './DropdownMenu.vue'
 
 export default {
     components: {
@@ -56,6 +56,8 @@ nav
     position: absolute
     width: 100%
     height: 100%
+    display: flex
+    align-items: center
 
 .navbar-enter-active, .navbar-leave-active
     transition: opacity .2s ease-in-out, transform .2s ease-in-out

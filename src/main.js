@@ -11,6 +11,13 @@ function toggleGen (prop) {
     }
 }
 
+// Generate store mutator for setting state prop to argument.
+function setterGen (prop) {
+    return function (state, val) {
+        state[prop] = val
+    }
+}
+
 Vue.use(Vuex)
 Vue.mixin({
     methods: {
@@ -22,26 +29,34 @@ Vue.mixin({
 
 const store = new Vuex.Store({
     state: {
-        screen: 'playlists',
+        // Vuex won't update getters when using window.location.pathname directly. Auto-updated on navigation.
+        uri: window.location.pathname,
+
         editor_active: false,
         menu_active: false,
 
         playlists: JSON.parse(document.getElementById('json').innerHTML),
         playlist_playing: null,
-        playlist_viewing: null,
 
         video_playing: null,
         playing: false,
         video_thumbnail: '',
 
+        scroller_interval_id: null,
         settings: {
             scroll_title: true,
             random: false,
             volume: 25,
             use_video_thumbnail: true
+        },
+
+        player: {
+            e: null,
+            position: 0
         }
     },
     mutations: {
+        // Settings
         loadSettings (state) {
             if (localStorage.getItem('settings') != null) {
                 state.settings = JSON.parse(localStorage.getItem('settings'))
@@ -53,57 +68,47 @@ const store = new Vuex.Store({
         setSetting (state, { setting, val }) {
             state.settings[setting] = val
         },
-        addPlaylist (state, playlist) {
-            state.playlists.push(playlist)
-        },
+
+        // Temporary settables/toggleables
+        setThumbnail: setterGen('video_thumbnail'),
+        setUri: setterGen('uri'),
+        setScrollerId: setterGen('scroller_interval_id'),
         toggleMenu: toggleGen('menu_active'),
         toggleEditor: toggleGen('editor_active'),
-        togglePlaying: toggleGen('playing'),
-        navigate (state, location) {
-            if (window.location.pathname === location) return
-            history.pushState({}, 'MusicTube', location)
-            this.commit('updateCurrentScreen')
+        togglePlaying (state, force) {
+            // If no track is playing, don't allow to resume
+            if (!state.player.e.src && !state.playing) return
+            state.playing = force !== undefined ? force : !state.playing
+            state.playing ? state.player.e.play() : state.player.e.pause()
         },
-        updateCurrentScreen (state) {
-            var uri = window.location.pathname
-            var uri_to_component = {
-                '/': 'playlists',
-                '/settings/': 'settings'
-            }
-            state.screen = uri_to_component[uri]
 
-            if (state.screen === undefined) {
-                state.playlist_viewing = state.playlists.find((list) => {
-                    return list.id === parseInt(uri.split('/')[1])
-                })
-                state.screen = 'videos'
-            }
+        // Player-related
+        setupPlayer (state) {
+            state.player.e = document.getElementById('player')
+            state.player.e.pause()
+            state.player.e.addEventListener('timeupdate', () => {
+                this.commit('updatePlayerPosition', Math.floor(state.player.e.currentTime))
+            })
+            state.player.e.addEventListener('ended', () => {
+                this.dispatch('shiftCurrentTrackByIndex', 1)
+            })
+            state.player.e.volume = state.settings.volume / 400
         },
-        updateCurrentTrack (state, { playlist, video }) {
+        updatePlayerPosition (state, pos) {
+            state.player.position = pos
+        },
+        setCurrentTrack (state, { playlist, video }) {
             state.video_playing = video
             state.playlist_playing = playlist
-            this.commit('updateThumbnail')
+            state.player.e.currentTime = 0
         },
-        updateCurrentTrackByIndex (state, index) {
-            if (state.playlist_playing.videos[index] === state.video_playing) return
-
-            if (state.settings.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length))
-            if (index < 0 || index >= state.playlist_playing.videos.length) index = 0
-
-            state.video_playing = state.playlist_playing.videos[index]
-            this.commit('updateThumbnail')
+        setPlayerSource (state, src) {
+            state.player.e.setAttribute('src', src)
         },
-        updateThumbnail (state) {
-            // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
-            var image = new Image()
-            image.onload = function () {
-                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
-                    state.video_thumbnail = `https://i.ytimg.com/vi/${state.video_playing.url}/mqdefault.jpg`
-                } else {
-                    state.video_thumbnail = `https://i.ytimg.com/vi/${state.video_playing.url}/maxresdefault.jpg`
-                }
-            }
-            image.src = `https://i.ytimg.com/vi/${state.video_playing.url}/maxresdefault.jpg`
+
+        // Playlist/Video modification
+        addPlaylist (state, playlist) {
+            state.playlists.push(playlist)
         },
         deletePlaylist (state, playlist) {
             if (confirm('Are you sure you want to delete the playlist?')) {
@@ -134,11 +139,73 @@ const store = new Vuex.Store({
             }
         }
     },
+    actions: {
+        updateCurrentTrack ({ state, commit, dispatch }, { playlist, video }) {
+            if (state.video_playing === video) return
+            commit('togglePlaying', false)
+            commit('setCurrentTrack', { playlist, video })
+            dispatch('updateThumbnail')
+            dispatch('setWindowTitle', video.title)
+
+            axios.get('/u/' + video.url).then(function ({ data }) {
+                commit('setPlayerSource', data['url'])
+                commit('togglePlaying', true)
+            })
+        },
+        shiftCurrentTrackByIndex ({ state, dispatch }, shift) {
+            var index = state.playlist_playing.videos.indexOf(state.video_playing) + shift
+            if (state.settings.random) index = Math.floor((Math.random() * state.playlist_playing.videos.length))
+            if (index < 0 || index >= state.playlist_playing.videos.length) index = 0
+
+            dispatch('updateCurrentTrack', {
+                'playlist': state.playlist_playing,
+                'video': state.playlist_playing.videos[index]
+            })
+        },
+        updateThumbnail ({ state, commit }) {
+            // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
+            var image = new Image()
+            image.onload = function () {
+                if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
+                    commit('setThumbnail', `https://i.ytimg.com/vi/${state.video_playing.url}/mqdefault.jpg`)
+                } else {
+                    commit('setThumbnail', `https://i.ytimg.com/vi/${state.video_playing.url}/maxresdefault.jpg`)
+                }
+            }
+            image.src = `https://i.ytimg.com/vi/${state.video_playing.url}/maxresdefault.jpg`
+        },
+        setWindowTitle ({ state, commit, dispatch }, text) {
+            clearTimeout(state.scroller_interval_id)
+            document.title = text
+            if (state.settings.scroll_title && text !== 'MusicTube') {
+                commit('setScrollerId', setTimeout(() => {
+                    dispatch('setWindowTitle', text.substr(1) + text.substr(0, 1))
+                }, 500))
+            }
+        },
+
+        navigate ({ state, commit }, location) {
+            if (window.location.pathname === location) return
+            history.pushState({}, 'MusicTube', location)
+            commit('setUri', window.location.pathname)
+        }
+    },
     getters: {
         current_bg (state) {
-            // Use default
             if (!state.settings.use_video_thumbnail || state.video_playing === null) return require('./assets/bg.jpg')
             return state.video_thumbnail
+        },
+        screen (state) {
+            var uri_to_component = {
+                '/': 'playlists',
+                '/settings/': 'settings'
+            }
+            return uri_to_component[state.uri] !== undefined ? uri_to_component[state.uri] : 'videos'
+        },
+        playlist_viewing (state) {
+            return state.playlists.find((list) => {
+                return list.id === parseInt(state.uri.split('/')[1])
+            })
         }
     }
 })

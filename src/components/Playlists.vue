@@ -1,7 +1,7 @@
 <template>
     <span class="no-avail" v-if="!playlists.length">No playlists. Go into editor mode to add one!</span>
     <table v-else>
-        <tr v-for="playlist in playlists" :key="playlist.id" @click="$store.commit('navigate', playlist.id)">
+        <tr v-for="playlist in playlists" :key="playlist.id" @click="$store.dispatch('navigate', playlist.id)">
             <td class="playlist-thumb" v-if="playlist.videos !== null">
                 <img :src="`https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`" height="50px"
                      v-for="(video, index) in playlist.videos.slice(0, 3)"

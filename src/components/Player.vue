@@ -2,27 +2,27 @@
     <div class="player">
 
         <div class="controls">
-            <i id="prev-button" class="fa fa-backward" @click="shiftVideoIndex(-1)"/>
-            <i id="play-button fa-play" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}" @click="onPlayPause"/>
+            <i id="prev-button" class="fa fa-backward" @click="$store.dispatch('shiftCurrentTrackByIndex', -1)"/>
+            <i id="play-button" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}" @click="$store.commit('togglePlaying')"/>
             <i id="random-button" class="fa fa-random" @click="$store.commit('toggleSetting', 'random')" :class="{ 'grey': !random }"/>
-            <i id="next-button" class="fa fa-forward" @click="shiftVideoIndex(1)"/>
+            <i id="next-button" class="fa fa-forward" @click="$store.dispatch('shiftCurrentTrackByIndex', 1)"/>
         </div>
 
-        <div class="thumb-nav" v-if="video_playing !== null">
-            <img :src="`https://i.ytimg.com/vi/${video_playing.url}/mqdefault.jpg`" height="50px">
-        </div>
-
-        <div class="track">
-            <span class="track-title" id="track-title">{{ player.title }}</span>
-            <transition name="position">
-                <span class="position" v-if="video_playing !== null">
+        <div class="track" v-if="video_playing !== null">
+            <div class="thumb-nav">
+                <img :src="`https://i.ytimg.com/vi/${video_playing.url}/mqdefault.jpg`" height="50px">
+            </div>
+            <div class="track-info">
+                <span class="track-title" id="track-title">{{ video_playing.title }}</span>
+                <span class="position">
                     <p class="position-text">{{ formatSeconds(player.position) }} / {{ formatSeconds(video_playing.length) }}</p>
                     <input type="range" class="position-slider" id="position-slider" min="0" :max="video_playing.length"
-                           step="video_playing.length / 100" @input="player.e.currentTime = Math.floor($event.target.value)"
-                           :value="player.position">
+                            step="video_playing.length / 100" @input="player.e.currentTime = Math.floor($event.target.value)"
+                            :value="player.position">
                 </span>
-            </transition>
+                </div>
         </div>
+        <div class="track" v-else>No track playing.</div>
 
         <span class="volume" @wheel.prevent="onVolumeWheel($event)">
             <i class="fa fa-volume-up volume-icon"/>
@@ -32,35 +32,19 @@
                    @change="$store.commit('setSetting', { setting: 'volume', val: $event.target.value })" :value="volume">
         </span>
 
-        <audio id="player" autoplay/>
-
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 
-var axios = require('axios')
-
 export default {
-    data: function () {
-        return {
-            scroller_interval_id: 0,
-            player: {
-                e: null,
-                title: 'No track playing.',
-                position: 0
-            }
-        }
-    },
     computed: {
-        video_id () {
-            return this.playlist_playing.videos.indexOf(this.video_playing)
-        },
         ...mapState([
             'playlist_playing',
             'video_playing',
-            'playing'
+            'playing',
+            'player'
         ]),
         ...mapState({
             random: state => state.settings.random,
@@ -69,70 +53,19 @@ export default {
         })
     },
     watch: {
-        video_playing: function (video) {
-            this.updateCurrentTrack(video)
-        },
-        playing: function (playing) {
-            playing ? this.player.e.play() : this.player.e.pause()
-        },
-        volume: function (vol) {
-            // Setting volume in HTML tags is not possible, so v-bind isn't an option.
-            this.player.e.volume = vol / 400
-        },
         scroll_title: function () {
+            // TODO: Move this somewhere more fitting
             var text = this.video_playing == null ? 'MusicTube' : this.video_playing.title
-            this.setTitle(text)
+            this.$store.dispatch('setWindowTitle', text)
         }
     },
-    mounted: function () {
-        // Pause the player add some event handlers to it
-        this.player.e = document.getElementById('player')
-        this.player.e.pause()
-        this.player.e.addEventListener('timeupdate', () => {
-            this.player.position = Math.floor(this.player.e.currentTime)
-        })
-        this.player.e.addEventListener('ended', () => { this.shiftVideoIndex(1) })
-        this.player.e.volume = this.volume / 400
-    },
     methods: {
-        // --- Helper methods ---
-        setTitle (text) {
-            clearTimeout(this.scroller_interval_id)
-            document.title = text
-            if (this.scroll_title && text !== 'MusicTube') {
-                this.scroller_interval_id = setTimeout(() => {
-                    this.setTitle(text.substr(1) + text.substr(0, 1))
-                }, 500)
-            }
-        },
-
-        // --- Playlist/Video playing related methods ---
-        updateCurrentTrack: function (video) {
-            this.$store.commit('togglePlaying', false)
-            this.player.e.currentTime = 0
-
-            this.setTitle(video.title)
-            this.player.title = 'Loading...'
-
-            // 'this' is overridden, but we still need access to the component's data.
-            var self = this
-            axios.get('/u/' + video.url).then(function ({ data }) {
-                self.player.title = video.title
-                self.player.e.setAttribute('src', data['url'])
-                self.$store.commit('togglePlaying', true)
-            })
-        },
-        onPlayPause () {
-            if (this.player.e.src !== '') this.$store.commit('togglePlaying')
-        },
-        shiftVideoIndex (shift) {
-            if (this.video_playing != null) this.$store.commit('updateCurrentTrackByIndex', this.video_id + shift)
-        },
         onVolumeWheel (e) {
             var vol = parseInt(this.volume) + (Math.sign(e.deltaY) * -5)
             vol = vol < 0 ? 0 : vol
             vol = vol > 100 ? 100 : vol
             this.$store.commit('setSetting', { setting: 'volume', val: vol })
+            this.player.e.volume = vol / 400
         }
     }
 }
@@ -140,24 +73,6 @@ export default {
 
 <style lang="sass">
 @import ../sass/colors
-
-.bg-img
-    position: fixed
-    top: -1%
-    left: -1%
-    right: 0
-    z-index: -1
-
-    display: block
-    background-size: cover
-    width: 102%
-    height: 102%
-
-    filter: blur(7px)
-
-.navbar-content
-    display: flex
-    align-items: center
 
 .controls
     display: flex
@@ -169,25 +84,35 @@ export default {
 .controls *
     padding: 0 10px
 
-// fa-play and fa-pause have different widths, which causes the entire navbar to shift by 2px
+// fa-play and fa-pause have different widths, which would cause the entire navbar to shift by 2px
 #play-button
-    width: 35px
+    width: 25px
 
 .grey
     color: $random-off
 
 .track
     flex: 1
+    display: flex
+    margin-top: 2px
 
 .thumb-nav img
-    margin-right: 10px
-    margin-top: 3px
+    margin: 0
     border: 2px solid $wtext
+
+.track-info
+    flex: 1
+    margin-left: 10px
+    margin-top: 3px
+    overflow: hidden
+    width: 0
+    text-overflow: ellipsis
 
 .track-title,
 .position-text
     margin: 0
     padding: 0
+    white-space: nowrap
 
 .position
     display: flex
