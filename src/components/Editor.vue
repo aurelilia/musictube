@@ -41,7 +41,7 @@ export default {
             }
             var self = this
 
-            switch (this.screen) {
+            switch (this.$store.getters.screen) {
             case 'playlists':
                 if (input.includes('youtube.com/playlist')) {
                     axios.post('/e/ip/', { url: input }).then(function ({ data }) {
@@ -58,7 +58,7 @@ export default {
                 }
                 break
             case 'videos':
-                var playlist = this.playlist_viewing
+                var playlist = this.$store.getters.playlist_viewing
                 if (!input.includes('youtube.com/watch?v=')) {
                     alert('Not a valid URL! Please try again.')
                     return
