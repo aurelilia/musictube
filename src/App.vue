@@ -33,6 +33,7 @@ export default {
             this.$store.commit('setUri', window.location.pathname)
         }
 
+        this.$store.dispatch('reloadPlaylists')
         this.$store.commit('loadSettings')
         this.$store.commit('setupPlayer')
     }

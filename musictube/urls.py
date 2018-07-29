@@ -19,13 +19,14 @@ from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', auth_views.login, name='login'),
     path('logout/', auth_views.logout, {'template_name': 'registration/logout.html'}, name='logout'),
     path('register/', CreateView.as_view(template_name='registration/register.html', form_class=UserCreationForm, success_url='/')),
-    path('accounts/profile/', RedirectView.as_view(url='/', permanent=True)),
-    path('e/', include('musictube.manager.urls')),
-    re_path('^', include('musictube.player.urls'))
+
+    path('api/<action>', views.api, name='api'),
+    re_path('^', views.frontend, name='frontend')
 ]

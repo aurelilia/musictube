@@ -7,7 +7,8 @@
             <td class="thumb"><img :src="`https://i.ytimg.com/vi/${video.url}/mqdefault.jpg`" height="60px"></td>
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
-            <td class="delete" v-if="editor_active" @click="$store.commit('deleteVideo', video)"><i class="fa fa-trash-o"/></td>
+            <td class="delete" v-if="editor_active"><i class="fa fa-trash-o"
+                @click="$store.dispatch('editorDelete', { type: 'video', videoid: video.id, listid: playlist_viewing.id })"/></td>
         </tr>
     </table>
 </template>

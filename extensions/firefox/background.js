@@ -8,11 +8,11 @@ function sendCommand (action) {
     })
 }
 
-function updateAudioState (ignore) {
+function updateAudioState () {
     browser.tabs.query({
         audible: true
     }).then((tabs) => {
-        var action = tabs.filter((tab) => !tab.url.includes('mtube.dynu.net') && tab.id !== ignore).length ? 'pause' : 'play'
+        var action = tabs.filter((tab) => !tab.url.includes('mtube.dynu.net')).length ? 'pause' : 'play'
         sendCommand(action)
     })
 }

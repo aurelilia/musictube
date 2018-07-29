@@ -41,8 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webpack_loader',
     'musictube',
-    'musictube.player',
-    'musictube.manager'
 ]
 
 MIDDLEWARE = [

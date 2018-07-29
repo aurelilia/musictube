@@ -34,44 +34,34 @@ export default {
 
     methods: {
         onAdd () {
-            var input = document.getElementById('add-input').value
-            if (input === '') {
-                alert('Please enter a name.')
+            var name = document.getElementById('add-input').value
+
+            if (name === '') {
+                alert('Please enter a name/URL.')
                 return
             }
-            var self = this
 
             switch (this.$store.getters.screen) {
             case 'playlists':
-                if (input.includes('youtube.com/playlist')) {
-                    axios.post('/e/ip/', { url: input }).then(function ({ data }) {
-                        self.$store.commit('addPlaylist', data)
-                    })
-                } else {
-                    if (this.playlists.find((plist) => { return input === plist.name }) !== undefined) {
-                        alert('You already have a playlist with that name! Please choose another one.')
-                        return
-                    }
-                    axios.post('/e/np/', { name: input }).then(function ({ data }) {
-                        self.$store.commit('addPlaylist', data)
-                    })
+                if (this.playlists.find((plist) => { return name === plist.name }) !== undefined) {
+                    alert('You already have a playlist with that name! Please choose another one.')
+                    return
                 }
                 break
             case 'videos':
-                var playlist = this.$store.getters.playlist_viewing
-                if (!input.includes('youtube.com/watch?v=')) {
+                if (!name.includes('youtube.com/watch?v=')) {
                     alert('Not a valid URL! Please try again.')
                     return
                 }
-
-                axios.post('/e/nv/', {
-                    url: input,
-                    plistname: playlist.name
-                }).then(function ({ data }) {
-                    self.$store.commit('addVideoToPlaylist', data)
-                })
                 break
             }
+
+            this.$store.dispatch('editorAdd', {
+                type: this.$store.getters.screen.slice(0, -1),
+                name,
+                listid: this.$store.getters.playlist_viewing ? this.$store.getters.playlist_viewing.id : null
+            })
+
             this.add = false
             document.getElementById('add-input').value = ''
         }

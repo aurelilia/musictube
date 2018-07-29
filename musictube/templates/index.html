@@ -6,8 +6,6 @@
 {% block content %}
     <div id="vue-app"></div>
     
-    <p id="json" style="display:none"> {{ json }} </p>
-    
     {% if DEBUG == False %} 
         {% render_bundle 'manifest' %} 
         {% render_bundle 'vendor' %} 

@@ -10,8 +10,10 @@
             <td class="playlist-thumb" v-else/>
             <td class="name">{{ playlist.name }}</td>
             <td class="context">{{ playlist.videos.length }} {{ (playlist.videos.length === 1) ? "title" : "titles" }}</td>
-            <td class="rename" v-if="editor_active"><i class="fa fa-edit" @click.stop="$store.commit('renamePlaylist', playlist)"/></td>
-            <td class="delete" v-if="editor_active"><i class="fa fa-trash-o" @click.stop="$store.commit('deletePlaylist', playlist)"/></td>
+            <td class="rename" v-if="editor_active"><i class="fa fa-edit"
+                @click.stop="$store.dispatch('editorRename', playlist.id)"/></td>
+            <td class="delete" v-if="editor_active"><i class="fa fa-trash-o"
+                @click.stop="$store.dispatch('editorDelete', { type: 'playlist', listid: playlist.id })"/></td>
         </tr>
     </table>
 </template>

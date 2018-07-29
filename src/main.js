@@ -32,10 +32,11 @@ const store = new Vuex.Store({
         // Vuex won't update getters when using window.location.pathname directly. Auto-updated on navigation.
         uri: window.location.pathname,
 
+        loaded: false,
         editor_active: false,
         menu_active: false,
 
-        playlists: JSON.parse(document.getElementById('json').innerHTML),
+        playlists: [],
         playlist_playing: null,
 
         video_playing: null,
@@ -70,9 +71,11 @@ const store = new Vuex.Store({
         },
 
         // Temporary settables/toggleables
+        loaded: toggleGen('loaded'),
         setThumbnail: setterGen('video_thumbnail'),
         setUri: setterGen('uri'),
         setScrollerId: setterGen('scroller_interval_id'),
+        setPlaylists: setterGen('playlists'),
         toggleMenu: toggleGen('menu_active'),
         toggleEditor: toggleGen('editor_active'),
         togglePlaying (state, force) {
@@ -104,39 +107,6 @@ const store = new Vuex.Store({
         },
         setPlayerSource (state, src) {
             state.player.e.setAttribute('src', src)
-        },
-
-        // Playlist/Video modification
-        addPlaylist (state, playlist) {
-            state.playlists.push(playlist)
-        },
-        deletePlaylist (state, playlist) {
-            if (confirm('Are you sure you want to delete the playlist?')) {
-                axios.post('/e/dp/', { name: playlist.name })
-                state.playlists.splice(state.playlists.indexOf(playlist), 1)
-            }
-        },
-        renamePlaylist (state, playlist) {
-            var new_name = prompt('Enter a new name for the playlist:')
-            if (new_name !== null && new_name !== '') {
-                axios.post('/e/rp/', {
-                    'old': playlist.name,
-                    'new': new_name
-                })
-                state.playlists[state.playlists.indexOf(playlist)].name = new_name
-            }
-        },
-        addVideoToPlaylist (state, video) {
-            this.getters.playlist_viewing.videos.push(video)
-        },
-        deleteVideo (state, video) {
-            if (confirm('Are you sure you want to remove the video?')) {
-                axios.post('/e/dv/', {
-                    playlist: this.getters.playlist_viewing.name,
-                    video: video.title
-                })
-                this.getters.playlist_viewing.videos.splice(this.getters.playlist_viewing.videos.indexOf(video), 1)
-            }
         }
     },
     actions: {
@@ -147,8 +117,8 @@ const store = new Vuex.Store({
             dispatch('updateThumbnail')
             dispatch('setWindowTitle', video.title)
 
-            axios.get('/u/' + video.url).then(function ({ data }) {
-                commit('setPlayerSource', data['url'])
+            axios.get('/api/getaudio?url=' + video.url).then(function ({ data }) {
+                commit('setPlayerSource', data)
                 commit('togglePlaying', true)
             })
         },
@@ -166,6 +136,7 @@ const store = new Vuex.Store({
             // YouTube maxresdefault thumbnails sometimes aren't available, so we fallback to mqdefault.
             var image = new Image()
             image.onload = function () {
+                // If the big thumbnail isn't available, YouTube responds with a smaller broken thumbnail image.
                 if (('naturalHeight' in image && image.naturalHeight <= 90) || image.height <= 90) {
                     commit('setThumbnail', `https://i.ytimg.com/vi/${state.video_playing.url}/mqdefault.jpg`)
                 } else {
@@ -184,10 +155,35 @@ const store = new Vuex.Store({
             }
         },
 
+        editorAdd ({ dispatch }, { type, name, listid }) {
+            axios.post('/api/add' + type, { name, listid }).then(function () {
+                dispatch('reloadPlaylists')
+            })
+        },
+        editorDelete ({ dispatch }, { type, videoid, listid }) {
+            if (!confirm('Are you sure?')) return
+            axios.post('/api/delete' + type, { videoid, listid }).then(function () {
+                dispatch('reloadPlaylists')
+            })
+        },
+        editorRename ({ dispatch }, listid) {
+            var name = prompt('Enter a new name for the playlist:')
+            if (!name) return
+            axios.post('/api/renameplaylist', { listid, name }).then(function () {
+                dispatch('reloadPlaylists')
+            })
+        },
+
         navigate ({ state, commit }, location) {
             if (window.location.pathname === location) return
             history.pushState({}, 'MusicTube', location)
             commit('setUri', window.location.pathname)
+        },
+        reloadPlaylists ({commit}) {
+            axios.get('/api/fetchplaylists').then(function ({ data }) {
+                commit('setPlaylists', data)
+                commit('loaded', true)
+            })
         }
     },
     getters: {
@@ -196,6 +192,7 @@ const store = new Vuex.Store({
             return state.video_thumbnail
         },
         screen (state) {
+            if (!state.loaded) return null
             var uri_to_component = {
                 '/': 'playlists',
                 '/settings/': 'settings'
