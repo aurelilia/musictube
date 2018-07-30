@@ -1,7 +1,7 @@
 import json
 import pafy
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.core.serializers.json import DjangoJSONEncoder
@@ -17,7 +17,7 @@ def frontend(request):
 
 @login_required
 def api(request, action):
-    """ For interacting with the server. Mainly for modifing DB entries. """
+    """ For interacting with the server. Calls fitting function depending on request. """
     actions = {
         'getaudio': getAudio,
         'fetchplaylists' : fetchPlaylists,
@@ -30,13 +30,18 @@ def api(request, action):
     }
 
     # Pass the function either body, POST or GET, depending on which is included, or an
-    # empty string if all are empty
+    # empty dict if all are empty
     data = json.loads(request.body) if request.body     \
            else request.GET if request.GET              \
            else request.POST if request.POST            \
-           else ''
-    return HttpResponse(actions[action](request, data))
+           else {}
 
+    try:
+        return HttpResponse(actions[action](request, data))
+    except KeyError:
+        return HttpResponseBadRequest('Missing argument')
+    except (AssertionError, ValueError):
+        return HttpResponseBadRequest('Illegal argument')
 
 def getAudio(request, data):
     """ Takes video URL or id, returns audio URL. """
@@ -57,10 +62,9 @@ def fetchPlaylists(request, data):
 def addPlaylist(request, data):
     if 'youtube.com' in data['name']:
         return importPlaylist(request, data)
-    if not Playlist.objects.filter(user=request.user, name=data['name']):
-        playlist = Playlist(name=data['name'], user=request.user, private=False)
-        playlist.save()
-        return JsonResponse(model_to_dict(playlist))
+    assert not Playlist.objects.filter(user=request.user, name=data['name'])
+    playlist = Playlist(name=data['name'], user=request.user, private=False)
+    playlist.save()
     return
 
 def addVideo(request, data):
@@ -96,8 +100,9 @@ def importPlaylist(request, data):
     return
 
 def renamePlaylist(request, data):
-    if not Playlist.objects.filter(user=request.user, name=data['name']):
-        playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
-        playlist.name = data['name']
-        playlist.save()
+    assert not Playlist.objects.filter(user=request.user, name=data['name'])
+    playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
+    playlist.name = data['name']
+    playlist.save()
     return
+ 
