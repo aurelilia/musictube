@@ -32,6 +32,14 @@ export default {
         window.onpopstate = () => {
             this.$store.commit('setUri', window.location.pathname)
         }
+        window.onkeydown = (e) => {
+            // Pause when space is pressed (and editor not active).
+            // TODO: Figure out why Vue ignores @keydown event handlers...
+            if (e.keyCode === 32 && !this.$store.state.editor_active) {
+                e.preventDefault()
+                this.$store.commit('togglePlaying')
+            }
+        }
 
         this.$store.dispatch('reloadPlaylists')
         this.$store.commit('loadSettings')
