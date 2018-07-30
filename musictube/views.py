@@ -25,8 +25,9 @@ def api(request, action):
         'addvideo': addVideo,
         'deleteplaylist': deletePlaylist,
         'deletevideo': deleteVideo,
+        'renameplaylist': renamePlaylist,
+        'renamevideo': renameVideo,
         'importplaylist': importPlaylist,
-        'renameplaylist': renamePlaylist
     }
 
     # Pass the function either body, POST or GET, depending on which is included, or an
@@ -85,10 +86,25 @@ def deletePlaylist(request, data):
 
 def deleteVideo(request, data):
     playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
-    video = get_object_or_404(Video, id=data['videoid'])
+    video = playlist.videos(Video, id=data['videoid'])
     playlist.videos.remove(video)
     playlist.save()
     video.delete()
+    return
+
+def renamePlaylist(request, data):
+    assert not Playlist.objects.filter(user=request.user, name=data['name'])
+    playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
+    playlist.name = data['name']
+    playlist.save()
+    return
+ 
+def renameVideo(request, data):
+    playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
+    video = get_object_or_404(Video, id=data['videoid'])
+    assert video in playlist.videos.all()
+    video.title = data['name']
+    video.save()
     return
 
 def importPlaylist(request, data):
@@ -102,11 +118,3 @@ def importPlaylist(request, data):
         playlist.videos.add(video)
     playlist.save()
     return
-
-def renamePlaylist(request, data):
-    assert not Playlist.objects.filter(user=request.user, name=data['name'])
-    playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
-    playlist.name = data['name']
-    playlist.save()
-    return
- 

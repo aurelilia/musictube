@@ -166,10 +166,10 @@ const store = new Vuex.Store({
                 dispatch('reloadPlaylists')
             })
         },
-        editorRename ({ dispatch }, listid) {
+        editorRename ({ dispatch }, { type, videoid, listid }) {
             var name = prompt('Enter a new name for the playlist:')
             if (!name) return
-            axios.post('/api/renameplaylist', { listid, name }).then(function () {
+            axios.post('/api/rename' + type, { videoid, listid, name }).then(function () {
                 dispatch('reloadPlaylists')
             })
         },
