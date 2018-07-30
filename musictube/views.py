@@ -77,7 +77,10 @@ def addVideo(request, data):
     return
 
 def deletePlaylist(request, data):
-    get_object_or_404(Playlist, user=request.user, id=data['listid']).delete()
+    playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
+    for video in playlist.videos.all():
+        video.delete()
+    playlist.delete()
     return
 
 def deleteVideo(request, data):
@@ -85,6 +88,7 @@ def deleteVideo(request, data):
     video = get_object_or_404(Video, id=data['videoid'])
     playlist.videos.remove(video)
     playlist.save()
+    video.delete()
     return
 
 def importPlaylist(request, data):
