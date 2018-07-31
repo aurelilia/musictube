@@ -195,7 +195,8 @@ const store = new Vuex.Store({
             if (!state.loaded) return null
             var uri_to_component = {
                 '/': 'playlists',
-                '/settings/': 'settings'
+                '/settings/': 'settings',
+                '/about/': 'about'
             }
             return uri_to_component[state.uri] !== undefined ? uri_to_component[state.uri] : 'videos'
         },

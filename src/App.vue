@@ -17,13 +17,16 @@ import NavBar from './components/NavBar.vue'
 import Playlists from './components/Playlists.vue'
 import Videos from './components/Videos.vue'
 import Settings from './components/Settings.vue'
+import About from './components/About.vue'
+
 
 export default {
     components: {
         NavBar,
         Playlists,
         Videos,
-        Settings
+        Settings,
+        About
     },
     mounted () {
         window.onunload = () => {

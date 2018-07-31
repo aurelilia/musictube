@@ -5,12 +5,13 @@
         <transition name="menu">
             <div id="menu" class="menu-dropdown" v-if="menu_active">
                 <a class="menu-item" @click="$store.dispatch('navigate', '/')">My Playlists</a>
-                <a class="menu-item" @click="$store.dispatch('navigate', '/settings/')">Settings</a>
-                <a class="menu-item" href="/logout/">Log out</a>
                 <a class="menu-item" @click="$store.commit('toggleEditor')">
                     <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"/>
                     Editor Mode
                 </a>
+                <a class="menu-item" @click="$store.dispatch('navigate', '/settings/')">Settings</a>
+                <a class="menu-item" href="/logout/">Log out</a>
+                <a class="menu-item" @click="$store.dispatch('navigate', '/about/')">About</a>
             </div>
         </transition>
     </div>
@@ -53,13 +54,13 @@ export default {
     z-index: 100
     top: 75px
 
-a
+.menu-item
     color: $menu-link
     padding: 12px 16px
     text-decoration: none
     display: block
 
-a:hover
+.menu-item:hover
     background-color: $menu-hover
     cursor: default
 
