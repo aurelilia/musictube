@@ -128,14 +128,14 @@ tr .delete,
     transform: translateX(75px)
 
 @media only screen and (max-device-width: 1024px)
-    .logo
+    .logo,
+    .volume
         display: none
 
     .controls
-        padding-left: 15px
+        padding-left: 25px
 
 @media only screen and (max-device-width: 768px)
-    .volume,
     .playlist-thumb,
     .thumb,
     .thumb-nav
@@ -163,13 +163,5 @@ tr .delete,
 
     .content
         margin-top: 85px
-
-@media only screen and (max-device-width: 400px)
-    .track-title
-        white-space: normal !important
-
-    .position-slider,
-    .position-text
-        display: none
 
 </style>
