@@ -48,7 +48,7 @@ const store = new Vuex.Store({
             scroll_title: true,
             random: false,
             volume: 25,
-            use_video_thumbnail: true,
+            use_video_thumbnail: false,
             bg_image: '1',
             bg_custom: false,
             bg_url: ''
