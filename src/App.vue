@@ -19,7 +19,6 @@ import Videos from './components/Videos.vue'
 import Settings from './components/Settings.vue'
 import About from './components/About.vue'
 
-
 export default {
     components: {
         NavBar,
