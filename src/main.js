@@ -48,7 +48,10 @@ const store = new Vuex.Store({
             scroll_title: true,
             random: false,
             volume: 25,
-            use_video_thumbnail: true
+            use_video_thumbnail: true,
+            bg_image: '1',
+            bg_custom: false,
+            bg_url: ''
         },
 
         player: {
@@ -188,7 +191,10 @@ const store = new Vuex.Store({
     },
     getters: {
         current_bg (state) {
-            if (!state.settings.use_video_thumbnail || state.video_playing === null) return require('./assets/bg.jpg')
+            if (!state.settings.use_video_thumbnail || state.video_playing === null) {
+                if (state.settings.bg_custom) return state.settings.bg_url
+                return require('./assets/bg' + state.settings.bg_image + '.jpg')
+            }
             return state.video_thumbnail
         },
         screen (state) {
