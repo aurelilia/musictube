@@ -23,8 +23,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', auth_views.login, name='login'),
-    path('logout/', auth_views.logout, {'template_name': 'registration/logout.html'}, name='logout'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
     path('register/', CreateView.as_view(template_name='registration/register.html', form_class=UserCreationForm, success_url='/')),
 
     path('api/<action>', views.api, name='api'),
