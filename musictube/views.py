@@ -32,9 +32,9 @@ def api(request, action):
 
     # Pass the function either body, POST or GET, depending on which is included, or an
     # empty dict if all are empty
-    data = json.loads(request.body) if request.body     \
-           else request.GET if request.GET              \
-           else request.POST if request.POST            \
+    data = json.loads(request.body.decode('utf-8')) if request.body     \
+           else request.GET if request.GET                              \
+           else request.POST if request.POST                            \
            else {}
 
     try:
