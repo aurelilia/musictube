@@ -8,7 +8,7 @@ Uses Django/Python for backend, VueJS for frontend.
 
 ### Django Setup
 
-This depends on django >= 2.0, pafy and django-webpack-loader. To install both with pip, do:
+This depends on django 2.1, pafy and django-webpack-loader. To install both with pip, do:
 
 `pip3 install django youtube-dl pafy django-webpack-loader`
 
@@ -26,5 +26,7 @@ npm install
 npm run build
 
 # Manually compile SASS for login page
-sass ./static/sass/login.sass > ./static/css/login.css
+mkdir ./musictube/static/css
+touch ./musictube/static/css/login.css
+sass ./musictube/static/sass/login.sass > ./musictube/static/css/login.css
 ```
