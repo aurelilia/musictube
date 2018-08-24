@@ -24,12 +24,12 @@
         </div>
         <div class="track" v-else>No track playing.</div>
 
-        <span class="volume" @wheel.prevent="onVolumeWheel($event)">
+        <span class="volume" @wheel.prevent="$store.commit('setVolume', parseInt(volume) + (Math.sign($event.deltaY) * -5))">
             <i class="fa fa-volume-up volume-icon"/>
             <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1"
-                   @input="$store.commit('setSetting', { setting: 'volume', val: $event.target.value })" :value="volume">
+                   @input="$store.commit('setVolume', parseInt($event.target.value))">
             <input type="number" class="volume-box" id="volume-box" min="0" max="100"
-                   @change="$store.commit('setSetting', { setting: 'volume', val: $event.target.value })" :value="volume">
+                   @change="$store.commit('setVolume', parseInt($event.target.value))">
         </span>
 
     </div>
@@ -57,15 +57,6 @@ export default {
             // TODO: Move this somewhere more fitting
             var text = this.video_playing == null ? 'MusicTube' : this.video_playing.title
             this.$store.dispatch('setWindowTitle', text)
-        }
-    },
-    methods: {
-        onVolumeWheel (e) {
-            var vol = parseInt(this.volume) + (Math.sign(e.deltaY) * -5)
-            vol = vol < 0 ? 0 : vol
-            vol = vol > 100 ? 100 : vol
-            this.$store.commit('setSetting', { setting: 'volume', val: vol })
-            this.player.e.volume = vol / 400
         }
     }
 }

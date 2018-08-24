@@ -72,6 +72,14 @@ const store = new Vuex.Store({
         setSetting (state, { setting, val }) {
             state.settings[setting] = val
         },
+        setVolume (state, vol) {
+            vol = vol < 0 ? 0 : vol
+            vol = vol > 100 ? 100 : vol
+            state.settings.volume = vol
+            document.getElementById('volume-box').value = vol
+            document.getElementById('volume-slider').value = vol
+            state.player.e.volume = vol / 400
+        },
 
         // Temporary settables/toggleables
         loaded: toggleGen('loaded'),
@@ -89,17 +97,6 @@ const store = new Vuex.Store({
         },
 
         // Player-related
-        setupPlayer (state) {
-            state.player.e = document.getElementById('player')
-            state.player.e.pause()
-            state.player.e.addEventListener('timeupdate', () => {
-                this.commit('updatePlayerPosition', Math.floor(state.player.e.currentTime))
-            })
-            state.player.e.addEventListener('ended', () => {
-                this.dispatch('shiftCurrentTrackByIndex', 1)
-            })
-            state.player.e.volume = state.settings.volume / 400
-        },
         updatePlayerPosition (state, pos) {
             state.player.position = pos
         },
@@ -113,6 +110,17 @@ const store = new Vuex.Store({
         }
     },
     actions: {
+        setupPlayer ({ state, commit }) {
+            state.player.e = document.getElementById('player')
+            state.player.e.pause()
+            state.player.e.addEventListener('timeupdate', () => {
+                this.commit('updatePlayerPosition', Math.floor(state.player.e.currentTime))
+            })
+            state.player.e.addEventListener('ended', () => {
+                this.dispatch('shiftCurrentTrackByIndex', 1)
+            })
+            commit('setVolume', state.settings.volume)
+        },
         updateCurrentTrack ({ state, commit, dispatch }, { playlist, video }) {
             if (state.video_playing === video) return
             commit('togglePlaying', false)

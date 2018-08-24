@@ -13,15 +13,15 @@
         </a>
 
         <span>
-            Background Image: 
+            Background Image:
             <input type="number" class="number-box" min="1" max="3"
-                @change="$store.commit('setSetting', { setting: 'bg_image', val: $event.target.value })" :value="settings.bg_image"/>
+                @change="$store.commit('setSetting', { setting: 'bg_image', val: $event.target.value })" :value="settings.bg_image">
             <a class="checkbox menu-item bg-img-box" @click="$store.commit('toggleSetting', 'bg_custom')">
                 <i class="fa" :class="{'fa-check-square-o': settings.bg_custom, 'fa-square-o': !settings.bg_custom}" aria-hidden="true"/>
                 Custom Background
             </a>
             <input type="url" class="url-box" :active="settings.bg_custom"
-                @change="$store.commit('setSetting', { setting: 'bg_url', val: $event.target.value })" :value="settings.bg_url"/>
+                @change="$store.commit('setSetting', { setting: 'bg_url', val: $event.target.value })" :value="settings.bg_url">
 
         </span>
     </div>
@@ -66,7 +66,7 @@ export default {
 .url-box:invalid
     border: 2px red
 
-.bg-img-box 
+.bg-img-box
     display: inline
 
 </style>

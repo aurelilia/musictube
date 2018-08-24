@@ -45,7 +45,7 @@ export default {
 
         this.$store.dispatch('reloadPlaylists')
         this.$store.commit('loadSettings')
-        this.$store.commit('setupPlayer')
+        this.$store.dispatch('setupPlayer')
     }
 }
 </script>
