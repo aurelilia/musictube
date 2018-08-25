@@ -10,7 +10,7 @@
 
         <div class="track" v-if="video_playing !== null">
             <div class="thumb-nav">
-                <img :src="`https://i.ytimg.com/vi/${video_playing.url}/mqdefault.jpg`" height="50px">
+                <img :src="`https://i.ytimg.com/vi/${video_playing.url}/mqdefault.jpg`" height="50px" @click="$store.dispatch('toggleVideoPlayer')">
             </div>
             <div class="track-info">
                 <span class="track-title" id="track-title">{{ video_playing.title }}</span>

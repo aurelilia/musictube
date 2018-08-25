@@ -23,7 +23,8 @@ export default {
         ...mapState([
             'playlist_playing',
             'video_playing',
-            'editor_active'
+            'editor_active',
+            'video_player_active'
         ]),
         ...mapGetters([
             'playlist_viewing'
@@ -31,7 +32,7 @@ export default {
     },
     watch: {
         video_playing (video) {
-            if (this.playlist_playing !== this.playlist_viewing) return
+            if (this.playlist_playing !== this.playlist_viewing || this.video_player_active) return
             var e = document.getElementsByTagName('tr')[this.playlist_playing.videos.indexOf(video)]
             this.scrollIntoView(e)
         }

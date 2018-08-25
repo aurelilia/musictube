@@ -18,6 +18,11 @@ function setterGen (prop) {
     }
 }
 
+// ZZZ...
+function sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 Vue.use(Vuex)
 Vue.mixin({
     methods: {
@@ -35,6 +40,7 @@ const store = new Vuex.Store({
         loaded: false,
         editor_active: false,
         menu_active: false,
+        video_player_active: false,
 
         playlists: [],
         playlist_playing: null,
@@ -121,14 +127,14 @@ const store = new Vuex.Store({
             })
             commit('setVolume', state.settings.volume)
         },
-        updateCurrentTrack ({ state, commit, dispatch }, { playlist, video }) {
-            if (state.video_playing === video) return
+        updateCurrentTrack ({ state, commit, dispatch }, { playlist, video, force }) {
+            if (state.video_playing === video && !force) return
             commit('togglePlaying', false)
             commit('setCurrentTrack', { playlist, video })
             dispatch('updateThumbnail')
             dispatch('setWindowTitle', video.title)
-
-            axios.get('/api/getaudio?url=' + video.url).then(function ({ data }) {
+            var type = state.video_player_active ? 'video' : 'audio'
+            axios.get(`/api/get${type}?url=${video.url}`).then(function ({ data }) {
                 commit('setPlayerSource', data)
                 commit('togglePlaying', true)
             })
@@ -164,6 +170,15 @@ const store = new Vuex.Store({
                     dispatch('setWindowTitle', text.substr(1) + text.substr(0, 1))
                 }, 500))
             }
+        },
+        async toggleVideoPlayer ({ state, dispatch }) {
+            state.video_player_active = !state.video_player_active
+            // Vue takes a bit to update DOM (needed for getting the player element)
+            await sleep(50)
+            dispatch('setupPlayer')
+            dispatch('updateCurrentTrack', { playlist: state.playlist_playing, video: state.video_playing, force: true })
+            state.player.e.currentTime = state.player.position
+            if (state.video_player_active) document.getElementById('wrapper').scrollTop = 0
         },
 
         editorAdd ({ dispatch }, { type, name, listid }) {

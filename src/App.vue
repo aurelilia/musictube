@@ -1,10 +1,16 @@
 <template>
     <div class="app">
         <div class="bg-img" id="bg-img" :style="`background-image: url(${$store.getters.current_bg})`"/>
-        <audio id="player" autoplay/>
         <nav-bar/>
 
         <div class="wrapper" id="wrapper">
+            <audio id="player" autoplay v-if="!$store.state.video_player_active"/>
+            <transition name="video" v-else>
+                <div class="video-player-div">
+                    <i id="close-button" class="fa fa-backward" @click="$store.dispatch('toggleVideoPlayer')"/>
+                    <video id="player" class="video-player" autoplay/>
+                </div>
+            </transition>
             <transition name="component" mode="out-in">
                 <component class="content" :is="$store.getters.screen"/>
             </transition>
@@ -87,6 +93,22 @@ body
     width: 90%
     overflow: visible
 
+.video-player-div
+    box-shadow: 0 5px 10px 3px $shadow
+    margin: 20px 10% 0px
+    width: 80%
+
+.video-player
+    width: 100%
+
+#close-button
+    transform: rotate(90deg)
+    display: inline-block
+    width: 100%
+    text-align: center
+    color: $wtext
+    margin: 10px 0
+
 // Both Playlists and Videos component use the same styling, so it's in here.
 .no-avail
     position: fixed
@@ -121,9 +143,18 @@ tr .delete,
 .component-enter-active, .component-leave-active, .menu-enter-active, .menu-leave-active
     transition: opacity .3s ease-in-out, transform .3s ease-in-out
 
+.video-enter-active, .video-leave-active
+    transition: transform .5s ease
+
 .component-enter
     opacity: 0
     transform: translateX(-75px)
+
+.video-enter
+    transform: translateY(130%)
+
+.video-leave-to
+    transform: translateY(-130%)
 
 .component-leave-to, .menu-enter, .menu-leave-to
     opacity: 0

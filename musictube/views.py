@@ -20,6 +20,7 @@ def api(request, action):
     """ For interacting with the server. Calls fitting function depending on request. """
     actions = {
         'getaudio': getAudio,
+        'getvideo': getVideo,
         'fetchplaylists' : fetchPlaylists,
         'addplaylist': addPlaylist,
         'addvideo': addVideo,
@@ -48,6 +49,12 @@ def getAudio(request, data):
     """ Takes video URL or id, returns audio URL. """
     video = pafy.new(data['url'])
     return video.getbestaudio().url
+
+def getVideo(request, data):
+    """ Takes video URL or id, returns video URL. 
+        TODO: Implement requesting different qualities (Using screen size on web client) """
+    video = pafy.new(data['url'])
+    return video.getbest().url
 
 def fetchPlaylists(request, data):
     """ API for getting info, using JSON """
