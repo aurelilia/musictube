@@ -96,8 +96,6 @@ const store = new Vuex.Store({
         toggleMenu: toggleGen('menu_active'),
         toggleEditor: toggleGen('editor_active'),
         togglePlaying (state, force) {
-            // If no track is playing, don't allow to resume
-            if (!state.player.e.src && !state.playing) return
             state.playing = force !== undefined ? force : !state.playing
             state.playing ? state.player.e.play() : state.player.e.pause()
         },
@@ -127,17 +125,14 @@ const store = new Vuex.Store({
             })
             commit('setVolume', state.settings.volume)
         },
-        updateCurrentTrack ({ state, commit, dispatch }, { playlist, video, force }) {
-            if (state.video_playing === video && !force) return
+        updateCurrentTrack ({ state, commit, dispatch }, { playlist, video }) {
+            if (state.video_playing === video) return
             commit('togglePlaying', false)
             commit('setCurrentTrack', { playlist, video })
+            dispatch('updatePlayerSource')
             dispatch('updateThumbnail')
             dispatch('setWindowTitle', video.title)
-            var type = state.video_player_active ? 'video' : 'audio'
-            axios.get(`/api/get${type}?url=${video.url}`).then(function ({ data }) {
-                commit('setPlayerSource', data)
-                commit('togglePlaying', true)
-            })
+            commit('togglePlaying', true)
         },
         shiftCurrentTrackByIndex ({ state, dispatch }, shift) {
             var index = state.playlist_playing.videos.indexOf(state.video_playing) + shift
@@ -162,6 +157,12 @@ const store = new Vuex.Store({
             }
             image.src = `https://i.ytimg.com/vi/${state.video_playing.url}/maxresdefault.jpg`
         },
+        updatePlayerSource ({ state, commit }) {
+            var type = state.video_player_active ? 'video' : 'audio'
+            axios.get(`/api/get${type}?url=${state.video_playing.url}`).then(function ({ data }) {
+                commit('setPlayerSource', data)
+            })
+        },
         setWindowTitle ({ state, commit, dispatch }, text) {
             clearTimeout(state.scroller_interval_id)
             document.title = text
@@ -176,7 +177,7 @@ const store = new Vuex.Store({
             // Vue takes a bit to update DOM (needed for getting the player element)
             await sleep(20)
             dispatch('setupPlayer')
-            dispatch('updateCurrentTrack', { playlist: state.playlist_playing, video: state.video_playing, force: true })
+            dispatch('updatePlayerSource')
             state.player.e.currentTime = state.player.position
             if (state.video_player_active) document.getElementById('wrapper').scrollTop = 0
         },

@@ -96,8 +96,8 @@ body
 .video-player-div
     box-shadow: 0 5px 10px 3px $shadow
     border-radius: 20px 20px 0 0
-    margin: 20px 10% 0px
-    width: 80%
+    margin: 20px 15% 0px
+    width: 75%
 
 .video-player
     width: 100%
