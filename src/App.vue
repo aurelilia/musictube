@@ -8,7 +8,7 @@
             <transition name="video" v-else>
                 <div class="video-player-div">
                     <i id="close-button" class="fa fa-backward" @click="$store.dispatch('toggleVideoPlayer')"/>
-                    <video id="player" class="video-player" autoplay/>
+                    <video id="player" class="video-player" autoplay @click="$store.commit('togglePlaying')" />
                 </div>
             </transition>
             <transition name="component" mode="out-in">
@@ -95,6 +95,7 @@ body
 
 .video-player-div
     box-shadow: 0 5px 10px 3px $shadow
+    border-radius: 20px 20px 0 0
     margin: 20px 10% 0px
     width: 80%
 

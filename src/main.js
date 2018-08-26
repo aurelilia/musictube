@@ -174,7 +174,7 @@ const store = new Vuex.Store({
         async toggleVideoPlayer ({ state, dispatch }) {
             state.video_player_active = !state.video_player_active
             // Vue takes a bit to update DOM (needed for getting the player element)
-            await sleep(50)
+            await sleep(20)
             dispatch('setupPlayer')
             dispatch('updateCurrentTrack', { playlist: state.playlist_playing, video: state.video_playing, force: true })
             state.player.e.currentTime = state.player.position
