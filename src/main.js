@@ -132,7 +132,6 @@ const store = new Vuex.Store({
             dispatch('updatePlayerSource')
             dispatch('updateThumbnail')
             dispatch('setWindowTitle', video.title)
-            commit('togglePlaying', true)
         },
         shiftCurrentTrackByIndex ({ state, dispatch }, shift) {
             var index = state.playlist_playing.videos.indexOf(state.video_playing) + shift
@@ -161,6 +160,7 @@ const store = new Vuex.Store({
             var type = state.video_player_active ? 'video' : 'audio'
             axios.get(`/api/get${type}?url=${state.video_playing.url}`).then(function ({ data }) {
                 commit('setPlayerSource', data)
+                commit('togglePlaying', true)
             })
         },
         setWindowTitle ({ state, commit, dispatch }, text) {
