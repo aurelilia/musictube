@@ -93,10 +93,9 @@ def deletePlaylist(request, data):
 
 def deleteVideo(request, data):
     playlist = get_object_or_404(Playlist, user=request.user, id=data['listid'])
-    video = playlist.videos(Video, id=data['videoid'])
+    video = get_object_or_404(Video, id=data['videoid'])
     playlist.videos.remove(video)
     playlist.save()
-    video.delete()
     return
 
 def renamePlaylist(request, data):
