@@ -27,7 +27,8 @@ Vue.use(Vuex)
 Vue.mixin({
     methods: {
         formatSeconds (secs) {
-            return new Date(1000 * secs).toISOString().substr(14, 5)
+            if (secs < 3600) return new Date(1000 * secs).toISOString().substr(14, 5)
+            else return new Date(1000 * secs).toISOString().substr(11, 8)
         }
     }
 })
