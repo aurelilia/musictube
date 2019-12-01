@@ -77,16 +77,16 @@ WSGI_APPLICATION = 'musictube.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 # Put your database config in your BASE_DIR, as json in file 'database'
-if DEBUG:
+try:
+    with open(os.path.join(BASE_DIR, 'database'), 'r') as db:
+        DATABASES = json.loads(db.read())
+except FileNotFoundError:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'musictube/db.sqlite3'),
         }
     }
-else:
-    with open(os.path.join(BASE_DIR, 'database'), 'r') as db:
-        DATABASES = json.loads(db.read())
 
 
 # Password validation

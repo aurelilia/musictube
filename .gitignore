@@ -2,6 +2,7 @@
 migrations
 __pycache__
 key
+database
 *.css
 *.css.map
 .vscode
