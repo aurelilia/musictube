@@ -8,12 +8,14 @@ Uses Django/Python for backend, VueJS for frontend.
 
 ### Django Setup
 
-This depends on django 2.1, pafy and django-webpack-loader. To install both with pip, do:
+This depends on django 2.1, pafy and django-webpack-loader. To install them with pip, do:
 
 `pip3 install django youtube-dl pafy django-webpack-loader`
 
 Additionally, you'll have to create two files in django's BASE_DIR:
+
 key: Put your SECRET_KEY in here. If this is missing, a dev env will be assumed and a default key be used.
+
 database: Put your django DATABASE settings in here (serialized in JSON).
 
 ### Webpack/Frontend Setup
