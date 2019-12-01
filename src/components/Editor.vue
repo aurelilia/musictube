@@ -1,10 +1,11 @@
 <template>
     <div class="navbar-content">
         <div class="controls">
-            <i class="fa fa-plus add-icon" @click="add = !add" />
-            <form @submit.prevent="onAdd()">
-                <transition name="add-box">
-                    <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL...">
+            <i class="fa fa-plus edit-icon" @click="addClicked()" />
+            <i class="fa fa-search edit-icon" @click="searchClicked()" />
+            <form @submit.prevent="onSubmit()">
+                <transition name="input-box">
+                    <input type="text" class="editor-input" id="editor-input" v-if="add || search" :placeholder="this.text">
                 </transition>
             </form>
         </div>
@@ -23,7 +24,9 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 export default {
     data: function () {
         return {
-            add: false
+            add: false,
+            search: false,
+            text: ''
         }
     },
     computed: mapState([
@@ -33,11 +36,34 @@ export default {
     ]),
 
     methods: {
-        onAdd () {
-            var name = document.getElementById('add-input').value
+        addClicked () {
+            this.add = !this.add
+            this.search = false
+            this.text = 'Enter name/URL...'
+        },
 
+        searchClicked () {
+            this.add = false
+            this.search = !this.search
+            this.text = 'Enter search term...'
+        },
+
+        onSubmit () {
+            if (this.$store.getters.screen !== 'playlists' && this.$store.getters.screen !== 'videos') {
+                alert('You may not.')
+                return
+            }
+
+            var text = document.getElementById('editor-input').value
+            document.getElementById('editor-input').value = ''
+
+            if (this.add) this.addPlaylist(text)
+            else this.searchVideo(text)
+        },
+
+        addPlaylist (name) {
             if (name === '') {
-                alert('Please enter a name/URL.')
+                alert('Please enter something.')
                 return
             }
 
@@ -61,9 +87,13 @@ export default {
                 name,
                 listid: this.$store.getters.playlist_viewing ? this.$store.getters.playlist_viewing.id : null
             })
+        },
 
-            this.add = false
-            document.getElementById('add-input').value = ''
+        searchVideo (query) {
+            if (this.$store.getters.screen === 'playlists') {
+                alert('Cannot search for videos on the playlist screen.')
+
+            }
         }
     }
 }
@@ -73,7 +103,8 @@ export default {
 <style lang="sass">
 @import ../sass/colors
 
-.add-icon
+.edit-icon
+    padding: 0 20px
     font-size: 1.3em
     flex: 1
 
@@ -88,10 +119,10 @@ input[type=text]
     font-family: 'Open Sans', sans-serif
     text-align: center
 
-.add-box-enter-active, .add-box-leave-active
+.input-box-enter-active, .input-box-leave-active
     transition: opacity .3s ease-in-out, transform .3s ease-in-out
 
-.add-box-enter, .add-box-leave-to
+.input-box-enter, .input-box-leave-to
     opacity: 0
     transform: translateX(-75px)
 

@@ -132,7 +132,7 @@ const store = new Vuex.Store({
             commit('setCurrentTrack', { playlist, video })
             dispatch('updatePlayerSource')
             dispatch('updateThumbnail')
-            dispatch('setWindowTitle', video.title)
+            dispatch('setWindowTitle', 'MT | ' + video.title)
         },
         shiftCurrentTrackByIndex ({ state, dispatch }, shift) {
             var index = state.playlist_playing.videos.indexOf(state.video_playing) + shift
