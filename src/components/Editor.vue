@@ -92,7 +92,6 @@ export default {
         searchVideo (query) {
             if (this.$store.getters.screen === 'playlists') {
                 alert('Cannot search for videos on the playlist screen.')
-
             }
         }
     }

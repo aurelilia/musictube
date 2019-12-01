@@ -6,6 +6,11 @@
             <i class="fa" :class="{'fa-check-square-o': settings.scroll_title, 'fa-square-o': !settings.scroll_title}" aria-hidden="true" />
             Scroll tab title
         </a>
+        <span v-if="settings.scroll_title">
+            Scrolling speed in ms:
+            <input type="number" class="number-box" min="30" max="1000"
+                @change="$store.commit('setSetting', { setting: 'scroll_title_speed', val: $event.target.value })" :value="settings.scroll_title_speed">
+        </span>
 
         <a class="checkbox menu-item" @click="$store.commit('toggleSetting', 'use_video_thumbnail')">
             <i class="fa" :class="{'fa-check-square-o': settings.use_video_thumbnail, 'fa-square-o': !settings.use_video_thumbnail}" aria-hidden="true" />
@@ -45,6 +50,9 @@ export default {
     box-shadow: 0 5px 10px 3px $shadow
     color: $settings-text
     background-color: $tr
+
+    span
+        padding-left: 5px
 
 .settings-title
     margin: 0
