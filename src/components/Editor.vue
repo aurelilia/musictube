@@ -1,7 +1,7 @@
 <template>
     <div class="navbar-content">
         <div class="controls">
-            <i class="fa fa-plus add-icon" @click="add = !add"/>
+            <i class="fa fa-plus add-icon" @click="add = !add" />
             <form @submit.prevent="onAdd()">
                 <transition name="add-box">
                     <input type="text" class="add-input" id="add-input" v-if="add" placeholder="Enter name/URL...">

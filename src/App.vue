@@ -1,18 +1,18 @@
 <template>
     <div class="app">
-        <div class="bg-img" id="bg-img" :style="`background-image: url(${$store.getters.current_bg})`"/>
+        <div class="bg-img" id="bg-img" :style="`background-image: url(${$store.getters.current_bg})`" />
         <nav-bar/>
 
         <div class="wrapper" id="wrapper">
-            <audio id="player" autoplay v-if="!$store.state.video_player_active"/>
+            <audio id="player" autoplay v-if="!$store.state.video_player_active" />
             <transition name="video" v-else>
                 <div class="video-player-div">
-                    <i id="close-button" class="fa fa-backward" @click="$store.dispatch('toggleVideoPlayer')"/>
+                    <i id="close-button" class="fa fa-backward" @click="$store.dispatch('toggleVideoPlayer')" />
                     <video id="player" class="video-player" autoplay @click="$store.commit('togglePlaying')" />
                 </div>
             </transition>
             <transition name="component" mode="out-in">
-                <component class="content" :is="$store.getters.screen"/>
+                <component class="content" :is="$store.getters.screen" />
             </transition>
         </div>
     </div>

@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('./config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 var BundleTracker = require('webpack-bundle-tracker')
 
 function resolve (dir) {
@@ -33,7 +34,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.json'],
         alias: {
-            'vue$': 'vue/dist/vue.esm.js',
+            vue$: 'vue/dist/vue.esm.js',
             '@': resolve('src')
         }
     },
@@ -79,6 +80,7 @@ module.exports = {
         child_process: 'empty'
     },
     plugins: [
-        new BundleTracker({ filename: './webpack-stats.json' })
+        new BundleTracker({ filename: './webpack-stats.json' }),
+        new VueLoaderPlugin()
     ]
 }

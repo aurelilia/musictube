@@ -140,8 +140,8 @@ const store = new Vuex.Store({
             if (index < 0 || index >= state.playlist_playing.videos.length) index = 0
 
             dispatch('updateCurrentTrack', {
-                'playlist': state.playlist_playing,
-                'video': state.playlist_playing.videos[index]
+                playlist: state.playlist_playing,
+                video: state.playlist_playing.videos[index]
             })
         },
         updateThumbnail ({ state, commit }) {
@@ -207,7 +207,7 @@ const store = new Vuex.Store({
             history.pushState({}, 'MusicTube', location)
             commit('setUri', window.location.pathname)
         },
-        reloadPlaylists ({commit}) {
+        reloadPlaylists ({ commit }) {
             axios.get('/api/fetchplaylists').then(function ({ data }) {
                 commit('setPlaylists', data)
                 commit('loaded', true)
@@ -244,5 +244,5 @@ new Vue({
     el: '#vue-app',
     components: { App },
     store,
-    template: `<App/>`
+    template: '<App/>'
 })

@@ -3,11 +3,11 @@
         <img class="logo" alt="musictube" src="/static/img/logo.png" height="50px" @click="$store.dispatch('navigate', '/')">
 
         <transition-group class="navbar-fade" name="navbar" mode="out-in">
-            <player class="navbar-content" v-show="!$store.state.editor_active" key="player"/>
-            <editor class="navbar-content" v-show="$store.state.editor_active" key="editor"/>
+            <player class="navbar-content" v-show="!$store.state.editor_active" key="player" />
+            <editor class="navbar-content" v-show="$store.state.editor_active" key="editor" />
         </transition-group>
 
-        <dropdown-menu/>
+        <dropdown-menu />
     </nav>
 </template>
 

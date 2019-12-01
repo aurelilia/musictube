@@ -3,12 +3,12 @@
         <span class="settings-title">Settings</span>
 
         <a class="checkbox menu-item" @click="$store.commit('toggleSetting', 'scroll_title')">
-            <i class="fa" :class="{'fa-check-square-o': settings.scroll_title, 'fa-square-o': !settings.scroll_title}" aria-hidden="true"/>
+            <i class="fa" :class="{'fa-check-square-o': settings.scroll_title, 'fa-square-o': !settings.scroll_title}" aria-hidden="true" />
             Scroll tab title
         </a>
 
         <a class="checkbox menu-item" @click="$store.commit('toggleSetting', 'use_video_thumbnail')">
-            <i class="fa" :class="{'fa-check-square-o': settings.use_video_thumbnail, 'fa-square-o': !settings.use_video_thumbnail}" aria-hidden="true"/>
+            <i class="fa" :class="{'fa-check-square-o': settings.use_video_thumbnail, 'fa-square-o': !settings.use_video_thumbnail}" aria-hidden="true" />
             Show thumbnail of currently playing video in background
         </a>
 
@@ -17,7 +17,7 @@
             <input type="number" class="number-box" min="1" max="3"
                 @change="$store.commit('setSetting', { setting: 'bg_image', val: $event.target.value })" :value="settings.bg_image">
             <a class="checkbox menu-item bg-img-box" @click="$store.commit('toggleSetting', 'bg_custom')">
-                <i class="fa" :class="{'fa-check-square-o': settings.bg_custom, 'fa-square-o': !settings.bg_custom}" aria-hidden="true"/>
+                <i class="fa" :class="{'fa-check-square-o': settings.bg_custom, 'fa-square-o': !settings.bg_custom}" aria-hidden="true" />
                 Custom Background
             </a>
             <input type="url" class="url-box" :active="settings.bg_custom"

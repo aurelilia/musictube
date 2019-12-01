@@ -8,9 +8,9 @@
             <td class="name">{{ video.title }}</td>
             <td class="context">{{ formatSeconds(video.length) }}</td>
             <td class="rename" v-if="editor_active"><i class="fa fa-edit"
-                @click.stop="$store.dispatch('editorRename', { type: 'video', videoid: video.id, listid: playlist_viewing.id})"/></td>
+                @click.stop="$store.dispatch('editorRename', { type: 'video', videoid: video.id, listid: playlist_viewing.id})" /></td>
             <td class="delete" v-if="editor_active"><i class="fa fa-trash-o"
-                @click="$store.dispatch('editorDelete', { type: 'video', videoid: video.id, listid: playlist_viewing.id })"/></td>
+                @click="$store.dispatch('editorDelete', { type: 'video', videoid: video.id, listid: playlist_viewing.id })" /></td>
         </tr>
     </table>
 </template>

@@ -1,11 +1,10 @@
 <template>
     <div class="player">
-
         <div class="controls">
-            <i id="prev-button" class="fa fa-backward" @click="$store.dispatch('shiftCurrentTrackByIndex', -1)"/>
-            <i id="play-button" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}" @click="$store.commit('togglePlaying')"/>
-            <i id="random-button" class="fa fa-random" @click="$store.commit('toggleSetting', 'random')" :class="{ 'grey': !random }"/>
-            <i id="next-button" class="fa fa-forward" @click="$store.dispatch('shiftCurrentTrackByIndex', 1)"/>
+            <i id="prev-button" class="fa fa-backward" @click="$store.dispatch('shiftCurrentTrackByIndex', -1)" />
+            <i id="play-button" class="fa" :class="{'fa-pause': playing, 'fa-play': !playing}" @click="$store.commit('togglePlaying')" />
+            <i id="random-button" class="fa fa-random" @click="$store.commit('toggleSetting', 'random')" :class="{ 'grey': !random }" />
+            <i id="next-button" class="fa fa-forward" @click="$store.dispatch('shiftCurrentTrackByIndex', 1)" />
         </div>
 
         <div class="track" v-if="video_playing !== null">
@@ -22,16 +21,17 @@
                 </span>
                 </div>
         </div>
-        <div class="track" v-else>No track playing.</div>
+        <div class="track" v-else>
+            No track playing.
+        </div>
 
         <span class="volume" @wheel.prevent="$store.commit('setVolume', parseInt(volume) + (Math.sign($event.deltaY) * -5))">
-            <i class="fa fa-volume-up volume-icon"/>
+            <i class="fa fa-volume-up volume-icon" />
             <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" step="1"
                    @input="$store.commit('setVolume', parseInt($event.target.value))">
             <input type="number" class="volume-box" id="volume-box" min="0" max="100"
                    @change="$store.commit('setVolume', parseInt($event.target.value))">
         </span>
-
     </div>
 </template>
 

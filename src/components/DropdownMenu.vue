@@ -1,12 +1,12 @@
 <template>
     <div class="hamburger-menu">
-        <i class="fa fa-bars" @click="$store.commit('toggleMenu')"/>
+        <i class="fa fa-bars" @click="$store.commit('toggleMenu')" />
 
         <transition name="menu">
             <div id="menu" class="menu-dropdown" v-if="menu_active">
                 <a class="menu-item" @click="$store.dispatch('navigate', '/')">My Playlists</a>
                 <a class="menu-item" @click="$store.commit('toggleEditor')">
-                    <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true"/>
+                    <i class="fa" :class="{'fa-check-square-o': editor_active, 'fa-square-o': !editor_active}" aria-hidden="true" />
                     Editor Mode
                 </a>
                 <a class="menu-item" @click="$store.dispatch('navigate', '/settings/')">Settings</a>
