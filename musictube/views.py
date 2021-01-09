@@ -114,7 +114,7 @@ def renameVideo(request, data):
     return
 
 def importPlaylist(request, data):
-    plist_pafy = pafy.playlist.get_playlist(data['url'])
+    plist_pafy = pafy.playlist.get_playlist(data['name'])
     playlist = Playlist(name=plist_pafy['title'], user=request.user, private=False)
     playlist.save()
     for pafy_item in plist_pafy['items']:
